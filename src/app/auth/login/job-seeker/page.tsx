@@ -1,11 +1,10 @@
 /** @format */
 "use client"
-import React from "react";
+import React, { useState } from "react";
 import type { FormProps } from "antd";
-import { Button, Checkbox, Form, Input } from "antd";
-
+import { Button, Checkbox, Form, Input, message } from "antd";
+import axios from "axios";
 type FieldType = {
-
   password?: string;
   email?: string;
   remember?: string;
@@ -20,18 +19,29 @@ const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (errorInfo) => {
 };
 
 const JobSeekerLogin = () => {
+    const onFinish = async (values: FieldType) => {
+    try {
+      const res = await axios.post("http://localhost:5000/api/auth/login", {
+        ...values,
+        role: "jobseeker", // fixed role here
+      });
+      message.success(res.data.message);
+      window.location.href = "/";
+    } catch (error: any) {
+      message.error(error.response?.data?.message || "Login failed!");
+    }
+  };
   return (
     <div className='flex justify-center items-center min-h-screen bg-gray-100 px-4'>
       <div className='bg-white w-full max-w-lg px-6 sm:px-8 py-10 sm:py-12 rounded-xl shadow-lg'>
-        <h1 className="text-3xl font-bold text-center">
-          Sign in
-        </h1>
-        <p className='text-center text-gray-600 mb-6'>Sign up to create your Job Seeker Account on JobOrbit.</p>
+        <h1 className='text-3xl font-bold text-center'>Sign in</h1>
+        <p className='text-center text-gray-600 mb-6'>
+          Sign up to create your Job Seeker Account on JobOrbit.
+        </p>
 
         <Form
           name='basic'
-         layout="vertical"
-       
+          layout='vertical'
           initialValues={{ remember: true }}
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
@@ -42,7 +52,7 @@ const JobSeekerLogin = () => {
             rules={[
               { required: true, message: "Please input your username!" },
             ]}>
-            <Input placeholder="Your Email"/>
+            <Input placeholder='Your Email' />
           </Form.Item>
 
           <Form.Item<FieldType>
@@ -51,25 +61,30 @@ const JobSeekerLogin = () => {
             rules={[
               { required: true, message: "Please input your password!" },
             ]}>
-            <Input.Password placeholder="Your Password"/>
+            <Input.Password
+              placeholder='Your Password'
+              autoComplete='current-password'
+            />
           </Form.Item>
-              <div className="!flex !flex-col justify-between">
-                
-                <Checkbox>Keep me signed in</Checkbox>
-                 <p className="text-red-600 hover:underline cursor-pointer">
-      Forgot your password?
-    </p>
-              </div>
+          <div className='!flex !flex-col justify-between'>
+            <Checkbox>Keep me signed in</Checkbox>
+            <p className='text-red-600 hover:underline cursor-pointer'>
+              Forgot your password?
+            </p>
+          </div>
 
           <Form.Item label={null}>
-            <Button  className='w-full !bg-[var(--bg-color)] !text-white py-3 text-lg !font-semibold !mt-8' htmlType='submit'>
+            <Button
+              className='w-full !bg-[var(--bg-color)] !text-white py-3 text-lg !font-semibold !mt-8'
+              htmlType='submit'>
               Continue
             </Button>
           </Form.Item>
         </Form>
 
-        <p className='text-center text-gray-600 mb-6'>Don't have an account?
-Create one here</p>
+        <p className='text-center text-gray-600 mb-6'>
+          Don't have an account? Create one here
+        </p>
       </div>
     </div>
   );

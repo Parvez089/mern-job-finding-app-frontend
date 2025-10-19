@@ -3,11 +3,12 @@
 
 import React from "react";
 import type { FormProps } from "antd";
-import { Button, Checkbox, Divider, Form, Input } from "antd";
+import { Button, Checkbox, Divider, Form, Input, message } from "antd";
 import { LinkedinFilled, GoogleCircleFilled } from "@ant-design/icons";
+import axios from "axios";
 
 type FieldType = {
-  username?: string;
+  name?: string;
   email?: string;
   password?: string;
   remember?: string;
@@ -22,6 +23,18 @@ const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (errorInfo) => {
 };
 
 const JobSeekerRegister = () => {
+  const onFinish = async (values: FieldType) => {
+    try {
+      const res = await axios.post("http://localhost:5000/api/auth/register", {
+        ...values,
+        role: "jobseeker", // fixed role here
+      });
+      message.success(res.data.message);
+      window.location.href = "/";
+    } catch (error: any) {
+      message.error(error.response?.data?.message || "Registration failed!");
+    }
+  };
   return (
     <div className='flex justify-center items-center min-h-screen bg-gray-100 px-4'>
       <div className='bg-white w-full max-w-lg px-6 sm:px-8 py-10 sm:py-12 rounded-xl shadow-lg'>
@@ -43,12 +56,12 @@ const JobSeekerRegister = () => {
           autoComplete='off'>
           {/* Username */}
           <Form.Item<FieldType>
-            label='Username'
-            name='username'
+            label='name'
+            name='name'
             rules={[
               { required: true, message: "Please input your username!" },
             ]}>
-            <Input placeholder='John Doe' />
+            <Input placeholder='Your name' />
           </Form.Item>
 
           {/* Email */}
@@ -56,7 +69,7 @@ const JobSeekerRegister = () => {
             label='Email'
             name='email'
             rules={[{ required: true, message: "Please input your email!" }]}>
-            <Input placeholder='email@example.com' />
+            <Input placeholder='Your Email' />
           </Form.Item>
 
           {/* Password */}

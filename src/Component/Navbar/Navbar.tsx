@@ -50,53 +50,55 @@ const Navbar = () => {
 
   return (
     <header className='bg-white border-b border-gray-200 flex justify-between items-center px-4 sm:px-6 lg:px-8 py-3 md:w-full'>
-      <div className='text-2xl sm:text-2xl font-semibold text-[var(--primary-text)] tracking-tight'>
-        JobOrbit
-      </div>
-
-      {/* Desktop Menu */}
-      {!isMobile && (
-        <div className='flex items-center gap-2 sm:gap-5'>
-          <Menu
-            theme='light'
-            mode='horizontal'
-            items={menuItems}
-            className='bg-white !border-none text-sm sm:text-base'
-          />
-          <Search
-            placeholder='Search jobs...'
-            onSearch={onSearch}
-            style={{ width: 200 }}
-            className='!outline-none rounded-lg !border !border-[var(--bg-color)]'
-          />
-          <Link href={"/auth"}>
-            <Button
-              className='!border-dashed !border-[var(--bg-color)] text-[var(--primary-text)] !hover:text-[var(--primary-text)] text-sm sm:text-base'
-              variant='dashed'
-              >
-              Get Started
-            </Button>
-          </Link>
+      <div className='container mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center  py-3 md:w-full'>
+        <div className='text-2xl sm:text-2xl font-semibold text-[var(--primary-text)] tracking-tight'>
+          JobOrbit
         </div>
-      )}
 
-      {/* Mobile Menu Button */}
-      {isMobile && (
-        <Button
-          type='text'
-          icon={<MenuOutlined className='text-black text-2xl' />}
-          onClick={() => setVisible(true)}
-        />
-      )}
+        {/* Desktop Menu */}
+        {!isMobile && (
+          <div className='flex items-center gap-2 sm:gap-5'>
+            <Menu
+              theme='light'
+              mode='horizontal'
+              items={menuItems}
+              className='bg-white !border-none text-sm sm:text-base '
+            />
+            <Input.Search
+              onSearch={onSearch}
+              placeholder='Find Jobs'
+              style={{ width: 200 }}
+              variant='filled'
+            />
 
-      {/* Mobile Drawer */}
-      <Drawer
-        placement='right'
-        onClose={() => setVisible(false)}
-        open={visible}
-        closable={false}>
-        <Menu mode='vertical' items={menuItems} className='border-none' />
-      </Drawer>
+            <Link href={"/auth"}>
+              <Button
+                className='!border-dashed !border-[var(--bg-color)] text-[var(--primary-text)] !hover:text-[var(--primary-text)] text-sm sm:text-base'
+                variant='dashed'>
+                Get Started
+              </Button>
+            </Link>
+          </div>
+        )}
+
+        {/* Mobile Menu Button */}
+        {isMobile && (
+          <Button
+            type='text'
+            icon={<MenuOutlined className='text-black text-2xl' />}
+            onClick={() => setVisible(true)}
+          />
+        )}
+
+        {/* Mobile Drawer */}
+        <Drawer
+          placement='right'
+          onClose={() => setVisible(false)}
+          open={visible}
+          closable={false}>
+          <Menu mode='vertical' items={menuItems} className='border-none' />
+        </Drawer>
+      </div>
     </header>
   );
 };
