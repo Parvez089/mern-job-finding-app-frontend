@@ -2,7 +2,8 @@
 "use client"
 import React from "react";
 import type { FormProps } from "antd";
-import { Button, Checkbox, Form, Input } from "antd";
+import { Button, Checkbox, Form, Input, message } from "antd";
+import axios from "axios";
 
 type FieldType = {
 
@@ -20,8 +21,22 @@ const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (errorInfo) => {
 };
 
 const AdminLogin = () => {
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+    const onFinish = async (values: FieldType) => {
+    try {
+      const res = await axios.post(`${API_BASE_URL}/api/auth/login`, {
+        ...values,
+        role: "admin", 
+      });
+      message.success(res.data.message);
+      window.location.href = "/";
+    } catch (error: any) {
+      message.error(error.response?.data?.message || "Login failed!");
+    }
+  };
+
   return (
-    <div className='flex justify-center items-center min-h-screen bg-gray-100 px-4'>
+    <div className='flex justify-center items-center !my-40 px-4'>
       <div className='bg-white w-full max-w-lg px-6 sm:px-8 py-10 sm:py-12 rounded-xl shadow-lg'>
         <h1 className="text-3xl font-bold text-center">
           Sign in

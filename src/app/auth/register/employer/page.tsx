@@ -22,9 +22,10 @@ const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (errorInfo) => {
 };
 
 const EmployerRegister = () => {
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
   const onFinish = async (values: FieldType) => {
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/register", {
+      const res = await axios.post(`${API_BASE_URL}/api/auth/register`, {
         ...values,
         role: "employer",
       });
@@ -35,7 +36,7 @@ const EmployerRegister = () => {
     }
   };
   return (
-    <div className='flex flex-col justify-center items-center min-h-screen px-4 sm:px-6 lg:px-8 '>
+    <div className='flex flex-col justify-center items-center  px-4 sm:px-6 lg:px-8 '>
       <div className='bg-white px-6 py-14 sm:px-12 sm:py-14 rounded-lg shadow w-full max-w-md'>
         <h1 className='text-2xl sm:text-3xl text-center !font-bold'>
           Create an <br /> Employer Account

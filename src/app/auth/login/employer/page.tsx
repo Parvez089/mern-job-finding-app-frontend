@@ -11,6 +11,8 @@ type FieldType = {
   remember?: string;
 };
 
+
+
 const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
   console.log("Success:", values);
 };
@@ -20,9 +22,12 @@ const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (errorInfo) => {
 };
 
 const EmployerLogin = () => {
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
   const onFinish = async (values: FieldType) => {
-    try {
-      const res = await axios.post("http://localhost:5000/api/auth/login", {
+  
+    try {   
+      
+      const res = await axios.post(`${API_BASE_URL}/api/auth/login`, {
         ...values,
         role: "employer",
       });
@@ -33,7 +38,7 @@ const EmployerLogin = () => {
     }
   };
   return (
-    <div className='flex justify-center items-center min-h-screen bg-gray-100 px-4'>
+    <div className='flex justify-center items-center !my-35 px-4'>
       <div className='bg-white w-full max-w-lg px-6 sm:px-8 py-10 sm:py-12 rounded-xl shadow-lg'>
         <h1 className='text-3xl font-bold text-center'>Sign in</h1>
         <p className='text-center text-gray-600 mb-6'>
