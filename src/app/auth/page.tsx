@@ -11,7 +11,7 @@ import Link from "next/link";
 
 const AuthRoute = () => {
   return (
-    <div className='flex flex-col justify-center items-center h-screen '>
+    <div className='flex flex-col justify-center !my-35 items-center '>
       <div className='bg-white px-12 py-14 rounded-lg shadow'>
         <h1 className='text-3xl !font-bold text-black text-center'>Sign up</h1>
         <p className='text-center'>

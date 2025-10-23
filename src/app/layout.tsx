@@ -4,6 +4,7 @@ import 'antd/dist/reset.css';
 import "./globals.css";
 
 import Navbar from "@/Component/Navbar/Navbar";
+import RootLayoutWrapper from "@/Component/Layout/RootLayoutWrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,8 +30,9 @@ export default function RootLayout({
     <html lang='en'>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <Navbar />
-        <div className='container mx-auto px-4 sm:px-6 lg:px-8'>{children}</div>
+        <RootLayoutWrapper>{children}</RootLayoutWrapper>
+    
+       
       </body>
     </html>
   );

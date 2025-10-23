@@ -22,7 +22,7 @@ const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (errorInfo) => {
 
 const AdminRegister = () => {
   return (
-    <div className='flex flex-col justify-center items-center min-h-screen px-4 sm:px-6 lg:px-8'>
+    <div className='flex flex-col justify-center items-center  px-4 sm:px-6 lg:px-8'>
       <div className='bg-white px-6 py-8 sm:px-12 sm:py-14 rounded-lg shadow w-full max-w-md'>
         <h1 className='text-2xl sm:text-3xl text-center !font-bold'>
           Create an <br /> Employer Account
