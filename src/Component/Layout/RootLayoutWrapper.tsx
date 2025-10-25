@@ -12,9 +12,8 @@ export default function RootLayoutWrapper({
     const pathname = usePathname();
 
     const hideNavbarRoutes = [
-        "/auth",
-        "/auth/login",
-        "/auth/register",
+
+      
         "/auth/login/employer/dashboard",
         "/auth/login/admin/dashboard",
         "/auth/login/job-seeker/dashboard",
