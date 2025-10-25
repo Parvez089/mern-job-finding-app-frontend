@@ -2,9 +2,17 @@
 
 import React, { useState } from 'react';
 import {
+  AccountBookFilled,
+  AccountBookOutlined,
+  ContactsOutlined,
+  LogoutOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
+  RadiusSettingOutlined,
+  ShoppingCartOutlined,
+  UnorderedListOutlined,
   UploadOutlined,
+  UsergroupAddOutlined,
   UserOutlined,
   VideoCameraOutlined,
 } from '@ant-design/icons';
@@ -12,7 +20,7 @@ import { Button, Layout, Menu, theme } from 'antd';
 
 const { Header, Sider, Content } = Layout;
 
-const AdminDashboard = () => {
+const EmployerDashboard = () => {
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -20,8 +28,8 @@ const AdminDashboard = () => {
 
   return <div>
       <Layout className='min-h-screen'>
-      <Sider className='min-h-screen' trigger={null} collapsible collapsed={!collapsed}>
-        <div className="demo-logo-vertical" />
+      <Sider className='min-h-screen ' trigger={null} collapsible collapsed={!collapsed}>
+        <div className="demo-logo-vertical mt-20" />
         <Menu
           theme="dark"
           mode="inline"
@@ -29,18 +37,44 @@ const AdminDashboard = () => {
           items={[
             {
               key: '1',
-              icon: <UserOutlined />,
-              label: 'nav 1',
+              icon: <UnorderedListOutlined />,
+              label: 'Manage Listing',
             },
             {
               key: '2',
               icon: <VideoCameraOutlined />,
-              label: 'nav 2',
+              label: 'Post a job',
             },
             {
               key: '3',
-              icon: <UploadOutlined />,
-              label: 'nav 3',
+              icon: <UsergroupAddOutlined />,
+              label: 'Company Profile',
+            },
+            {
+              key: '4',
+              icon: <RadiusSettingOutlined />,
+              label: 'Account Settings',
+            },
+            {
+              key: '5',
+              icon: <AccountBookOutlined />,
+              label: 'Subscriptions/Billing',
+            },
+            {
+              key: '6',
+              icon: <ShoppingCartOutlined />,
+              label: 'Job orbit Merketplace',
+            },
+            {
+              key: '7',
+              icon: <ContactsOutlined />,
+              label: 'Contact Support',
+            },
+            {
+              key: '8',
+              icon: <LogoutOutlined />,
+              label: 'Sign Out',
+              
             },
           ]}
         />
@@ -74,4 +108,4 @@ const AdminDashboard = () => {
   </div>;
 };
 
-export default AdminDashboard ;
+export default EmployerDashboard ;

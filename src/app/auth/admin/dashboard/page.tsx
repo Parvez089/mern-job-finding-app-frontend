@@ -12,7 +12,7 @@ import { Button, Layout, Menu, theme } from 'antd';
 
 const { Header, Sider, Content } = Layout;
 
-const EmployerDashboard = () => {
+const AdminDashboard = () => {
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -66,12 +66,15 @@ const EmployerDashboard = () => {
             background: colorBgContainer,
             borderRadius: borderRadiusLG,
           }}
+
+          className='text-center text-4xl font-semibold'
+
         >
-          Content
+          Admin Dashboard
         </Content>
       </Layout>
     </Layout>
   </div>;
 };
 
-export default EmployerDashboard ;
+export default AdminDashboard ;
