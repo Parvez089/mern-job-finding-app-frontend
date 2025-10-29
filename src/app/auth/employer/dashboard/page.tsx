@@ -1,111 +1,13 @@
 "use client";
 
-import React, { useState } from 'react';
-import {
-  AccountBookFilled,
-  AccountBookOutlined,
-  ContactsOutlined,
-  LogoutOutlined,
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-  RadiusSettingOutlined,
-  ShoppingCartOutlined,
-  UnorderedListOutlined,
-  UploadOutlined,
-  UsergroupAddOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
-} from '@ant-design/icons';
-import { Button, Layout, Menu, theme } from 'antd';
 
-const { Header, Sider, Content } = Layout;
 
 const EmployerDashboard = () => {
-  const [collapsed, setCollapsed] = useState(false);
-  const {
-    token: { colorBgContainer, borderRadiusLG },
-  } = theme.useToken();
-
-  return <div>
-      <Layout className='min-h-screen'>
-      <Sider className='min-h-screen ' trigger={null} collapsible collapsed={!collapsed}>
-        <div className="demo-logo-vertical mt-20" />
-        <Menu
-          theme="dark"
-          mode="inline"
-          defaultSelectedKeys={['1']}
-          items={[
-            {
-              key: '1',
-              icon: <UnorderedListOutlined />,
-              label: 'Manage Listing',
-            },
-            {
-              key: '2',
-              icon: <VideoCameraOutlined />,
-              label: 'Post a job',
-            },
-            {
-              key: '3',
-              icon: <UsergroupAddOutlined />,
-              label: 'Company Profile',
-            },
-            {
-              key: '4',
-              icon: <RadiusSettingOutlined />,
-              label: 'Account Settings',
-            },
-            {
-              key: '5',
-              icon: <AccountBookOutlined />,
-              label: 'Subscriptions/Billing',
-            },
-            {
-              key: '6',
-              icon: <ShoppingCartOutlined />,
-              label: 'Job orbit Merketplace',
-            },
-            {
-              key: '7',
-              icon: <ContactsOutlined />,
-              label: 'Contact Support',
-            },
-            {
-              key: '8',
-              icon: <LogoutOutlined />,
-              label: 'Sign Out',
-              
-            },
-          ]}
-        />
-      </Sider>
-      <Layout>
-        <Header style={{ padding: 0, background: colorBgContainer }}>
-          <Button
-            type="text"
-            icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-            onClick={() => setCollapsed(!collapsed)}
-            style={{
-              fontSize: '16px',
-              width: 64,
-              height: 64,
-            }}
-          />
-        </Header>
-        <Content
-          style={{
-            margin: '24px 16px',
-            padding: 24,
-            minHeight: 280,
-            background: colorBgContainer,
-            borderRadius: borderRadiusLG,
-          }}
-        >
-          Content
-        </Content>
-      </Layout>
-    </Layout>
-  </div>;
+  return (
+    <div>
+      <h1>Welcome to dashboard</h1>
+    </div>
+  );
 };
 
 export default EmployerDashboard ;

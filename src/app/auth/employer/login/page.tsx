@@ -31,10 +31,28 @@ const EmployerLogin = () => {
         ...values,
         role: "employer",
       });
-      message.success(res.data.message);
-      window.location.href = "/";
+
+      const token = res.data.token;
+      console.log("Login Token: ", token);
+      const user = res.data.user;
+
+      if(token && user){
+        localStorage.setItem("token", token)
+         localStorage.setItem("user", JSON.stringify(user));
+        message.success(res.data.message);
+
+        setTimeout(()=>{
+ window.location.href = "/";
+        }, 500)
+     
+      } else{
+         message.error("Invalid login response from server!");
+      }
+
+
+
     } catch (error: any) {
-      message.error(error.response?.data?.message || "Registration failed!");
+      message.error(error.response?.data?.message || "Login failed!");
     }
   };
   return (
