@@ -2,32 +2,31 @@
 
 import { usePathname } from "next/navigation";
 import Navbar from "../Navbar/Navbar";
-
+import Footer from "../Footer/Footer";
 
 export default function RootLayoutWrapper({
-    children,
-}:{
-    children: React.ReactNode;
+  children,
+}: {
+  children: React.ReactNode;
 }) {
-    const pathname = usePathname();
+  const pathname = usePathname();
 
-    const hideNavbarRoutes = [
+  const hideNavbarRoutes = [
+    "/auth/login/employer/dashboard",
+    "/auth/login/admin/dashboard",
+    "/auth/login/job-seeker/dashboard",
+  ];
 
-      
-        "/auth/login/employer/dashboard",
-        "/auth/login/admin/dashboard",
-        "/auth/login/job-seeker/dashboard",
-    ];
+  const shouldHideNavbar = hideNavbarRoutes.some((route) =>
+    pathname.startsWith(route)
+  );
 
-    const shouldHideNavbar = hideNavbarRoutes.some((route)=>
-    pathname.startsWith(route));
+  return (
+    <div>
+      {!shouldHideNavbar && <Navbar />}
+      {children}
 
-    return(
-        <div>
-            {
-                !shouldHideNavbar && <Navbar/>
-            }
-            {children}
-        </div>
-    )
+      <Footer />
+    </div>
+  );
 }
