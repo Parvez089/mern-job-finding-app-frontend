@@ -7,6 +7,9 @@
   --color: #007f61;
   /* --bg-color: #164081;  */
    --bg-color: #007f61; 
+   /* --primary-light: #9afcdb; */
+/* --primary-light: #CCFFF0; */
+--primary-light: #b0fce5;
 }
 
 @theme inline {

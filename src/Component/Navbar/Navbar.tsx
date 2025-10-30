@@ -23,6 +23,20 @@ const Navbar = () => {
 
   const router = useRouter();
 
+  const menuItems = [
+    { key: "home", label: <Link href='/'>Home</Link> },
+    { key: "about", label: <Link href='/about'>About</Link> },
+    {
+      key: "services",
+      label: <Link href='/services'>Services</Link>,
+    },
+    {
+      key: "talent",
+      label: <Link href='/talent'>Find Talent</Link>,
+    },
+    { key: "contact", label: <Link href='/contact'>Contact</Link> },
+  ];
+
   // ✅ Handle Responsive Menu + Decode Token
   useEffect(() => {
     setMounted(true);
@@ -82,30 +96,18 @@ const Navbar = () => {
 
   return (
     <header className='bg-white border-b border-gray-200 flex justify-between items-center px-4 sm:px-6 lg:px-8 py-3 w-full mb-8'>
-      <div className='container mx-auto flex justify-between items-center py-3'>
+      <div className='container mx-auto flex justify-between items-center px-4 sm:px-6 lg:px-8 py-3'>
         <div className='text-2xl font-semibold text-[var(--primary-text)] tracking-tight'>
           <Link href='/'>JobOrbit</Link>
         </div>
 
         {!isMobile && (
-          <div className='flex items-center gap-2 sm:gap-5'>
+          <div className='hidden md:flex items-center gap-2 sm:gap-5'>
             <Menu
               theme='light'
               mode='horizontal'
-              items={[
-                { key: "home", label: <Link href='/'>Home</Link> },
-                { key: "about", label: <Link href='/about'>About</Link> },
-                {
-                  key: "services",
-                  label: <Link href='/services'>Services</Link>,
-                },
-                {
-                  key: "talent",
-                  label: <Link href='/talent'>Find Talent</Link>,
-                },
-                { key: "contact", label: <Link href='/contact'>Contact</Link> },
-              ]}
-              className='bg-white !border-none text-sm sm:text-base'
+              items={menuItems}
+              className=' !border-none '
             />
 
             <Input.Search
@@ -150,20 +152,7 @@ const Navbar = () => {
           onClose={() => setVisible(false)}
           open={visible}
           closable={false}>
-          <Menu
-            mode='vertical'
-            items={[
-              { key: "home", label: <Link href='/'>Home</Link> },
-              { key: "about", label: <Link href='/about'>About</Link> },
-              {
-                key: "services",
-                label: <Link href='/services'>Services</Link>,
-              },
-              { key: "talent", label: <Link href='/talent'>Find Talent</Link> },
-              { key: "contact", label: <Link href='/contact'>Contact</Link> },
-            ]}
-            className='border-none'
-          />
+          <Menu mode='vertical' items={menuItems} className='border-none' />
           {userData ? (
             <>
               <Button className='w-full mt-4' onClick={handleDashboardRedirect}>
