@@ -2,9 +2,7 @@
 
 "use client";
 
-import JobDesc from "@/Component/Job/job-desc";
-import JobDetails from "@/Component/Job/job-details";
-import JobRequirement from "@/Component/Job/job-reqirement";
+
 import axios from "axios";
 
 import { useParams } from "next/navigation";
@@ -26,7 +24,7 @@ interface Job {
   qualifications: string;
   createdAt: string;
 }
-const ApplyJob = () => {
+const JobRequirement = () => {
   const { id } = useParams();
 
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -47,47 +45,28 @@ const ApplyJob = () => {
     };
 
     fetchJob();
-  }, [id, API_BASE_URL]);
+  }, [id,API_BASE_URL]);
+
 
   if (loading) return <p>Loading...</p>;
   if (!job) return <p>Job not found</p>;
 
   return (
-    <div>
-      <div className='flex md:hidden justify-center items-center mx-4'>
-        {/* Mobile  */}
-        <div className='w-full flex flex-col gap-4'>
-          <div>
-            <JobDesc />
-          </div>
-          <div className='flex flex-col gap-8 '>
-            <div>
-              <JobRequirement />
-            </div>
-            <div>
-              <JobDetails />
+    <div >
+  
+        <div className='grid grid-cols-12 gap-2 mt-8'>
+          <div className='grid col-start-1 col-end-8 w-full'>
+            <div className="flex flex-col gap-4 ">
+              <h1>{job.description}</h1>
+              <h1>{job.responsibilities}</h1>
+              <h1>{job.qualifications}</h1>
+              <h1>{job.details}</h1>
             </div>
           </div>
-        </div>
-      </div>
 
-      {/* desktop */}
-      <div className=' hidden md:flex justify-center sm:ml-4'>
-        <div className='w-full max-w-5xl'>
-          <JobDesc />
-          <div className='grid grid-cols-12 gap-2 mt-8'>
-            <div className='grid col-start-1 col-end-8 w-full'>
-              <JobRequirement />
-            </div>
-
-            <div className='w-full grid col-start-8 col-end-12 '>
-              <JobDetails />
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );
 };
 
-export default ApplyJob;
+export default JobRequirement;

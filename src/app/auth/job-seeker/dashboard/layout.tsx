@@ -3,24 +3,89 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import {
-  AccountBookFilled,
+
   AccountBookOutlined,
-  ContactsOutlined,
+  BellFilled,
+  BellOutlined,
+  CloudUploadOutlined,
+  FileSearchOutlined,
   LogoutOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
-  RadiusSettingOutlined,
-  ShoppingCartOutlined,
-  UnorderedListOutlined,
-  UploadOutlined,
-  UsergroupAddOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
+  SaveOutlined,
+  ScheduleOutlined,
+
+  SettingFilled
 } from "@ant-design/icons";
 import { Button, Layout, Menu, theme } from "antd";
 import Link from "next/link";
 const { Header, Sider, Content } = Layout;
-const EmployerDashboard = ({ children }: { children: React.ReactNode }) => {
+
+const menuItems = [
+              {
+                key: "1",
+                icon: <FileSearchOutlined />,
+                label: (
+                  <Link href='/'>
+                    {" "}
+                    Find Jobs{" "}
+                  </Link>
+                ),
+              },
+              {
+                key: "2",
+                icon: <SaveOutlined />,
+                label: (
+                  <Link href='/auth/employer/dashboard/job-post'>
+                    {" "}
+                    Saved Jobs{" "}
+                  </Link>
+                ),
+              },
+              {
+                key: "3",
+                icon: <ScheduleOutlined />,
+                label: (
+                  <Link href='/auth/employer/dashboard/company-profile'>
+                    {" "}
+                   Applied Jobs{" "}
+                  </Link>
+                ),
+              },
+              {
+                key: "4",
+                icon: <CloudUploadOutlined />,
+                label: (
+                  <Link href='/auth/employer/dashboard/account-settings'>
+                    {" "}
+                    Resume Upload{" "}
+                  </Link>
+                ),
+              },
+              {
+                key: "5",
+                icon: <BellOutlined />,
+                label: (
+                  <Link href='/auth/employer/dashboard/subscriptions-billing'>
+                    {" "}
+                    Notifications{" "}
+                  </Link>
+                ),
+              },
+              {
+                key: "6",
+                icon: <SettingFilled />,
+                label: (
+                  <Link href='/auth/employer/dashboard/marketplace'>
+                    {" "}
+                    Settings{" "}
+                  </Link>
+                ),
+              },
+              
+              { key: "8", icon: <LogoutOutlined />, label: "Sign Out" },
+            ]
+const JobSeekerDashboard = ({ children }: { children: React.ReactNode }) => {
   const [collapsed, setCollapsed] = useState(false);
 const [isMobile, setIsMobile] = useState(false);
 
@@ -55,79 +120,7 @@ const [isMobile, setIsMobile] = useState(false);
             theme='dark'
             mode='inline'
             defaultSelectedKeys={["1"]}
-            items={[
-              {
-                key: "1",
-                icon: <UnorderedListOutlined />,
-                label: (
-                  <Link href='/auth/employer/dashboard/manage-listing'>
-                    {" "}
-                    Manage Listing{" "}
-                  </Link>
-                ),
-              },
-              {
-                key: "2",
-                icon: <VideoCameraOutlined />,
-                label: (
-                  <Link href='/auth/employer/dashboard/job-post'>
-                    {" "}
-                    Post a job{" "}
-                  </Link>
-                ),
-              },
-              {
-                key: "3",
-                icon: <UsergroupAddOutlined />,
-                label: (
-                  <Link href='/auth/employer/dashboard/company-profile'>
-                    {" "}
-                    Company Profile{" "}
-                  </Link>
-                ),
-              },
-              {
-                key: "4",
-                icon: <RadiusSettingOutlined />,
-                label: (
-                  <Link href='/auth/employer/dashboard/account-settings'>
-                    {" "}
-                    Account Settings{" "}
-                  </Link>
-                ),
-              },
-              {
-                key: "5",
-                icon: <AccountBookOutlined />,
-                label: (
-                  <Link href='/auth/employer/dashboard/subscriptions-billing'>
-                    {" "}
-                    Subscriptions/Billing{" "}
-                  </Link>
-                ),
-              },
-              {
-                key: "6",
-                icon: <ShoppingCartOutlined />,
-                label: (
-                  <Link href='/auth/employer/dashboard/marketplace'>
-                    {" "}
-                    Job orbit Marketplace{" "}
-                  </Link>
-                ),
-              },
-              {
-                key: "7",
-                icon: <ContactsOutlined />,
-                label: (
-                  <Link href='/auth/employer/dashboard/contact'>
-                    {" "}
-                    Contact Support{" "}
-                  </Link>
-                ),
-              },
-              { key: "8", icon: <LogoutOutlined />, label: "Sign Out" },
-            ]}
+            items={menuItems}
           />{" "}
         </Sider>{" "}
         <Layout
@@ -152,4 +145,4 @@ const [isMobile, setIsMobile] = useState(false);
     </div>
   );
 };
-export default EmployerDashboard;
+export default JobSeekerDashboard ;

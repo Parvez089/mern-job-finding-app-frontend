@@ -40,7 +40,7 @@ const AuthRoute = () => {
           Continue
         </Button>
         <p className='!mt-2'>
-          Already have an account? <Link href={""}>Log in.</Link>{" "}
+          Already have an account? <Link href={"/auth/job-seeker/login"} className="text-blue-500 !font-semibold">Log in.</Link>{" "}
         </p>
       </div>
     </div>
