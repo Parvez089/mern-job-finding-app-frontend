@@ -79,7 +79,7 @@ const Navbar = () => {
 
     const { role } = userData;
 
-    if (role === "jobseeker") router.push("/auth/jobseeker/dashboard");
+    if (role === "jobseeker") router.push("/auth/job-seeker/dashboard");
     else if (role === "employer") router.push("/auth/employer/dashboard");
     else if (role === "admin") router.push("/auth/admin/dashboard");
     else router.push("/auth");
@@ -96,24 +96,25 @@ const Navbar = () => {
 
   return (
     <header className='bg-white border-b border-gray-200 flex justify-between items-center px-4 sm:px-6 lg:px-8 py-3 w-full mb-8'>
-      <div className='container mx-auto flex justify-between items-center px-4 sm:px-6 lg:px-8 py-3'>
+      <div className='container mx-auto flex justify-between items-center px-4 sm:px-1 lg:px-8 py-3 sm:mx-4'>
         <div className='text-2xl font-semibold text-[var(--primary-text)] tracking-tight'>
           <Link href='/'>JobOrbit</Link>
         </div>
 
         {!isMobile && (
-          <div className='hidden md:flex items-center gap-2 sm:gap-5'>
+          <div className='hidden md:flex items-center !border-b-none !shadow-none gap-2 sm:gap-5'>
             <Menu
               theme='light'
               mode='horizontal'
               items={menuItems}
-              className=' !border-none '
+              className=' !border-b-none '
             />
 
             <Input.Search
               onSearch={(value) => console.log(value)}
               placeholder='Find Jobs'
               style={{ width: 200 }}
+              className="!border-gray-300"
             />
 
             {userData ? (
@@ -131,7 +132,7 @@ const Navbar = () => {
               </div>
             ) : (
               <Button
-                className='!border-dashed !border-[var(--bg-color)] text-[var(--primary-text)] !hover:text-[var(--primary-text)] text-sm sm:text-base shadow'
+                className='!border-dashed !border-[var(--bg-color)]  text-[var(--primary-text)] !hover:text-[var(--primary-text)] text-sm sm:text-base shadow'
                 onClick={() => router.push("/auth")}>
                 Get Started
               </Button>
@@ -154,16 +155,16 @@ const Navbar = () => {
           closable={false}>
           <Menu mode='vertical' items={menuItems} className='border-none' />
           {userData ? (
-            <>
-              <Button className='w-full mt-4' onClick={handleDashboardRedirect}>
-                {userData.name} Dashboard
+            <div className="flex flex-col gap-2">
+              <Button className='w-full mt-4 !border-gray-300 !text-black' onClick={handleDashboardRedirect}>
+                {userData.name} 
               </Button>
               <Button
-                className='w-full mt-2 !bg-red-500 !text-white'
+                className='w-full mt-2 !bg-red-500 !border-none !text-white'
                 onClick={handleLogout}>
                 Logout
               </Button>
-            </>
+            </div>
           ) : (
             <Button
               className='w-full mt-4'

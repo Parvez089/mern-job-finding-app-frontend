@@ -30,7 +30,6 @@ const DisplayJob = () => {
     },[API_BASE_URL])
 
      const handleClick = (id: string) => {
-    // Define the behavior on button click
     router.push(`/job/${id}`)
   };
   return (

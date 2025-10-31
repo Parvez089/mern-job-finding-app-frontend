@@ -4,11 +4,16 @@ import React, { useState } from "react";
 import type { FormProps } from "antd";
 import { Button, Checkbox, Form, Input, message } from "antd";
 import axios from "axios";
+import Link from "next/link";
 type FieldType = {
   password?: string;
   email?: string;
   remember?: string;
 };
+
+interface DecodedToken{
+
+}
 
 const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
   console.log("Success:", values);
@@ -26,8 +31,26 @@ const JobSeekerLogin = () => {
         ...values,
         role: "jobseeker", 
       });
-      message.success(res.data.message);
-      window.location.href = "/";
+
+       const token = res.data.token;
+      console.log("Login Token: ", token);
+      const user = res.data.user;
+
+      
+      if(token && user){
+        localStorage.setItem("token", token)
+         localStorage.setItem("user", JSON.stringify(user));
+        message.success(res.data.message);
+
+        setTimeout(()=>{
+ window.location.href = "/";
+        }, 500)
+     
+      } else{
+         message.error("Invalid login response from server!");
+      }
+
+     
     } catch (error: any) {
       message.error(error.response?.data?.message || "Login failed!");
     }
@@ -84,7 +107,7 @@ const JobSeekerLogin = () => {
         </Form>
 
         <p className='text-center text-gray-600 mb-6'>
-          Don't have an account? Create one here
+          Don't have an account? <Link href="auth/job-seeker/register">Create one here</Link> 
         </p>
       </div>
     </div>

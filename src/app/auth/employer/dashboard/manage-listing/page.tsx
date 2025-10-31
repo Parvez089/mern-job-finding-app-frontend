@@ -8,14 +8,7 @@ import Link from "next/link";
 
 const ManageListing = () => {
 
-  // const [checked1, setChecked1] = useState(false);
-  // const [checked2, setChecked2] = useState(false);
-  // const [checked3, setChecked3] = useState(false);
 
-
-  // const handleChange1 =(e: any) => setChecked1(e.target.checked)
-  // const handleChange2 =(e: any) => setChecked2(e.target.checked)
-  // const handleChange3 =(e: any) => setChecked3(e.target.checked)
 
   const [selected, setSelected] = useState<"all" | "active" | "inactive" | null>(null);
 

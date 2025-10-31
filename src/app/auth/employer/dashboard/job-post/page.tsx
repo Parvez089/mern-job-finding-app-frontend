@@ -160,6 +160,24 @@ const JobPost = () => {
             rules={[{ required: true }]}>
             <Input.TextArea rows={12} />
           </Form.Item>
+          <Form.Item
+            name='jobSummary'
+            label='Job Summary'
+            rules={[{ required: true }]}>
+            <Input.TextArea rows={12} />
+          </Form.Item>
+          <Form.Item
+            name='responsibilitie'
+            label='Responsibilitie'
+            rules={[{ required: true }]}>
+            <Input.TextArea rows={12} />
+          </Form.Item>
+          <Form.Item
+            name='details'
+            label='Details'
+            rules={[{ required: true }]}>
+            <Input.TextArea rows={12} />
+          </Form.Item>
           <Form.Item>
             <Space className='flex gap-4 justify-center items-center'>
               <Button htmlType='submit' className='w-full'>

@@ -25,8 +25,9 @@ export default function RootLayoutWrapper({
     <div>
       {!shouldHideNavbar && <Navbar />}
       {children}
-
-      <Footer />
+      <div className='!bottom-0'>
+        <Footer />
+      </div>
     </div>
   );
 }
