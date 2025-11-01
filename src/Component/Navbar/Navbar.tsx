@@ -96,28 +96,24 @@ const Navbar = () => {
 
   return (
     <header className='bg-white border-b border-gray-200 flex justify-between items-center px-4 sm:px-6 lg:px-8 py-3 w-full mb-8'>
-      <div className='container mx-auto flex justify-between items-center px-4 sm:px-1 lg:px-8 py-3 sm:mx-4'>
+      <div className='container mx-auto flex justify-between items-center px-4 sm:px-1 lg:px-8 py-3 '>
         <div className='text-2xl font-semibold text-[var(--primary-text)] tracking-tight'>
           <Link href='/'>JobOrbit</Link>
         </div>
-
-        {!isMobile && (
           <div className='hidden md:flex items-center !border-b-none !shadow-none gap-2 sm:gap-5'>
-            <Menu
+ <Menu
               theme='light'
               mode='horizontal'
               items={menuItems}
-              className=' !border-b-none '
+              className=' !border-b-none flex justify-center w-full'
             />
+          </div>
+       
+          <div >
+           
 
-            <Input.Search
-              onSearch={(value) => console.log(value)}
-              placeholder='Find Jobs'
-              style={{ width: 200 }}
-              className="!border-gray-300"
-            />
-
-            {userData ? (
+         <div>
+{userData ? (
               <div className='flex items-center gap-3'>
                 <Button
                   className='!border-dashed !border-[var(--bg-color)] text-[var(--primary-text)] text-sm sm:text-base shadow'
@@ -137,8 +133,10 @@ const Navbar = () => {
                 Get Started
               </Button>
             )}
+         </div>
+
+            
           </div>
-        )}
 
         {isMobile && (
           <Button

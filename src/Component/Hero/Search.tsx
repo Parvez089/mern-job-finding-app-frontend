@@ -18,13 +18,13 @@ const onSearch: SearchProps["onSearch"] = (value, _e, info) =>
 const SearchPage = () => {
   return  <div>
       <div className='md:flex flex-row !items-center  hidden !justify-center !content-center '>
-        <div className='flex   p-2 !border-2 rounded-l-lg  bg-white'>
+        <div className='flex   p-2 !rounded-l-lg  bg-white'>
           <SearchOutlined className='!outline-none !shadow-none text-2xl ' />
           <Input className='!border-none !outline-none !shadow-none md:!w-72' placeholder="Job title, keywords, or company"/>
         </div>
-        <div className='flex p-2 !border-y-2 !border-r-2 rounded-  bg-white  rounded-r-lg'>
+        <div className='flex p-2   bg-white  rounded-r-lg'>
           <FontAwesomeIcon width={2} height={2} icon={faLocationDot} className='text-2xl' />
-          <Input
+          <Input variant={"borderless"} 
             className='!border-none !outline-none !shadow-none !w-72'
             placeholder="City, state, zip code, or 'remote'"
           />
