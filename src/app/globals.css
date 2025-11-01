@@ -4,14 +4,18 @@
   --background: #ffffff;
   --foreground: #171717;
   /* --color: #164081; */
-  --color: #007f61;
+  /* --color: #007f61; */
+  --color: #016BFD;
   /* --bg-color: #164081;  */
-   --bg-color: #007f61; 
+   /* --bg-color: #007f61;  */
+   --bg-color: #016BFD; 
    /* --primary-light: #9afcdb; */
 /* --primary-light: #CCFFF0; */
 --primary-light: #b0fce5;
 }
-
+.ant-menu-horizontal {
+  justify-content: center !important;
+}
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
