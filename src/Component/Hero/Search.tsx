@@ -15,45 +15,64 @@ const { Search } = Input;
 
 const onSearch: SearchProps["onSearch"] = (value, _e, info) =>
   console.log(info?.source, value);
+
 const SearchPage = () => {
-  return  <div>
-      <div className='md:flex flex-row !items-center  hidden !justify-center !content-center '>
-        <div className='flex   p-2 !rounded-l-lg  bg-white'>
-          <SearchOutlined className='!outline-none !shadow-none text-2xl ' />
-          <Input className='!border-none !outline-none !shadow-none md:!w-72' placeholder="Job title, keywords, or company"/>
-        </div>
-        <div className='flex p-2   bg-white  rounded-r-lg'>
-          <FontAwesomeIcon width={2} height={2} icon={faLocationDot} className='text-2xl' />
-          <Input variant={"borderless"} 
-            className='!border-none !outline-none !shadow-none !w-72'
-            placeholder="City, state, zip code, or 'remote'"
-          />
-          <Button className='!bg-[var(--bg-color)] !text-white !font-semibold !h-7 '>
-            Search
-          </Button>
-        </div>
-      </div>
-      <div className='grid grid-cols-1 items-center md:hidden justify-center mt-24 w-full'>
-        <div className='flex mx-5 p-2 border-2 bg-white max-w-full rounded-t-lg'>
-          <SearchOutlined className='!border-none !outline-none !shadow-none text-2xl' />
-          <Input className='!border-none !outline-none !shadow-none  w-full' />
-        </div>
-        <div className='flex mx-5  p-2 !border-x-2 !border-b-2 bg-white rounded-b-lg '>
-          <FontAwesomeIcon icon={faLocationDot} className='text-2xl' />
+  return (
+    <div className="w-full flex justify-center mt-7">
+      {/* Desktop View */}
+      <div className="hidden md:flex items-center justify-center w-full max-w-7xl">
+        {/* Job title input */}
+        <div className="flex flex-1 p-3 bg-white rounded-tl-lg">
+          <SearchOutlined className="text-2xl text-gray-600" />
           <Input
-            className='!border-none !outline-none !shadow-none !w-96'
+            className="!border-none !outline-none !shadow-none w-full"
+            placeholder="Job title, keywords, or company"
+          />
+        </div>
+
+        {/* Location input + Search button */}
+        <div className="flex flex-1 p-3 bg-white rounded-tr-lg">
+          <FontAwesomeIcon
+            icon={faLocationDot}
+            className="text-2xl text-gray-600"
+          />
+          <Input
+            variant="borderless"
+            className="!border-none !outline-none !shadow-none w-full"
             placeholder="City, state, zip code, or 'remote'"
           />
-        
-        </div>
-         <div className=" mt-2 mx-5">
-            <Button className='!bg-[var(--bg-color)]  !text-white !font-semibold !h-12 w-full !text-xl'>
+          <Button className="!bg-[var(--bg-color)] !text-white !font-semibold !h-7 !px-6 ml-2">
             Search
           </Button>
         </div>
       </div>
-     
-    </div>;
+
+      {/* Mobile View */}
+      <div className="grid grid-cols-1 items-center md:hidden justify-center mt-6 w-full px-5">
+        <div className="flex p-2 bg-white rounded-t-lg">
+          <SearchOutlined className="text-2xl text-gray-600" />
+          <Input
+            className="!border-none !outline-none !shadow-none w-full"
+            placeholder="Job title, keywords, or company"
+          />
+        </div>
+
+        <div className="flex p-2 bg-white rounded-b-lg mt-[1px]">
+          <FontAwesomeIcon icon={faLocationDot} className="text-2xl text-gray-600" />
+          <Input
+            className="!border-none !outline-none !shadow-none w-full"
+            placeholder="City, state, zip code, or 'remote'"
+          />
+        </div>
+
+        <div className="mt-3">
+          <Button className="!bg-[var(--bg-color)] !text-white !font-semibold !h-12 w-full !text-lg">
+            Search
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default SearchPage;

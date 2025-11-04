@@ -22,7 +22,7 @@ const Footer = () => {
 
   
     </div>
-    <div className="bg-[var(--primary-text)]">
+    <div className="bg-[var(--bg-primary)]">
     <div className="flex justify-between mx-24 py-8 text-white">
       <div>
         <h1><CopyrightCircleOutlined className="font-bold"/> 2025 Job Orbit </h1>

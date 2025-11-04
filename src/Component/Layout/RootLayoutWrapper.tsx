@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import Navbar from "../Navbar/Navbar";
 import Footer from "../Footer/Footer";
+import ConditionalHero from "../Hero/ConditionalHero";
 
 export default function RootLayoutWrapper({
   children,
@@ -11,23 +12,19 @@ export default function RootLayoutWrapper({
 }) {
   const pathname = usePathname();
 
-  const hideNavbarRoutes = [
-    "/auth/login/employer/dashboard",
-    "/auth/login/admin/dashboard",
-    "/auth/login/job-seeker/dashboard",
-  ];
+  const hideNavbarRoutes = ["/"];
 
   const shouldHideNavbar = hideNavbarRoutes.some((route) =>
     pathname.startsWith(route)
   );
 
   return (
-    <div>
+    <div className='flex flex-col min-h-screen'>
       {!shouldHideNavbar && <Navbar />}
-      {children}
-      <div className='!bottom-0'>
-        <Footer />
-      </div>
+      <ConditionalHero/>
+      <main className='flex-grow'>{children}</main>
+
+      <Footer />
     </div>
   );
 }

@@ -34,7 +34,7 @@ const Navbar = () => {
       key: "talent",
       label: <Link href='/talent'>Find Talent</Link>,
     },
-    { key: "contact", label: <Link href='/contact'>Contact</Link> },
+    
   ];
 
   // ✅ Handle Responsive Menu + Decode Token
@@ -95,48 +95,43 @@ const Navbar = () => {
   if (!mounted) return null;
 
   return (
-    <header className='bg-white border-b border-gray-200 flex justify-between items-center px-4 sm:px-6 lg:px-8 py-3 w-full mb-8'>
-      <div className='container mx-auto flex justify-between items-center px-4 sm:px-1 lg:px-8 py-3 '>
-        <div className='text-2xl font-semibold text-[var(--primary-text)] tracking-tight'>
+    <header className='  flex justify-between items-center px-4 sm:px-6 lg:px-8 py-3 w-full mb-8'>
+      <div className='w-full flex  justify-between items-center px-4 sm:px-1 lg:px-8 py-3 '>
+        <div className='text-2xl font-semibold text-[var(--text-color)] tracking-tight'>
           <Link href='/'>JobOrbit</Link>
         </div>
-          <div className='hidden md:flex items-center !border-b-none !shadow-none gap-2 sm:gap-5'>
- <Menu
-              theme='light'
-              mode='horizontal'
-              items={menuItems}
-              className=' !border-b-none flex justify-center w-full'
-            />
-          </div>
-       
-          <div >
-           
+        <div className='hidden md:flex items-center !border-b-none !shadow-none  gap-2 sm:gap-5 custom-menu'>
+          <Menu
+            mode='horizontal'
+            items={menuItems}
+            className=' !border-none !bg-transparent  flex justify-center w-full !text-black'
+          />
+        </div>
 
-         <div>
-{userData ? (
+        {!isMobile && (
+          <div>
+            {userData ? (
               <div className='flex items-center gap-3'>
                 <Button
-                  className='!border-dashed !border-[var(--bg-color)] text-[var(--primary-text)] text-sm sm:text-base shadow'
+                  className='!border-dashed !bg-transparent !border-[var(--bg-color)] text-[var(--primary-text)] text-sm sm:text-base shadow'
                   onClick={handleDashboardRedirect}>
                   {userData.name}
                 </Button>
                 <Button
-                  className='!bg-red-500 !text-white !hover:bg-red-600'
+                  className='!bg-red-500 !hover:bg-red-600 !text-[var(--text-color)]'
                   onClick={handleLogout}>
                   Logout
                 </Button>
               </div>
             ) : (
               <Button
-                className='!border-dashed !border-[var(--bg-color)]  text-[var(--primary-text)] !hover:text-[var(--primary-text)] text-sm sm:text-base shadow'
+                className='!border-dashed !border-[var(--text-color)] !bg-transparent  !text-[var(--text-color)] !font-semibold  text-sm sm:text-base shadow'
                 onClick={() => router.push("/auth")}>
                 Get Started
               </Button>
             )}
-         </div>
-
-            
           </div>
+        )}
 
         {isMobile && (
           <Button
@@ -153,9 +148,11 @@ const Navbar = () => {
           closable={false}>
           <Menu mode='vertical' items={menuItems} className='border-none' />
           {userData ? (
-            <div className="flex flex-col gap-2">
-              <Button className='w-full mt-4 !border-gray-300 !text-black' onClick={handleDashboardRedirect}>
-                {userData.name} 
+            <div className='flex flex-col gap-2'>
+              <Button
+                className='w-full mt-4 !border-gray-300 !text-black'
+                onClick={handleDashboardRedirect}>
+                {userData.name}
               </Button>
               <Button
                 className='w-full mt-2 !bg-red-500 !border-none !text-white'

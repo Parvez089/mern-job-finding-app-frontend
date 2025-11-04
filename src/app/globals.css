@@ -11,7 +11,9 @@
    --bg-color: #016BFD; 
    /* --primary-light: #9afcdb; */
 /* --primary-light: #CCFFF0; */
---primary-light: #b0fce5;
+ --text-color: #ffffff;
+  --bg-primary : #166286;
+--primary-light: #0a4936;
 }
 .ant-menu-horizontal {
   justify-content: center !important;
@@ -56,3 +58,9 @@ body {
 .primary-text-color{
   color: #164081;
 }
+
+.custom-menu .ant-menu-item a,
+.custom-menu .ant-menu-item {
+  @apply text-white hover:text-[var(--primary-text)];
+}
+
