@@ -1,25 +1,24 @@
-/** @format */
-"use client";
+// app/page.tsx 
 
-import Hero from "@/Component/Hero/Hero";
-
-import { useRouter } from "next/navigation";
+'use client';
 import { useState } from "react";
 import JobLayout from "./job/layout";
+import JobDetails from "./components/JobDetails";
 
 export default function Home() {
-   const router = useRouter();
+  const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
 
-   const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
-
-   const handleJobSelect = (id: string) => {
-     setSelectedJobId(id);
-     router.push(`/job/${id}`);
-   };
   return (
-    <div className=''>
-   
-    {/* <JobLayout/> */}
+    <div>
+  
+
+      <JobLayout onSelectJob={setSelectedJobId}>
+        {selectedJobId ? (
+          <JobDetails jobId={selectedJobId} />
+        ) : (
+          <div className="p-4 text-gray-500">Select a job to see details</div>
+        )}
+      </JobLayout>
     </div>
   );
 }

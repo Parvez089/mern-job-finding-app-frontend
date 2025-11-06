@@ -1,31 +1,43 @@
-'use client';
+/** @format */
 
-import { useEffect, useState } from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import { getAllJobs } from "../services/api";
 import JobList from "../components/JobList";
 
-
-export default function JobLayout({ children }: { children: React.ReactNode }) {
+interface JobLayoutProps {
+  children: React.ReactNode;
+  onSelectJob?: (id: string) => void;
+}
+const JobLayout = ({ children, onSelectJob }: JobLayoutProps) => {
   const [jobs, setJobs] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchJobs = async () => {
       const data = await getAllJobs();
-      console.log(data, "data is")
       setJobs(data);
     };
     fetchJobs();
   }, []);
-
   return (
-    <div className="flex w-full max-w-7xl justify-center mx-auto">
-      <div className="w-full">
-        <h1>Recommendation Job</h1>
- <JobList jobs={jobs} />
+
+    <div>
+ <div className='flex hidden w-full gap-8 max-w-7xl mx-auto'>
+      <div className='w-full !max-w-lg '>
+        <JobList jobs={jobs} onSelectJob={onSelectJob} />
       </div>
-     
-      <div className="w-full">{children}</div>
-      hello
+      <div className='w-full'>{children}</div>
     </div>
+ <div className='md:flex w-full gap-8 max-w-7xl mx-auto'>
+      <div className='w-full !max-w-lg '>
+        <JobList jobs={jobs} onSelectJob={onSelectJob} />
+      </div>
+      <div className='w-full'>{children}</div>
+    </div>
+    
+    </div>
+   
   );
-}
+};
+
+export default JobLayout;

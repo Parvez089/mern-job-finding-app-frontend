@@ -1,26 +1,23 @@
-'use client';
 
+import axios  from 'axios';
 
-import axios from "axios";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
-const API_BASE_URL = "http://localhost:5000";
-
-export const getAllJobs = async () => {
-  try {
-    const response = await axios.get(`${API_BASE_URL}/api/job`);
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching jobs:", error);
-    return [];
+export const getAllJobs = async()=>{
+  try{
+    const res = await axios.get(`${API_BASE_URL}/api/job`);
+    return res.data;
+  } catch(err){
+    console.error("Error fetching jobs: ", err)
   }
-};
+}
 
 export const getJobById = async (id: string) => {
-  try {
-    const response = await axios.get(`${API_BASE_URL}/api/job/${id}`);
-    return response.data;
-  } catch (error) {
-    console.error(`Error fetching job with ID ${id}:`, error);
+  try{
+    const res = await axios.get(`${API_BASE_URL}/api/job/${id}`);
+    return res.data;
+  } catch(err){
+    console.error("Error fetching job by Id", err);
     return null;
   }
-};
+}

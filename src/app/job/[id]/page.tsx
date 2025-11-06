@@ -1,18 +1,16 @@
-'use client';
+/** @format */
 
 import JobDetails from "@/app/components/JobDetails";
-import { getJobById } from "@/app/services/api";
 
-interface JobPageProps {
+// app/job/[id]/page.tsx
+
+export default async function JobDetailPage({
+  params,
+}: {
   params: { id: string };
-}
+}) {
+  // ✅ await params before using
+  const { id } = await params;
 
-export default async function JobDetailPage({ params }: JobPageProps) {
-  const job = await getJobById(params.id);
-
-  if (!job) {
-    return <p>Job not found.</p>;
-  }
-
-  return <JobDetails job={job} />;
+  return <JobDetails jobId={id} />;
 }
