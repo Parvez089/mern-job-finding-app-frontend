@@ -1,41 +1,83 @@
-'use client';
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+/** @format */
+
+"use client";
+import { SaveOutlined } from "@ant-design/icons";
+import { usePathname, useRouter } from "next/navigation"; 
+import React, { useEffect } from "react";
 
 interface Job {
   _id: string;
   title: string;
   company: string;
   city: string;
+  location: string;
 }
 
-export default function JobList({ jobs }: { jobs: Job[] }) {
+interface JobListProps {
+  jobs: Job[];
+  onSelectJob?: (id: string) => void;
+}
 
+const JobList = ({ jobs = [], onSelectJob }: JobListProps) => {
   const pathname = usePathname();
+  const router = useRouter(); 
+
+  useEffect(()=>{
+    if(jobs.length > 0 && pathname === "/job"){
+      const firstJobId = jobs[0]._id;
+
+      if(onSelectJob) onSelectJob(firstJobId);
+
+      router.push(`/job/${firstJobId}`)
+       console.log("Default selected job:", firstJobId);
+    }
+  },[jobs, pathname, router, onSelectJob])
+
   return (
-    <div className="w-full border-r border-gray-200 p-4  h-screen">
-      <h2 className="text-xl font-semibold mb-3">Available Jobs</h2>
-      {jobs.map((job) => {       
+    <div>
+      <h2 className='text-2xl !font-bold --font-poppins'>Available Jobs</h2>
+
+      {jobs.length === 0 && <p>No jobs available</p>}
+      <div className='space-y-3 '>
+        {jobs.map((job) => {
+          const isActive = pathname === `/job/${job._id}`;
+
+          return (
+            <div
+              key={job._id}
+              onClick={() => {
+                // Optional callback
+                if (onSelectJob) onSelectJob(job._id);
+
         
-        const isActive = pathname === `/job/${job._id}`;
+                router.push(`/job/${job._id}`);
 
-        return(
- <Link
-          href={`/job/${job._id}`}
-          key={job._id}
-          className={`block p-3 mb-2 rounded-md transition ${
-              isActive ? "bg-blue-100" : "hover:bg-gray-100"
-            }`}
-        >
-          <h3 className="font-medium">{job.title}</h3>
-          <p className="text-sm text-gray-600">{job.company}</p>
-          <p className="text-xs text-gray-500">{job.city}</p>
-        </Link>
-        )}
+                console.log("Navigating to job:", job._id);
+              }}
+              className={`border p-3 rounded-4xl cursor-pointer transition 
+               !bg-[var(--card-color)] ${
+                 isActive ? "!border-blue-500" : "border-gray-200"
+               }`}>
+              <div className='flex justify-between !m-2'>
+                <div className='--font-poppins'>
+                  <h3 className='text-xl !font-semibold'>{job.title}</h3>
+                  <p>{job.company}</p>
+                </div>
 
- 
-       
-      )}
+                <div className="text-lg h-6">
+                  <SaveOutlined className="bg-blue-200  p-2 rounded-4xl"/>
+                </div>
+              </div>
+              <div className='text-gray-500 m-2'>
+                <h2>{job.city}</h2>
+                <h2>{job.location}</h2>
+              </div>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
-}
+};
+
+export default JobList;
