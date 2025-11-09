@@ -3,7 +3,7 @@
 "use client";
 import { SaveOutlined } from "@ant-design/icons";
 import { usePathname, useRouter } from "next/navigation"; 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 interface Job {
   _id: string;
@@ -20,18 +20,43 @@ interface JobListProps {
 
 const JobList = ({ jobs = [], onSelectJob }: JobListProps) => {
   const pathname = usePathname();
-  const router = useRouter(); 
+  const router = useRouter();
+  const [isMobile, setIsMobile] = useState(false);
 
-  useEffect(()=>{
-    if(jobs.length > 0 && pathname === "/job"){
+  useEffect(() => {
+    // if(!isMobile && jobs.length > 0 && pathname === "/job")
+
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkScreenSize();
+    window.addEventListener("resize", checkScreenSize);
+    return () => window.removeEventListener("resize", checkScreenSize);
+  }, []);
+
+  useEffect(() => {
+    if (isMobile && jobs.length > 0 && pathname === "/job") {
       const firstJobId = jobs[0]._id;
 
-      if(onSelectJob) onSelectJob(firstJobId);
+      if (onSelectJob) onSelectJob(firstJobId);
 
-      router.push(`/job/${firstJobId}`)
-       console.log("Default selected job:", firstJobId);
+      router.push(`/job/${firstJobId}`);
+      console.log("Default selected job:", firstJobId);
     }
-  },[jobs, pathname, router, onSelectJob])
+  }, [jobs, pathname, router, onSelectJob, isMobile]);
+
+  const handleJobClick = (id: string) => {
+    if (onSelectJob) onSelectJob(id);
+
+    if (isMobile) {
+      router.push(`/job/small-device/${id}`);
+    } else {
+      router.push(`/job/${id}`);
+    }
+
+    console.log("Navigating to job: ", id);
+  };
 
   return (
     <div>
@@ -45,15 +70,7 @@ const JobList = ({ jobs = [], onSelectJob }: JobListProps) => {
           return (
             <div
               key={job._id}
-              onClick={() => {
-                // Optional callback
-                if (onSelectJob) onSelectJob(job._id);
-
-        
-                router.push(`/job/${job._id}`);
-
-                console.log("Navigating to job:", job._id);
-              }}
+              onClick={() => handleJobClick(job._id)}
               className={`border p-3 rounded-4xl cursor-pointer transition 
                !bg-[var(--card-color)] ${
                  isActive ? "!border-blue-500" : "border-gray-200"
@@ -64,8 +81,8 @@ const JobList = ({ jobs = [], onSelectJob }: JobListProps) => {
                   <p>{job.company}</p>
                 </div>
 
-                <div className="text-lg h-6">
-                  <SaveOutlined className="bg-blue-200  p-2 rounded-4xl"/>
+                <div className='text-lg h-6'>
+                  <SaveOutlined className='bg-blue-200  p-2 rounded-4xl' />
                 </div>
               </div>
               <div className='text-gray-500 m-2'>
