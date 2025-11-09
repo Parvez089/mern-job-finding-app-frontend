@@ -38,7 +38,7 @@ const JobSeekerRegister = () => {
     }
   };
   return (
-    <div className='flex mb-5 justify-center items-center px-4'>
+    <div className='flex mb-5 mt-8 justify-center items-center px-4'>
       <div className='bg-white w-full max-w-lg px-6 sm:px-8 py-10 sm:py-12 rounded-xl shadow-lg'>
         {/* Title */}
         <h1 className='text-2xl sm:text-3xl font-bold text-center mb-2'>
@@ -110,7 +110,14 @@ const JobSeekerRegister = () => {
               Continue
             </Button>
           </Form.Item>
-     <p>Already hanve an account? <Link href={"/auth/job-seeker/login"} className="text-lg font-semibold">log in</Link></p>
+          <p>
+            Already hanve an account?{" "}
+            <Link
+              href={"/auth/job-seeker/login"}
+              className='text-lg font-semibold'>
+              log in
+            </Link>
+          </p>
           {/* Divider */}
           <Divider className='text-gray-400'>or sign up with</Divider>
 

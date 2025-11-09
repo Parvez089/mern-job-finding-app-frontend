@@ -20,23 +20,20 @@ const JobLayout = ({ children, onSelectJob }: JobLayoutProps) => {
     fetchJobs();
   }, []);
   return (
-
     <div>
- <div className='flex hidden w-full gap-8 max-w-7xl mx-auto'>
-      <div className='w-full !max-w-lg '>
-        <JobList jobs={jobs} onSelectJob={onSelectJob} />
+      <div className='hidden w-full gap-8 max-w-7xl mx-auto'>
+        <div className='w-full !max-w-lg '>
+          <JobList jobs={jobs} onSelectJob={onSelectJob} />
+        </div>
+        <div className='w-full'>{children}</div>
       </div>
-      <div className='w-full'>{children}</div>
-    </div>
- <div className='md:flex w-full gap-8 max-w-7xl mx-auto'>
-      <div className='w-full !max-w-lg '>
-        <JobList jobs={jobs} onSelectJob={onSelectJob} />
+      <div className='md:flex w-full gap-8 max-w-7xl mx-auto'>
+        <div className='w-full !max-w-lg '>
+          <JobList jobs={jobs} onSelectJob={onSelectJob} />
+        </div>
+        <div className='w-full'>{children}</div>
       </div>
-      <div className='w-full'>{children}</div>
     </div>
-    
-    </div>
-   
   );
 };
 
