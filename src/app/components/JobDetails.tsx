@@ -5,6 +5,8 @@ import React, { useEffect, useState } from "react";
 import { getJobById } from "../services/api";
 import { Button } from "antd";
 import { LinkOutlined, SaveFilled, SaveOutlined } from "@ant-design/icons";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface Job {
   _id: string;
@@ -25,6 +27,7 @@ interface JobDetailsProps {
 }
 const JobDetails = ({ jobId }: JobDetailsProps) => {
   const [job, setJobs] = useState<Job | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchJob = async () => {
@@ -33,6 +36,10 @@ const JobDetails = ({ jobId }: JobDetailsProps) => {
     };
     fetchJob();
   }, [jobId]);
+
+  const handleApply = () =>{
+    router.push("/job/apply-job");
+  }
 
   if (!job) return <p>Loading job details...</p>;
   return (
@@ -52,7 +59,7 @@ const JobDetails = ({ jobId }: JobDetailsProps) => {
         </div>
 
         <div className='flex gap-6 '>
-          <Button className='!bg-[var(--bg-color)] text-xl !text-[var(--text-color)]'>
+          <Button onClick={handleApply} className='!bg-[var(--bg-color)] text-xl !text-[var(--text-color)]'>
             Apply Now
           </Button>
           <SaveOutlined className='bg-blue-100 text-lg p-2 rounded-4xl' />

@@ -6,7 +6,7 @@ import Hero from "./Hero";
 
 const ConditionalHero = () => {
     const pathname = usePathname();
-    const showHero = pathname === "/" || pathname.startsWith("/job/")
+    const showHero = pathname === "/" || pathname.startsWith("/job/") && pathname !== "/job/apply-job"
 
     if(!showHero)  return null;
   return <Hero/>;

@@ -33,7 +33,7 @@ const SearchPage = () => {
         {/* Location input + Search button */}
         <div className="flex flex-1 p-3 bg-white rounded-tr-lg">
           <FontAwesomeIcon
-            icon={faLocationDot}
+            icon={faLocationDot} width={20} height={20}
             className="text-2xl text-gray-600"
           />
           <Input

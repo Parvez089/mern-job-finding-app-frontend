@@ -36,15 +36,24 @@ const JobList = ({ jobs = [], onSelectJob }: JobListProps) => {
   }, []);
 
   useEffect(() => {
-    if (isMobile && jobs.length > 0 && pathname === "/job") {
+    if (jobs.length > 0 && pathname === "/job") {
       const firstJobId = jobs[0]._id;
 
+      // If desktop → stay in layout view
+      if (!isMobile) {
+        router.replace(`/job/${firstJobId}`);
+      } else {
+        // If mobile → go to small device route
+        router.replace(`/job/small-device/${firstJobId}`);
+      }
+
+      // Callback for parent if exists
       if (onSelectJob) onSelectJob(firstJobId);
 
-      router.push(`/job/${firstJobId}`);
-      console.log("Default selected job:", firstJobId);
+      console.log("✅ Default selected job:", firstJobId);
     }
   }, [jobs, pathname, router, onSelectJob, isMobile]);
+
 
   const handleJobClick = (id: string) => {
     if (onSelectJob) onSelectJob(id);

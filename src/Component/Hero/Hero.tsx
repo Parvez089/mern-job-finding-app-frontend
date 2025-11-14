@@ -16,7 +16,7 @@ const Hero = () => {
 
   return (
     <div className=''>
-      <div className='bg-[var(--bg-primary)] h-84'>
+      <div className='bg-[var(--bg-primary)] h-[400px] sm:h-[450px]'>
         <Navbar />
         <HeroText />
       </div>
