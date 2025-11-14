@@ -1,17 +1,22 @@
 /** @format */
-
 "use client";
+
 import React, { useEffect, useState } from "react";
 import { getAllJobs } from "../services/api";
 import JobList from "../components/JobList";
+import { usePathname } from "next/navigation";
 
 interface JobLayoutProps {
   children: React.ReactNode;
   onSelectJob?: (id: string) => void;
 }
+
 const JobLayout = ({ children, onSelectJob }: JobLayoutProps) => {
   const [jobs, setJobs] = useState<any[]>([]);
+  const [isMobile, setIsMobile] = useState(false);
+  const pathname = usePathname();
 
+  // Fetch jobs
   useEffect(() => {
     const fetchJobs = async () => {
       const data = await getAllJobs();
@@ -19,20 +24,37 @@ const JobLayout = ({ children, onSelectJob }: JobLayoutProps) => {
     };
     fetchJobs();
   }, []);
+
+  // Detect screen size
+  useEffect(() => {
+    const checkScreen = () => setIsMobile(window.innerWidth < 768);
+    checkScreen();
+    window.addEventListener("resize", checkScreen);
+    return () => window.removeEventListener("resize", checkScreen);
+  }, []);
+
+  const isApplyPage = pathname === "/job/apply-job";
+  // Decide whether to show JobList
+  const hideForSmallDevice = isMobile && pathname.startsWith("/job/small-device/");
+  const showJobList = !isApplyPage && !hideForSmallDevice;
+
+
+  if(isApplyPage){
+    return(
+      <div className="flex justify-center items-center min-h-screen bg-gray-50 px-4">
+        <div className="w-full max-w-3xl">{children}</div>
+      </div>
+    )
+  }
+
   return (
-    <div>
-      <div className='hidden w-full gap-8 max-w-7xl mx-auto'>
-        <div className='w-full !max-w-lg '>
+    <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-8 w-full">
+      {showJobList && (
+        <div className="w-full md:w-1/3 !max-w-lg">
           <JobList jobs={jobs} onSelectJob={onSelectJob} />
         </div>
-        <div className='w-full'>{children}</div>
-      </div>
-      <div className='md:flex w-full gap-8 max-w-7xl mx-auto'>
-        <div className='w-full !max-w-lg '>
-          <JobList jobs={jobs} onSelectJob={onSelectJob} />
-        </div>
-        <div className='w-full'>{children}</div>
-      </div>
+      )}
+      <div className="w-full md:w-2/3">{children}</div>
     </div>
   );
 };

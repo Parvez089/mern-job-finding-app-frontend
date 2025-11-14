@@ -95,7 +95,7 @@ const Navbar = () => {
   if (!mounted) return null;
 
   return (
-    <header className='  flex justify-between items-center px-4 sm:px-6 lg:px-8 py-3 w-full mb-8'>
+    <header className='  flex justify-between items-center px-4 sm:px-6 lg:px-8 py-3 w-full mb-8 bg-[var(--bg-primary)]'>
       <div className='w-full flex  justify-between items-center px-4 sm:px-1 lg:px-8 py-3 '>
         <div className='text-2xl font-semibold text-[var(--text-color)] tracking-tight'>
           <Link href='/'>JobOrbit</Link>

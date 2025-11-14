@@ -12,11 +12,13 @@ export default function RootLayoutWrapper({
 }) {
   const pathname = usePathname();
 
-  const hideNavbarRoutes = ["/"];
+  const isHomePage = pathname === "/" ;
+  const isAuthPage = pathname.startsWith("/auth")
+  const isJobDetailsPage =
+    pathname.startsWith("/job/") &&
+    pathname !== "/job/apply-job";
 
-  const shouldHideNavbar = hideNavbarRoutes.some((route) =>
-    pathname.startsWith(route)
-  );
+  const shouldHideNavbar = isHomePage || isJobDetailsPage || isAuthPage;
 
   return (
     <div className='flex flex-col min-h-screen'>
