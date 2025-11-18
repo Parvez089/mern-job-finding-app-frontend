@@ -38,7 +38,7 @@ const JobDetails = ({ jobId }: JobDetailsProps) => {
   }, [jobId]);
 
   const handleApply = () =>{
-    router.push("/job/apply-job");
+    router.push(`/job/apply-job?jobId=${jobId}`);
   }
 
   if (!job) return <p>Loading job details...</p>;

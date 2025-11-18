@@ -1,141 +1,251 @@
 /** @format */
 "use client";
 
-import React from "react";
-import type { FormProps } from "antd";
-import { Button, Checkbox, Divider, Form, Input, message } from "antd";
-import { LinkedinFilled, GoogleCircleFilled } from "@ant-design/icons";
+import React, { useEffect, useState } from "react";
+import { Form, Input, Button, message, Upload, Divider } from "antd";
+import { PlusOutlined, UploadOutlined, MinusCircleOutlined } from "@ant-design/icons";
 import axios from "axios";
-import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+
+type AddressType = {
+  city?: string;
+  state?: string;
+  zip?: string;
+};
+
+type ExperienceItem = {
+  company?: string;
+  role?: string;
+  duration?: string;
+};
+
+type EducationItem = {
+  degree?: string;
+  institute?: string;
+  year?: string;
+};
 
 type FieldType = {
+  appId?: string;
+  applicantId?: string;
   name?: string;
   email?: string;
-  password?: string;
-  remember?: string;
-};
-
-const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
-  console.log("Success:", values);
-};
-
-const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (errorInfo) => {
-  console.log("Failed:", errorInfo);
+  phone?: string;
+  resume?: File | string;
+  experience?: ExperienceItem[];
+  education?: EducationItem[];
+  address?: AddressType;
 };
 
 const ApplyJob = () => {
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+  const params = useSearchParams();
+
+  const jobId = params.get("jobId");
+
+  const [initialData, setInitialData] = useState({});
+
+  useEffect(()=>{
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+    setInitialData({
+      appId: jobId,
+      applicantId: user._id,
+    })
+  }, [jobId]);
   const onFinish = async (values: FieldType) => {
     try {
-      const res = await axios.post(`${API_BASE_URL}/api/auth/register`, {
-        ...values,
-        role: "jobseeker", // fixed role here
+      const formData = new FormData();
+
+      // Append simple fields
+      formData.append("appId", values.appId || "");
+      formData.append("applicantId", values.applicantId || "");
+      formData.append("name", values.name || "");
+      formData.append("email", values.email || "");
+      formData.append("phone", values.phone || "");
+
+      // Resume
+      if (values.resume instanceof File) {
+        formData.append("resume", values.resume);
+      }
+
+      // Experience JSON
+      formData.append("experience", JSON.stringify(values.experience || []));
+      formData.append("education", JSON.stringify(values.education || []));
+      formData.append("address", JSON.stringify(values.address || {}));
+
+      const res = await axios.post(`${API_BASE_URL}api/job-applications`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
+
       message.success(res.data.message);
       window.location.href = "/";
     } catch (error: any) {
-      message.error(error.response?.data?.message || "Registration failed!");
+      message.error(error.response?.data?.message || "Submission failed!");
     }
   };
-  return (
-    <div className='flex mb-5 justify-center items-center m px-4'>
-      <div className='bg-white w-full max-w-3xl px-6 sm:px-8 py-10 sm:py-12 rounded-xl shadow-lg'>
-        {/* Title */}
-        <h1 className='text-2xl sm:text-3xl font-bold text-center mb-2'>
-          Apply Job <br /> Job Seeker Account
-        </h1>
-        <p className='text-center text-gray-600 mb-6'>
-          Sign up to create your Job Seeker Account on JobOrbit.
-        </p>
 
-        <Form
-          name='jobseeker-register'
-          layout='vertical'
-          className='w-full'
-          initialValues={{ remember: true }}
-          onFinish={onFinish}
-          onFinishFailed={onFinishFailed}
-          autoComplete='off'>
-          {/* Username */}
-          <Form.Item<FieldType>
-            label='name'
-            name='name'
-            rules={[
-              { required: true, message: "Please input your username!" },
-            ]}>
-            <Input placeholder='Your name' />
+  return (
+    <div className="flex flex-col mt-5 justify-center items-center px-4 mb-5">
+      <div className="bg-white px-6 py-10 rounded-lg shadow max-w-3xl w-full">
+        <h1 className="text-3xl text-center font-bold">Apply Job</h1>
+
+        <Form layout="vertical" onFinish={onFinish} initialValues={initialData} className="mt-6">
+
+          {/* App ID */}
+          <Form.Item name="appId" label="Job ID" rules={[{ required: true }]}>
+            <Input placeholder="Enter Job ID" />
+          </Form.Item>
+
+          {/* Applicant ID */}
+          <Form.Item name="applicantId" label="Applicant ID" rules={[{ required: true }]}>
+            <Input placeholder="Enter Applicant ID" />
+          </Form.Item>
+
+          {/* Name */}
+          <Form.Item name="name" label="Full Name" rules={[{ required: true }]}>
+            <Input />
           </Form.Item>
 
           {/* Email */}
-          <Form.Item<FieldType>
-            label='Email'
-            name='email'
-            rules={[{ required: true, message: "Please input your email!" }]}>
-            <Input placeholder='Your Email' />
+          <Form.Item name="email" label="Email">
+            <Input type="email" />
           </Form.Item>
 
-          {/* Password */}
-          <Form.Item<FieldType>
-            label='Password'
-            name='password'
-            rules={[
-              { required: true, message: "Please input your password!" },
-            ]}>
-            <Input.Password placeholder='Password' />
+          {/* Phone */}
+          <Form.Item name="phone" label="Phone">
+            <Input />
           </Form.Item>
 
-          {/* Terms */}
-          <Form.Item<FieldType>
-            name='remember'
-            valuePropName='checked'
-            className='mb-4'>
-            <Checkbox className='text-sm text-gray-700'>
-              By signing up, I agree to JobOrbits{" "}
-              <span className='text-red-600 hover:underline'>
-                Terms of Service
-              </span>{" "}
-              and{" "}
-              <span className='text-red-600 hover:underline'>
-                Privacy Policy
-              </span>
-              .
-            </Checkbox>
+          {/* Resume Upload */}
+          <Form.Item label="Upload Resume" name="resume" valuePropName="file">
+            <Upload
+              beforeUpload={(file) => {
+                return false;
+              }}
+            >
+              <Button icon={<UploadOutlined />}>Upload Resume</Button>
+            </Upload>
+          </Form.Item>
+
+          {/* Experience Section */}
+          <Divider>Experience</Divider>
+
+          <Form.List name="experience">
+            {(fields, { add, remove }) => (
+              <>
+                {fields.map(({ key, name, ...restField }) => (
+                  <div key={key} className="border p-4 mb-3 rounded relative">
+                    <MinusCircleOutlined
+                      className="absolute right-3 top-3 text-red-500 cursor-pointer"
+                      onClick={() => remove(name)}
+                    />
+
+                    <Form.Item
+                      {...restField}
+                      label="Company"
+                      name={[name, "company"]}
+                      rules={[{ required: true }]}
+                    >
+                      <Input />
+                    </Form.Item>
+
+                    <Form.Item
+                      {...restField}
+                      label="Role"
+                      name={[name, "role"]}
+                      rules={[{ required: true }]}
+                    >
+                      <Input />
+                    </Form.Item>
+
+                    <Form.Item
+                      {...restField}
+                      label="Duration"
+                      name={[name, "duration"]}
+                    >
+                      <Input />
+                    </Form.Item>
+                  </div>
+                ))}
+
+                <Button icon={<PlusOutlined />} onClick={() => add()}>
+                  Add Experience
+                </Button>
+              </>
+            )}
+          </Form.List>
+
+          {/* Education Section */}
+          <Divider>Education</Divider>
+
+          <Form.List name="education">
+            {(fields, { add, remove }) => (
+              <>
+                {fields.map(({ key, name, ...restField }) => (
+                  <div key={key} className="border p-4 mb-3 rounded relative">
+                    <MinusCircleOutlined
+                      className="absolute right-3 top-3 text-red-500 cursor-pointer"
+                      onClick={() => remove(name)}
+                    />
+
+                    <Form.Item
+                      {...restField}
+                      label="Degree"
+                      name={[name, "degree"]}
+                    >
+                      <Input />
+                    </Form.Item>
+
+                    <Form.Item
+                      {...restField}
+                      label="Institute"
+                      name={[name, "institute"]}
+                    >
+                      <Input />
+                    </Form.Item>
+
+                    <Form.Item
+                      {...restField}
+                      label="Year"
+                      name={[name, "year"]}
+                    >
+                      <Input />
+                    </Form.Item>
+                  </div>
+                ))}
+
+                <Button icon={<PlusOutlined />} onClick={() => add()}>
+                  Add Education
+                </Button>
+              </>
+            )}
+          </Form.List>
+
+          {/* Address Section */}
+          <Divider>Address</Divider>
+
+          <Form.Item name={["address", "city"]} label="City">
+            <Input />
+          </Form.Item>
+
+          <Form.Item name={["address", "state"]} label="State">
+            <Input />
+          </Form.Item>
+
+          <Form.Item name={["address", "zip"]} label="Zip Code">
+            <Input />
           </Form.Item>
 
           {/* Submit */}
-          <Form.Item>
-            <Button
-              htmlType='submit'
-              className='w-full !bg-[var(--bg-color)] !text-white py-3 text-lg !font-semibold '>
-              Continue
-            </Button>
-          </Form.Item>
-          <p>
-            Already hanve an account?{" "}
-            <Link
-              href={"/auth/job-seeker/login"}
-              className='text-lg font-semibold'>
-              log in
-            </Link>
-          </p>
-          {/* Divider */}
-          <Divider className='text-gray-400'>or sign up with</Divider>
+          <Button
+            type="primary"
+            htmlType="submit"
+            className="w-full mt-4 font-semibold"
+          >
+            Submit Application
+          </Button>
 
-          {/* Social Buttons */}
-          <div className='flex justify-center items-center gap-6 mt-4'>
-            <Button
-              type='default'
-              className='flex items-center justify-center gap-2 border rounded-lg px-4 py-2 hover:bg-gray-100'>
-              <GoogleCircleFilled className='text-[#4285F4] w-5 h-5' />
-              Google
-            </Button>
-            <Button
-              type='default'
-              className='flex items-center justify-center gap-2 border rounded-lg px-4 py-2 hover:bg-gray-100'>
-              <LinkedinFilled className='text-[#0A66C2] w-5 h-5' />
-              LinkedIn
-            </Button>
-          </div>
         </Form>
       </div>
     </div>
