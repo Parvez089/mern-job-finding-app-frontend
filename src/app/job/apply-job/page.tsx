@@ -1,15 +1,14 @@
-/** @format */
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Input, Button, message, Upload, Divider } from "antd";
 import { PlusOutlined, UploadOutlined, MinusCircleOutlined } from "@ant-design/icons";
 import axios from "axios";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
-type AddressType = { city?: string; state?: string; zip?: string };
 type ExperienceItem = { company?: string; role?: string; duration?: string };
 type EducationItem = { degree?: string; institute?: string; year?: string };
+
 type FieldType = {
   appId?: string;
   applicantId?: string;
@@ -19,7 +18,7 @@ type FieldType = {
   resumeUrl?: string;
   experience?: ExperienceItem[];
   education?: EducationItem[];
-  address?: AddressType;
+  address?: { city?: string; state?: string; zip?: string };
 };
 
 const ApplyJob = () => {
@@ -29,14 +28,13 @@ const ApplyJob = () => {
   const [form] = Form.useForm<FieldType>();
   const [resumeFile, setResumeFile] = useState<File | null>(null);
 
-  // Auto-fill JobID & User Info
   useEffect(() => {
-    const jobId = params.get("jobId"); // query parameter
-    const user = JSON.parse(localStorage.getItem("user") || "{}"); // logged-in user
+    const jobId = params.get("jobId");
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
 
     form.setFieldsValue({
-      appId: jobId || "",
-      applicantId: user._id || "",
+      appId: jobId || undefined,
+      applicantId: user._id || undefined,
       name: user.name || "",
       email: user.email || "",
       phone: user.phone || "",
@@ -44,7 +42,6 @@ const ApplyJob = () => {
   }, [params, form]);
 
   const onFinish = async (values: FieldType) => {
-    console.log(values)
     try {
       const token = localStorage.getItem("token");
       if (!token) {
@@ -53,43 +50,35 @@ const ApplyJob = () => {
         return;
       }
 
-      // Validate required fields
-      if (!values.appId || !values.name) {
-        message.error("Job ID and Name are required");
+      if (!values.appId || !values.applicantId || !values.name) {
+        message.error("Job ID, Applicant ID & Name are required");
         return;
       }
 
-      // Prepare FormData
-      const formData = new FormData();
-      formData.append("appId", values.appId);
-      formData.append("applicantId", values.applicantId || "");
-      formData.append("name", values.name);
-      formData.append("email", values.email || "");
-      formData.append("phone", values.phone || "");
-      formData.append("experience", JSON.stringify(values.experience || []));
-      formData.append("education", JSON.stringify(values.education || []));
-      formData.append("address", JSON.stringify(values.address || {}));
+      let payload: any;
+      let headers: any = { Authorization: `Bearer ${token}` };
 
       if (resumeFile) {
-        formData.append("resume", resumeFile);
-      } else if (values.resumeUrl) {
-        formData.append("resumeUrl", values.resumeUrl);
+        payload = new FormData();
+        payload.append("appId", values.appId!);
+        payload.append("applicantId", values.applicantId!);
+        payload.append("name", values.name!);
+        payload.append("email", values.email || "");
+        payload.append("phone", values.phone || "");
+        payload.append("experience", JSON.stringify(values.experience || []));
+        payload.append("education", JSON.stringify(values.education || []));
+        payload.append("address", JSON.stringify(values.address || {}));
+        payload.append("resume", resumeFile);
+      } else {
+        payload = values;
+        headers["Content-Type"] = "application/json";
       }
 
-      // POST request
-      const response = await axios.post(`${API_BASE_URL}/api/job-applications`, formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
-       console.log("Backend Response →", response.data);
-
-      message.success("Application submitted successfully!");
-      router.push("/"); // redirect to home
+      const response = await axios.post(`${API_BASE_URL}/api/job-applications`, payload, { headers });
+      message.success(response.data.message);
+      router.push("/");
     } catch (error: any) {
-      console.error("Error:", error.response?.data || error);
+      console.error(error);
       message.error(error.response?.data?.message || "Submission failed!");
     }
   };
@@ -100,21 +89,21 @@ const ApplyJob = () => {
         <h1 className="text-3xl text-center font-bold mb-5">Apply Job</h1>
 
         <Form form={form} layout="vertical" onFinish={onFinish}>
-          {/* Personal Info */}
           <Form.Item name="name" label="Full Name" rules={[{ required: true }]}>
             <Input />
           </Form.Item>
-          <Form.Item name="email" label="Email" rules={[{ type: "email", required: true }]}>
-            <Input />
-          </Form.Item>
-          <Form.Item name="phone" label="Phone" rules={[{ required: true }]}>
+
+          <Form.Item name="email" label="Email" rules={[{ type: "email" }]}>
             <Input />
           </Form.Item>
 
-          {/* Resume Upload */}
+          <Form.Item name="phone" label="Phone">
+            <Input />
+          </Form.Item>
+
           <Form.Item label="Upload Resume">
             <Upload
-            name="resume"
+              name="resume"
               beforeUpload={() => false}
               maxCount={1}
               onChange={(info: any) => setResumeFile(info.fileList[0]?.originFileObj || null)}
@@ -123,26 +112,21 @@ const ApplyJob = () => {
             </Upload>
           </Form.Item>
 
-          {/* Resume URL */}
           <Form.Item name="resumeUrl" label="Or Resume URL">
             <Input placeholder="https://example.com/resume.pdf" />
           </Form.Item>
 
-          {/* Experience */}
           <Divider>Experience</Divider>
           <Form.List name="experience">
             {(fields, { add, remove }) => (
               <>
                 {fields.map((field) => (
                   <div key={field.key} className="border p-4 mb-3 rounded relative">
-                    <MinusCircleOutlined
-                      className="absolute right-3 top-3 text-red-500 cursor-pointer"
-                      onClick={() => remove(field.name)}
-                    />
-                    <Form.Item label="Company" name={[field.name, "company"]} rules={[{ required: true }]}>
+                    <MinusCircleOutlined className="absolute right-3 top-3 text-red-500 cursor-pointer" onClick={() => remove(field.name)} />
+                    <Form.Item label="Company" name={[field.name, "company"]}>
                       <Input />
                     </Form.Item>
-                    <Form.Item label="Role" name={[field.name, "role"]} rules={[{ required: true }]}>
+                    <Form.Item label="Role" name={[field.name, "role"]}>
                       <Input />
                     </Form.Item>
                     <Form.Item label="Duration" name={[field.name, "duration"]}>
@@ -157,21 +141,17 @@ const ApplyJob = () => {
             )}
           </Form.List>
 
-          {/* Education */}
           <Divider>Education</Divider>
           <Form.List name="education">
             {(fields, { add, remove }) => (
               <>
                 {fields.map((field) => (
                   <div key={field.key} className="border p-4 mb-3 rounded relative">
-                    <MinusCircleOutlined
-                      className="absolute right-3 top-3 text-red-500 cursor-pointer"
-                      onClick={() => remove(field.name)}
-                    />
-                    <Form.Item label="Degree" name={[field.name, "degree"]} rules={[{ required: true }]}>
+                    <MinusCircleOutlined className="absolute right-3 top-3 text-red-500 cursor-pointer" onClick={() => remove(field.name)} />
+                    <Form.Item label="Degree" name={[field.name, "degree"]}>
                       <Input />
                     </Form.Item>
-                    <Form.Item label="Institute" name={[field.name, "institute"]} rules={[{ required: true }]}>
+                    <Form.Item label="Institute" name={[field.name, "institute"]}>
                       <Input />
                     </Form.Item>
                     <Form.Item label="Year" name={[field.name, "year"]}>
@@ -186,7 +166,6 @@ const ApplyJob = () => {
             )}
           </Form.List>
 
-          {/* Address */}
           <Divider>Address</Divider>
           <Form.Item name={["address", "city"]} label="City">
             <Input />
