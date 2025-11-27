@@ -29,66 +29,101 @@ const ApplyJob = () => {
   const [resumeFile, setResumeFile] = useState<File | null>(null);
 
   useEffect(() => {
-    const jobId = params.get("jobId");
-    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    
+     const token = localStorage.getItem("token");
+     console.log(token)
+     console.log(token)
+     if (!token) {
+    message.error("Please login first!");
+    router.push("/auth/job-seeker/login");
+    return;
+  }
 
+  const jobId = params.get("jobId");
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    console.log(jobId)
+    console.log(user)
+    const userId = user._id || user.id || "";
     form.setFieldsValue({
-      appId: jobId || undefined,
-      applicantId: user._id || undefined,
+      appId: jobId || "",
+      applicantId:  userId,
       name: user.name || "",
       email: user.email || "",
       phone: user.phone || "",
+      experience: [],
+      resumeUrl: user.resumeUrl || "",
+      education: [],
+      address: { city: "", state: "", zip: "" },
     });
   }, [params, form]);
 
-  const onFinish = async (values: FieldType) => {
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        message.error("Please login first!");
-        router.push("/login");
-        return;
-      }
+const onFinish = async (values: FieldType) => {
 
-      if (!values.appId || !values.applicantId || !values.name) {
-        message.error("Job ID, Applicant ID & Name are required");
-        return;
-      }
+  console.log(values)
+  try {
+    const token = localStorage.getItem("token");
 
-      let payload: any;
-      let headers: any = { Authorization: `Bearer ${token}` };
-
-      if (resumeFile) {
-        payload = new FormData();
-        payload.append("appId", values.appId!);
-        payload.append("applicantId", values.applicantId!);
-        payload.append("name", values.name!);
-        payload.append("email", values.email || "");
-        payload.append("phone", values.phone || "");
-        payload.append("experience", JSON.stringify(values.experience || []));
-        payload.append("education", JSON.stringify(values.education || []));
-        payload.append("address", JSON.stringify(values.address || {}));
-        payload.append("resume", resumeFile);
-      } else {
-        payload = values;
-        headers["Content-Type"] = "application/json";
-      }
-
-      const response = await axios.post(`${API_BASE_URL}/api/job-applications`, payload, { headers });
-      message.success(response.data.message);
-      router.push("/");
-    } catch (error: any) {
-      console.error(error);
-      message.error(error.response?.data?.message || "Submission failed!");
+    if (!values.appId || !values.applicantId || !values.name) {
+      message.error("Job ID, Applicant ID & Name are required");
+      return;
     }
-  };
+
+    const formData = new FormData();
+    formData.append("appId", values.appId!);
+    formData.append("applicantId", values.applicantId!);
+    formData.append("name", values.name!);
+    formData.append("email", values.email || "");
+    formData.append("phone", values.phone || "");
+   
+    formData.append("experience", JSON.stringify(values.experience || []));
+    formData.append("education", JSON.stringify(values.education || []));
+    formData.append("address", JSON.stringify(values.address || {}));
+
+    if (resumeFile) {
+      formData.append("resumeFile", resumeFile);
+    } else if (values.resumeUrl) {
+      formData.append("resumeUrl", values.resumeUrl);
+    }
+
+    const response = await axios.post(`${API_BASE_URL}/api/applications`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data", // must be multipart
+        },
+      }
+    );
+
+    message.success(response.data.message);
+    router.push("/");
+
+  } catch (error: any) {
+    console.error("UPLOAD ERROR → ", error);
+    message.error(error.response?.data?.message || "Submission failed!");
+  }
+};
 
   return (
     <div className="flex flex-col mt-5 justify-center items-center px-4 mb-5">
       <div className="bg-white px-6 py-10 rounded-lg shadow max-w-3xl w-full">
         <h1 className="text-3xl text-center font-bold mb-5">Apply Job</h1>
 
-        <Form form={form} layout="vertical" onFinish={onFinish}>
+        <Form form={form} layout="vertical" onFinish={onFinish} 
+        initialValues={{
+    experience: [],
+    education: [],
+    address: { city: "", state: "", zip: "" },
+    resumeUrl: "",
+  }}
+        >
+
+          <Form.Item name="appId" hidden>
+    <Input />
+  </Form.Item>
+  <Form.Item name="applicantId" hidden>
+    <Input />
+  </Form.Item>
           <Form.Item name="name" label="Full Name" rules={[{ required: true }]}>
             <Input />
           </Form.Item>
@@ -103,7 +138,7 @@ const ApplyJob = () => {
 
           <Form.Item label="Upload Resume">
             <Upload
-              name="resume"
+              name="resumeFile"
               beforeUpload={() => false}
               maxCount={1}
               onChange={(info: any) => setResumeFile(info.fileList[0]?.originFileObj || null)}
