@@ -9,6 +9,8 @@
   /* --bg-color: #164081;  */
    /* --bg-color: #007f61;  */
    --bg-color: #016BFD; 
+   --bg-dashboard-color: #24243E; 
+   --bg-dashboard: #E8EBF5; 
    /* --primary-light: #9afcdb; */
 /* --primary-light: #CCFFF0; */
  --text-color: #ffffff;
@@ -18,6 +20,16 @@
 }
 .ant-menu-horizontal {
   justify-content: center !important;
+}
+
+.ant-menu {
+  background-color: var(--bg-dashboard-color) !important;
+  color: white !important;
+}
+
+.ant-menu-item,
+.ant-menu-submenu-title {
+  color: white !important;
 }
 @theme inline {
   --color-background: var(--background);

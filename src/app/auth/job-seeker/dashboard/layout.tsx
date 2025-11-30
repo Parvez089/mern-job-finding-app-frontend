@@ -9,6 +9,7 @@ import {
   BellOutlined,
   CloudUploadOutlined,
   FileSearchOutlined,
+  HomeOutlined,
   LogoutOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -24,11 +25,11 @@ const { Header, Sider, Content } = Layout;
 const menuItems = [
               {
                 key: "1",
-                icon: <FileSearchOutlined />,
+                icon: <HomeOutlined />,
                 label: (
-                  <Link href='/'>
+                  <Link href='http://localhost:3000/auth/job-seeker/dashboard'>
                     {" "}
-                    Find Jobs{" "}
+                    Home{" "}
                   </Link>
                 ),
               },
@@ -99,7 +100,7 @@ const [isMobile, setIsMobile] = useState(false);
       return () => window.removeEventListener("resize", handleResize);
     }, []);
   const {
-    token: { colorBgContainer, borderRadiusLG },
+    token: { colorBgContainer },
   } = theme.useToken();
   return (
     <div>
@@ -125,7 +126,7 @@ const [isMobile, setIsMobile] = useState(false);
         </Sider>{" "}
         <Layout
           className={`transition-all duration-300 ease-in-out ${
-            isMobile ? "ml-0" : collapsed ? "ml-0" : "ml-2"
+            isMobile ? "ml-0" : collapsed ? "ml-0" : "ml-0"
           }`}>
           {" "}
           <Header style={{ padding: 0, background: colorBgContainer }}>
