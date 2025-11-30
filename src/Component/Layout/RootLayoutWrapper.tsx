@@ -17,6 +17,7 @@ export default function RootLayoutWrapper({
   const isJobDetailsPage =
     pathname.startsWith("/job/") &&
     pathname !== "/job/apply-job";
+    const isDashboardPage = pathname.startsWith("/auth/employer/dashboard");
 
   const shouldHideNavbar = isHomePage || isJobDetailsPage || isAuthPage;
 
@@ -26,7 +27,10 @@ export default function RootLayoutWrapper({
       <ConditionalHero/>
       <main className='flex-grow'>{children}</main>
 
-      <Footer />
+           {/* Hide Footer on Dashboard */}
+      {!isDashboardPage && <Footer />}
+   
+
     </div>
   );
 }
