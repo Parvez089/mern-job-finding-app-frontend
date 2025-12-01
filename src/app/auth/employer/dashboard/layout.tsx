@@ -1,6 +1,6 @@
 /** @format */
 "use client";
-import { Menu } from "antd";
+import { Button, Menu } from "antd";
 import React, { useEffect, useState } from "react";
 import {
   UnorderedListOutlined,
@@ -17,11 +17,19 @@ import {
   NotificationFilled,
 } from "@ant-design/icons";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
+
+interface DecodedToken {
+  role: string;
+  name: string;
+  exp: number;
+}
 const EmployerDashboard = ({ children }: { children: React.ReactNode }) => {
   const [collapsed, setCollapsed] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
-
+  const [userData, setUserData] = useState<DecodedToken | null>(null);
+const router = useRouter();
   useEffect(() => {
     const handleResize = () => {
       const mobile = window.innerWidth <= 768; // 👈 Mobile detect
@@ -33,6 +41,13 @@ const EmployerDashboard = ({ children }: { children: React.ReactNode }) => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+    const handleLogout = () => {
+    localStorage.removeItem("token");
+    setUserData(null);
+    router.push("/");
+  };
+
 
   return (
     <div className="flex h-screen">
@@ -51,11 +66,11 @@ const EmployerDashboard = ({ children }: { children: React.ReactNode }) => {
         w-64 z-50 shadow-lg transition-transform duration-300 
         ${collapsed ? "-translate-x-full md:translate-x-0" : "translate-x-0"}`}
       >
-        {/* 🔸 LOGO + CLOSE BUTTON */}
+        {/* LOGO + CLOSE BUTTON */}
         <div className="flex justify-between items-center px-4 py-3">
           <h1 className="text-white text-2xl">LOGO</h1>
           
-          {/* ❌ Sidebar Close Button (only on mobile) */}
+          {/*  Sidebar Close Button (only on mobile) */}
           {isMobile && (
             <MenuFoldOutlined
               className="text-white text-xl cursor-pointer"
@@ -64,19 +79,19 @@ const EmployerDashboard = ({ children }: { children: React.ReactNode }) => {
           )}
         </div>
 
-        {/* 🔸 MENU ITEMS */}
+        {/* MENU ITEMS */}
         <Menu
           className="bg-transparent [&_.ant-menu-item]:!text-white [&_.ant-menu-item-selected]:!bg-[#2a54b7]"
           mode="inline"
           items={[
             { key: "1", icon: <UnorderedListOutlined />, label: <Link href="/auth/employer/dashboard/">Dashboard</Link> },
             { key: "2", icon: <VideoCameraOutlined />, label: <Link href="/auth/employer/dashboard/job-post">Post a job</Link> },
-            { key: "3", icon: <UsergroupAddOutlined />, label: <Link href="/auth/employer/dashboard/company-profile">Company Profile</Link> },
+            { key: "3", icon: <UsergroupAddOutlined />, label: <Link href="/auth/employer/dashboard/company-profile">Employer Profile</Link> },
             { key: "4", icon: <RadiusSettingOutlined />, label: <Link href="/auth/employer/dashboard/account-settings">Account Settings</Link> },
             { key: "5", icon: <AccountBookOutlined />, label: <Link href="/auth/employer/dashboard/subscriptions-billing">Subscriptions/Billing</Link> },
             { key: "6", icon: <ShoppingCartOutlined />, label: <Link href="/auth/employer/dashboard/marketplace">Job Orbit Marketplace</Link> },
-            { key: "7", icon: <ContactsOutlined />, label: <Link href="/auth/employer/dashboard/contact">Contact Support</Link> },
-            { key: "8", icon: <LogoutOutlined />, label: "Sign Out" },
+            { key: "7", icon: <ContactsOutlined />, label: <Link   href="/auth/employer/dashboard/contact">Contact Support</Link> },
+            { key: "8", label:<button  onClick={handleLogout}><LogoutOutlined /> Sign Out </button> ,  },
           ]}
         />
       </div>
@@ -87,7 +102,7 @@ const EmployerDashboard = ({ children }: { children: React.ReactNode }) => {
         {/* TOP NAVBAR */}
         <div className="bg-white h-16 flex justify-between items-center px-4 shadow-md">
           
-          {/* 🔸 MOBILE MENU BUTTON */}
+          {/*  MOBILE MENU BUTTON */}
           {collapsed && isMobile && (
             <MenuUnfoldOutlined
               className="text-xl cursor-pointer"

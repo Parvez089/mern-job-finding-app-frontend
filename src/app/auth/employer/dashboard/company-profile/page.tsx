@@ -2,7 +2,7 @@
 
 import ProfileImage from "@/Component/profile/ProfileImage";
 import { CalculatorOutlined } from "@ant-design/icons";
-import { Progress, Switch } from "antd";
+import { Button, Progress, Switch } from "antd";
 import Image from "next/image";
 import React from "react";
 
@@ -24,7 +24,7 @@ const CompanyProfile = () => {
 
           <h2 >Change Profile Image</h2>
           </div>
-          <div className="mt-4 clear-both flex flex-col gap-4">
+          <div className="mt-2 clear-both flex flex-col gap-4">
 <p className="font-bold text-gray-500">EMPLOYEE DETAILS</p>
 <div className="bg-gray-100 p-1 rounded-lg ">
   <h1 className="text-gray-400"> First Name</h1>
@@ -122,9 +122,16 @@ const CompanyProfile = () => {
           </div>
           
         </div>
-        <div></div>
+        <div>
+        {/* add */}
+        </div>
       </div>
     </div>
+
+    <div className="mt-2">
+<Button className="mt-4">Save</Button>
+    </div>
+    
   </div>;
 };
 
