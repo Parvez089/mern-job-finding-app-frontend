@@ -115,7 +115,7 @@ const AccountSettingComponents = () => {
            {/* Button */}
 
            <div className="mt-8">
-         <Button className="w-full mt-4">Save</Button>
+         <Button className="w-full mt-4 !bg-blue-500 !text-white font-bold">Save</Button>
 
            </div>
         </div>
