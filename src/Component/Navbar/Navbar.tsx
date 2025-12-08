@@ -104,7 +104,7 @@ const Navbar = () => {
           <Menu
             mode='horizontal'
             items={menuItems}
-            className=' !border-none !bg-transparent  flex justify-center w-full !text-black'
+            className=' !border-none !bg-transparent  flex justify-center w-full text-black'
           />
         </div>
 
@@ -113,12 +113,12 @@ const Navbar = () => {
             {userData ? (
               <div className='flex items-center gap-3'>
                 <Button
-                  className='!border-dashed !bg-transparent !border-[var(--bg-color)] text-[var(--primary-text)] text-sm sm:text-base shadow'
+                  className='border-dashed!  border-(--bg-color) text-(--primary-text) text-sm sm:text-base shadow'
                   onClick={handleDashboardRedirect}>
                   {userData.name}
                 </Button>
                 <Button
-                  className='!bg-red-500 !hover:bg-red-600 !text-[var(--text-color)]'
+                  className='bg-red-500! !hover:bg-red-600 !text-[var(--text-color)]'
                   onClick={handleLogout}>
                   Logout
                 </Button>
