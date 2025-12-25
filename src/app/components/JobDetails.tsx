@@ -66,7 +66,7 @@ const JobDetails = ({ jobId }: JobDetailsProps) => {
           <LinkOutlined className='bg-blue-100 text-lg p-2 rounded-4xl' />
         </div>
       </div>
-      <div className='!bg-[var(--card-color)] overflow-scroll overflow-x-auto max-h-[700px]'>
+      <div className='!bg-[var(--card-color)] overflow-scroll overflow-x-auto max-h-[1200px]'>
         <div className='mt-8 px-4 flex flex-col gap-4 !bg-[var(--card-color)] '>
           {
             job.description &&(

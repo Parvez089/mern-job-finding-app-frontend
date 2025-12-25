@@ -36,42 +36,9 @@ const JobPost = () => {
   const [form] = Form.useForm();
    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
-//  useEffect(()=>{
-
-//   if(typeof window === "undefined") return;
-
-//     const userData = localStorage.getItem("user");
-//     console.log("User data from localStorage:", userData);
-
-//     if(!userData){
-//       message.error("Please login first!");
-//       window.location.href = "/auth"
-//       return;
-//     }
-
-//     try{
-// const user = JSON.parse(userData);
-//     console.log("Parsed user", user)
-
-//     if(!user.role){
-//       message.error("Invalid user data.Please login again");
-//       localStorage.removeItem("user");
-//       window.localStorage.href = "/auth"
-//     }
-
-//     if(user.role !== "employer" && user.role !== "admin"){
-//       message.error("Access deniew! only employers of admins can post jobs");
-//       window.location.href = "/";
-//     }
-//     }catch(error){
-//        console.error("Invalid user data in localStorage", error);
-//       localStorage.removeItem("user");
-//       window.location.href = "/auth";
-//     }
-    
-//    },[])
 
   const onFinish = async (values: any) =>{
+    console.log("Submitting values:", values);
     try{
        const token = localStorage.getItem("token");
        console.log(token);
@@ -167,8 +134,8 @@ const JobPost = () => {
             <Input.TextArea rows={12} />
           </Form.Item>
           <Form.Item
-            name='responsibilitie'
-            label='Responsibilitie'
+            name='responsibilities'
+            label='Responsibilities'
             rules={[{ required: true }]}>
             <Input.TextArea rows={12} />
           </Form.Item>

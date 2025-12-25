@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import Navbar from "../Navbar/Navbar";
 import Footer from "../Footer/Footer";
 import ConditionalHero from "../Hero/ConditionalHero";
+import Banner from "../banner/Banner";
 
 export default function RootLayoutWrapper({
   children,
@@ -28,6 +29,7 @@ export default function RootLayoutWrapper({
       <main className='flex-grow'>{children}</main>
 
            {/* Hide Footer on Dashboard */}
+           <Banner/>
       {!isDashboardPage && <Footer />}
    
 

@@ -82,7 +82,7 @@ const SmallDeviceJob = ({ jobId }: JobDetailsProps) => {
 
           {job.details && (
             <div>
-              <h1 className='text-lg !font-semibold'>Job Responsibilities</h1>
+              <h1 className='text-lg !font-semibold'>Job Details</h1>
               <h2 className='text-justify text-base/6 text-gray-600 list-disc'>
                 {job.details}
               </h2>
