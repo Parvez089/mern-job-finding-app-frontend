@@ -10,3 +10,17 @@ export const getEmployerProfile = async () => {
 
     return res.data;
 }
+
+export const updateEmployerProfile = async () => {
+    const token = localStorage.getItem("token");
+    const res = await axios.get(`${API_BASE_URL}/api/employer/update`, FormData, {
+        headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`
+        }
+    });
+
+    return res.data;
+}
+
+
