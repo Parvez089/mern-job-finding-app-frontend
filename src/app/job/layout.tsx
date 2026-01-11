@@ -27,8 +27,8 @@ const JobLayout = ({ children, onSelectJob }: JobLayoutProps) => {
   useEffect(() => {
     const fetchJobs = async () => {
       const data = await getAllJobs(page,PAGE_SIZE);
-      setJobs(data.jobs);
-      setTotalPages(data.pagination.totalPages)
+      setJobs(data?.jobs || []);
+      setTotalPages(data?.pagination?.totalPages || [])
     };
     fetchJobs();
   }, [page]);
@@ -63,8 +63,8 @@ const JobLayout = ({ children, onSelectJob }: JobLayoutProps) => {
           <div className="mt-4 flex justify-center">
             <Pagination
             current={page}
-            total={totalPages * 12}
-            pageSize={12}
+            total={totalPages * PAGE_SIZE}
+            pageSize={PAGE_SIZE}
             onChange={(p)=>setPage(p)}
             />
 

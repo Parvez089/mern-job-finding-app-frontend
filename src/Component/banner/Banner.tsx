@@ -26,15 +26,15 @@ const Banner = () => {
           </div>
 
           {/* Image Content */}
-          <div className="flex-1 relative w-full aspect-video md:aspect-auto">
+          {/* <div className="flex-1 relative w-full aspect-video md:aspect-auto">
             <Image 
-              src="/man-at-laptop.jpg" // Add your image to /public
+              src="" // Add your image to /public
               alt="Person working on laptop"
               width={500}
               height={300}
               className="rounded-2xl object-cover"
             />
-          </div>
+          </div> */}
         </div>
       </div>
     </section>;

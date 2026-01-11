@@ -38,7 +38,7 @@ const JobList = ({ jobs = [], onSelectJob }: JobListProps) => {
   useEffect(() => {
     if (jobs.length > 0 && pathname === "/job") {
       const firstJobId = jobs[0]._id;
-
+      console.log(jobs.length, "Total Job")
       // If desktop → stay in layout view
       if (!isMobile) {
         router.replace(`/job/${firstJobId}`);
@@ -71,7 +71,8 @@ const JobList = ({ jobs = [], onSelectJob }: JobListProps) => {
     <div>
       <h2 className='text-2xl !font-bold --font-poppins'>Available Jobs</h2>
 
-      {jobs.length === 0 && <p>No jobs available</p>}
+      {jobs.length === 0 && <p>No jobs available</p> }
+     
       <div className='space-y-3 '>
         {jobs.map((job) => {
           const isActive = pathname === `/job/${job._id}`;

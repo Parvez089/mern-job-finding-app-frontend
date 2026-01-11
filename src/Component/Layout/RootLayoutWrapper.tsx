@@ -22,6 +22,8 @@ export default function RootLayoutWrapper({
 
   const shouldHideNavbar = isHomePage || isJobDetailsPage || isAuthPage;
 
+  const shouldHideBanner = isDashboardPage || isAuthPage;
+
   return (
     <div className='flex flex-col min-h-screen'>
       {!shouldHideNavbar && <Navbar />}
@@ -29,8 +31,8 @@ export default function RootLayoutWrapper({
       <main className='flex-grow'>{children}</main>
 
            {/* Hide Footer on Dashboard */}
-           <Banner/>
-      {!isDashboardPage && <Footer />}
+        {!shouldHideBanner && <Banner/>}   
+      {!isDashboardPage && <Footer /> }
    
 
     </div>

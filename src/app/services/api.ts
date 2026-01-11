@@ -5,7 +5,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export const getAllJobs = async(page: number = 1, limit: number = 12)=>{
   try{
-    const res = await axios.get(`${API_BASE_URL}/api/job?page=${page}&limit=${limit}`);
+    const res = await axios.get( `${API_BASE_URL}/api/job?page=${page}&limit=${limit}`);
     return res.data;
   } catch(err){
     console.error("Error fetching jobs: ", err)
@@ -18,6 +18,6 @@ export const getJobById = async (id: string) => {
     return res.data;
   } catch(err){
     console.error("Error fetching job by Id", err);
-    return {jobs:[], pagination: {totalPages: 0}};
+    
   }
 }
