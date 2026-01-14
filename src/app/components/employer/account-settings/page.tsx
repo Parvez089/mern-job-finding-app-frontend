@@ -1,245 +1,248 @@
 "use client";
 
-import React, { useEffect } from "react";
-
-import { useState } from "react";
-
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { Button, Divider, Form, Input, message } from "antd";
-import { GoogleCircleFilled, GooglePlusCircleFilled } from "@ant-design/icons";
-
+import {
+  Button,
+  Divider,
+  Form,
+  Input,
+  message,
+  Upload,
+} from "antd";
+import type { UploadProps } from "antd";
+import { GoogleCircleFilled } from "@ant-design/icons";
 import {
   getEmployerProfile,
   updateEmployerProfile,
-} from "../../../services/employer.js";
+} from "@/app/services/employer";
+
+interface ProfileFormValues {
+  firstName: string;
+  lastName: string;
+  phone: string;
+  currentpassword?: string;
+  newpassword?: string;
+}
 
 const AccountSettingComponents = () => {
   const [form] = Form.useForm();
-  const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [imageUrl, setImageUrl] = useState("");
-  const [fileList, setFileList] = useState([]);
 
+  // image state
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [file, setFile] = useState<File | null>(null);
+
+  // ===============================
+  // FETCH PROFILE
+  // ===============================
   useEffect(() => {
-    async function fetchProfile() {
+    const fetchProfile = async () => {
       try {
-        const data = await getEmployerProfile();
-        const user = data.message;
+        const res = await getEmployerProfile();
+        const user = res.message;
+
+        const nameParts = user?.name?.split(" ") || [];
 
         form.setFieldsValue({
-          firstName: user.name?.split("")[0] || "",
-          lastName: user.name?.split("")[1] || "",
-          email: user.email,
+          firstName: nameParts[0] || "",
+          lastName: nameParts.slice(1).join(" "),
           phone: user.phone,
+          email: user.email,
         });
 
-        if (user.ProfileImage?.secure_url)
+        if (user?.ProfileImage?.secure_url) {
           setImageUrl(user.ProfileImage.secure_url);
-      } catch (error) {
+        }
+      } catch {
         message.error("Failed to load profile");
-        console.error(error);
       }
-    }
+    };
 
     fetchProfile();
   }, [form]);
 
-const onFinish = async (values) => {
+  // ===============================
+  // UPLOAD IMAGE
+  // ===============================
+  const uploadProps: UploadProps = {
+    beforeUpload: (file) => {
+      const isImage = ["image/jpeg", "image/png", "image/jpg"].includes(
+        file.type
+      );
+
+      if (!isImage) {
+        message.error("Only JPG/PNG images allowed");
+        return Upload.LIST_IGNORE;
+      }
+
+      const isLt10MB = file.size / 1024 / 1024 < 10;
+      if (!isLt10MB) {
+        message.error("Image must be under 10MB");
+        return Upload.LIST_IGNORE;
+      }
+
+      setFile(file);
+
+      const reader = new FileReader();
+      reader.onload = () => setImageUrl(reader.result as string);
+      reader.readAsDataURL(file);
+
+      return false;
+    },
+    showUploadList: false,
+  };
+
+  // ===============================
+  // SUBMIT FORM
+  // ===============================
+  const onFinish = async (values: ProfileFormValues) => {
     setLoading(true);
+
     try {
       const formData = new FormData();
-      // Combine names back together or send separately based on your API
-      formData.append("name", `${values.firstName} ${values.lastName}`);
+
+      formData.append(
+        "name",
+        [values.firstName, values.lastName].filter(Boolean).join(" ")
+      );
+
       formData.append("phone", values.phone);
-      
-      if (fileList.length > 0) {
-        formData.append("file", fileList[0].originFileObj);
+
+      // disabled input workaround
+      formData.append("email", form.getFieldValue("email"));
+
+      if (values.currentpassword && values.newpassword) {
+        formData.append("currentpassword", values.currentpassword);
+        formData.append("newpassword", values.newpassword);
+      }
+
+      if (file) {
+        formData.append("file", file);
       }
 
       const res = await updateEmployerProfile(formData);
 
-      if (res.success) {
-        message.success("Profile updated successfully!");
-        if (res.user?.ProfileImage?.secure_url) {
-          setImageUrl(res.user.ProfileImage.secure_url);
-        }
+      if (res?.success) {
+        message.success("Profile updated successfully");
+        setFile(null);
       }
-    } catch (error) {
-      message.error("Update failed. Try again!");
+    } catch {
+      message.error("Update failed");
     } finally {
       setLoading(false);
     }
   };
 
-  const uploadProps = {
-    beforeUpload: (file) => {
-      setFileList([file]);
-      const reader = new FileReader();
-      reader.onload = (e) => setImageUrl(e.target.result);
-      reader.readAsDataURL(file);
-      return false; // Prevent auto-upload to server
-    },
-    fileList,
-    showUploadList: false,
+  // ===============================
+  // DELETE IMAGE (UI ONLY)
+  // ===============================
+  const handleDeleteImage = () => {
+    setImageUrl(null);
+    setFile(null);
   };
-  //  useEffect(()=>{
-  //   async function fetchProfile(){
-  //     try{
-  //       const data = await getEmployerProfile();
-  //       setProfile(data.message);
 
-  //       form.setFieldsValue({
-  //         firstName: data.message.name.split(" ")[0] || "",
-  //         lastName: data.message.name.split(" ")[1] || "",
-  //         email: data.message.email,
-  //         phone: data.message.phone
-  //       })
-
-  //     }  catch(error){
-  //     console.error(error);
-  //     message.error("Faild to load profile")
-
-  //   }
-  //   }
-
-  //   fetchProfile();
-  //  }, [form])
+  // ===============================
+  // RENDER
+  // ===============================
   return (
-    <div className='flex flex-col max-w-3xl w-full'>
-      <h1 className='font-semibold!'>Account</h1>
-      <p>Real-time information and activities of your property.</p>
-      <Divider className='mb-2! ' />
-      <div className='mt-2 flex md:flex-col justify-between'>
-        <div className='md:flex md:gap-4 gap-12 items-center justify-between'>
-          <div className='flex gap-4 '>
+    <div className="flex flex-col max-w-3xl w-full p-4">
+      <h1 className="text-xl font-semibold">Account</h1>
+      <p className="text-gray-500">
+        Real-time information and activities of your account.
+      </p>
+
+      <Divider />
+
+      {/* PROFILE IMAGE */}
+      <div className="flex justify-between items-center mb-6">
+        <div className="flex gap-4 items-center">
+          <div className="relative w-[60px] h-[60px]">
+            <Image
+              fill
+              alt="Profile"
+              src={imageUrl ?? "https://via.placeholder.com/60"}
+              className="rounded-full object-cover"
+            />
+          </div>
+          <div>
+            <p className="font-semibold">Profile picture</p>
+            <p className="text-xs text-gray-500">
+              JPG / PNG under 10MB
+            </p>
+          </div>
+        </div>
+
+        <div className="flex gap-2">
+          <Upload {...uploadProps}>
+            <Button size="small">Upload</Button>
+          </Upload>
+          <Button size="small" danger onClick={handleDeleteImage}>
+            Delete
+          </Button>
+        </div>
+      </div>
+
+      {/* FORM */}
+      <Form
+        form={form}
+        layout="vertical"
+        onFinish={onFinish}
+        disabled={loading}
+      >
+        <div className="grid grid-cols-2 gap-4">
+          <Form.Item label="First Name" name="firstName">
+            <Input />
+          </Form.Item>
+          <Form.Item label="Last Name" name="lastName">
+            <Input />
+          </Form.Item>
+        </div>
+
+        <Divider />
+
+        <Form.Item label="Email" name="email">
+          <Input disabled />
+        </Form.Item>
+
+        <Form.Item label="Phone" name="phone">
+          <Input />
+        </Form.Item>
+
+        <Divider />
+
+        <Form.Item label="Current Password" name="currentpassword">
+          <Input.Password />
+        </Form.Item>
+
+        <Form.Item label="New Password" name="newpassword">
+          <Input.Password />
+        </Form.Item>
+
+        <Divider />
+
+        <div className="flex justify-between items-center border p-3 rounded">
+          <div className="flex items-center gap-3">
+            <GoogleCircleFilled className="text-2xl text-red-500" />
             <div>
-              <Image
-                width={60}
-                height={60}
-                alt=''
-                src='https://plus.unsplash.com/premium_photo-1689568126014-06fea9d5d341?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
-                className='rounded-full w-15 h-15'
-              />
-            </div>
-
-            <div className='flex  flex-col mt-3 space-y-0!'>
-              <p className='font-semibold'>Profile picture</p>
-              <p>PNG,JPEG,JPG under 10MB</p>
+              <p className="font-semibold text-sm">Google</p>
+              <p className="text-xs text-gray-500">
+                Faster login method
+              </p>
             </div>
           </div>
-
-          <div className='flex gap-4 mt-2'>
-            <button className='bg-white px-2 py-1 rounded-lg'>
-              Upload new picture
-            </button>
-            <button>Delete</button>
-          </div>
+          <Button size="small">Connect</Button>
         </div>
-      </div>
-      <div className='mt-4 '>
-        <Form form={form} name='layout-multiple-horizontal' layout='horizontal'>
-          <div className='flex w-full! gap-4'>
-            <Form.Item
-              layout='vertical'
-              label='First Name'
-              name='firstName'
-              className='w-full'>
-              <Input />
-            </Form.Item>
-            <Form.Item
-              layout='vertical'
-              label='Last Name'
-              name='lastName'
-              className='w-full'>
-              <Input />
-            </Form.Item>
-          </div>
-        </Form>
-        <div>
-          <Divider className=' mt-0!' />
 
-          {/* Contact information */}
-          <div className=''>
-            <h1 className='font-semibold!'>Contact </h1>
-            <p>Manage Your Contact Information</p>
-            <Form name='layout-multiple-horizontal' layout='horizontal'>
-              <div className='flex w-full! gap-4'>
-                <Form.Item
-                  layout='vertical'
-                  label='Email'
-                  name='email'
-                  className='w-full'>
-                  <Input />
-                </Form.Item>
-                <Form.Item
-                  layout='vertical'
-                  label='Phone'
-                  name='phone'
-                  className='w-full'>
-                  <Input />
-                </Form.Item>
-              </div>
-            </Form>
-          </div>
-          <Divider className='!mt-0' />
-
-          {/* Password */}
-
-          <div>
-            <h1 className='!font-semibold'>Password </h1>
-            <p>Modify your current password</p>
-            <Form name='layout-multiple-horizontal' layout='horizontal'>
-              <div className='flex !w-full gap-4'>
-                <Form.Item
-                  layout='vertical'
-                  label='Current Password'
-                  name='currentpassword'
-                  className='w-full'>
-                  <Input />
-                </Form.Item>
-                <Form.Item
-                  layout='vertical'
-                  label='New Password'
-                  name='newpassword'
-                  className='w-full'>
-                  <Input />
-                </Form.Item>
-              </div>
-            </Form>
-          </div>
-          <Divider className='!mt-0' />
-
-          <div>
-            <h1>Integrated Account</h1>
-            <p>Manage your current integrated accounts.</p>
-
-            <div className='bg-white w-full flex justify-between  rounded shadow'>
-              <div className='flex gap-4 px-2 py-1'>
-                <GoogleCircleFilled className='text-2xl' />
-                <div className='!space-y-1 mt-2'>
-                  <p className=' font-semibold'>Google</p>
-                  <p className='text-sm text-gray-500'>
-                    Use Google for the faster login methods in your account
-                  </p>
-                </div>
-              </div>
-
-              <div className='flex justify-center items-center mr-2'>
-                <Button>Connect</Button>
-              </div>
-            </div>
-            <div></div>
-          </div>
-
-          {/* Button */}
-
-          <div className='mt-8'>
-            <Button className='w-full mt-4 !bg-blue-500 !text-white font-bold'>
-              Save
-            </Button>
-          </div>
-        </div>
-      </div>
+        <Button
+          type="primary"
+          htmlType="submit"
+          loading={loading}
+          className="w-full mt-6!"
+        >
+          Save Changes
+        </Button>
+      </Form>
     </div>
   );
 };

@@ -1,123 +1,106 @@
 "use client";
 
-import Charts from "@/app/components/Charts";
-import { UserOutlined } from "@ant-design/icons";
-import axios from "axios";
 import { useEffect, useState } from "react";
+import axios from "axios";
+import StatsCard from "@/app/components/employer/TotalApplication";
+import HiringTrendsChart from "@/app/components/employer/Chart";
+import RecentJobPosts from "@/app/components/employer/RecentJobPosts";
 
+interface DashboardStats {
+  totalApplicants: number;
+  totalJobs: number;
+  totalInterviews: number;
+  totalHires: number;
+  jobsPercentage: number;
+  applicantsPercentage: number;
+  interviewsPercentage: number;
+  hiresPercentage: number;
+  isJobUp: boolean;
+  isApplicantsUp: boolean;
+  isInterviewsUp: boolean;
+  isHiresUp: boolean;
+}
 const EmployerDashboard = () => {
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
-  const [totalApplicants, setTotalApplicants] = useState(null);
-  const [totalJobs, setTotalJobs] = useState(null)
-  const [totalViews, setTotalViews] = useState(null)
+
+  // State for all dynamic stats
+
+  const [stats, setStats] = useState<DashboardStats>({
+    totalApplicants: 0,
+    totalJobs: 0,
+    totalInterviews: 0,
+    totalHires: 0,
+    jobsPercentage: 0,
+    applicantsPercentage: 0,
+    interviewsPercentage: 0,
+    hiresPercentage: 0,
+    isJobUp: false,
+    isApplicantsUp: false,
+    isInterviewsUp: false,
+    isHiresUp: false,
+  });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchDashboardData = async () => {
       try {
         const token = localStorage.getItem("token");
 
         const res = await axios.get(
-          `${API_BASE_URL}/api/applications/employer/applicants`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-        setTotalApplicants(res.data.totalApplicants);
-       
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const token = localStorage.getItem("token");
-
-        const res = await axios.get(
-          
-          `${API_BASE_URL}/api/applications/employer/total-jobs`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
+          `${API_BASE_URL}/api/applications/employer/dashboard-stats`,
+          { headers: { Authorization: `Bearer ${token}` } }
         );
 
-        setTotalJobs(res.data.totalJobs);
+        setStats(res.data);
       } catch (error) {
-        console.log(error);
+        console.error("Error fetching dashboard stats:", error);
+      } finally {
+        setLoading(false);
       }
     };
-    fetchData();
-  }, []);
-  useEffect(() => {
-  const fetchJobViews = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const res = await axios.get(`${API_BASE_URL}/api/applications/employer/total-job-views`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
 
-      setTotalViews(res.data.totalViews);
-    } catch (err) {
-      console.error(err);
-    }
-  };
+    fetchDashboardData();
+  }, [API_BASE_URL]);
 
-  fetchJobViews();
-}, []);
   return (
     <div>
       <div className='grid md:grid-cols-4 grid-cols-2 gap-8'>
-        <div className='flex justify-between bg-white shadow-sm rounded-lg p-2'>
-          <div>
-            <h1 className='text-xl text-blue-500 !font-bold'>
-              {totalViews!== null ? totalViews : "Loading..."}
-            </h1>
-            <h3>Total Views</h3>
-          </div>
+        <StatsCard
+          title='Total Applicants'
+          value={loading ? "..." : stats.totalApplicants.toLocaleString()}
+          percentage={`${Math.abs(stats.applicantsPercentage)}%`}
+          isUp={stats.isApplicantsUp}
+        />
 
-          <UserOutlined className='text-xl' />
-        </div>
-        <div className='flex justify-between bg-white shadow-sm p-2 rounded-lg  '>
-          <div>
-            <h1 className='text-xl'> {totalJobs!== null ? totalJobs : "Loading..."}</h1>
-            <h3>Posted Job</h3>
-          </div>
+        <StatsCard
+          title='Active Jobs'
+          value={loading ? "..." : stats.totalJobs.toLocaleString()}
+          percentage={`${stats.jobsPercentage}%`}
+          isUp={stats.isJobUp}
+        />
 
-          <UserOutlined className='text-xl' />
-        </div>
-        <div className='flex justify-between bg-white shadow-sm rounded-lg p-2'>
-          <div>
-            <h1 className='text-xl'>
-              {totalApplicants !== null ? totalApplicants : "Loading..."}
-            </h1>
-            <h3>Total Application</h3>
-          </div>
+        <StatsCard
+          title='Interviews'
+          value={loading ? "..." : stats.totalInterviews.toLocaleString()}
+          percentage={`${Math.abs(stats.interviewsPercentage || 0)}%`}
+          isUp={stats.interviewsPercentage > 0}
+          isDown={stats.interviewsPercentage < 0}
+        />
 
-          <UserOutlined className='text-xl' />
-        </div>
-        <div className='flex justify-between bg-white shadow-sm p-2 rounded-lg'>
-          <div>
-            <h1 className='text-xl'>08</h1>
-            <h3>Shortlist</h3>
-          </div>
-
-          <UserOutlined className='text-xl' />
-        </div>
-    
+        <StatsCard
+          title='Hires'
+          value={loading ? "..." : stats.totalHires.toLocaleString()}
+          percentage={`${Math.abs(stats.hiresPercentage || 0)}%`}
+          isUp={stats.isHiresUp}
+        />
       </div>
-      <div className='grid md:grid-cols-3   gap-4 mt-4'>
-        <div className=' bg-white rounded-lg shadow-lg md:py-34 '>
-          <Charts />
-        </div>
-        <div className='bg-yellow-200  md:py-34'>
-          <h2>Posted Job</h2>
-        </div>
-        <div className='bg-yellow-200  md:py-34'>
-          <h2>Posted Job</h2>
-        </div>
+
+      <div className='mt-6'>
+        <HiringTrendsChart />
+      </div>
+
+      <div className='mt-6'>
+        <RecentJobPosts />
       </div>
     </div>
   );
