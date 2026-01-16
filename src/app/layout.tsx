@@ -27,6 +27,8 @@ const poppins = Poppins({
    display: 'swap', 
 });
 
+
+
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
@@ -49,10 +51,9 @@ export default function RootLayout({
     <html lang='en'>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${roboto.variable} ${poppins.variable} antialiased`}>
-          <AntdRegistry>
-        <RootLayoutWrapper>{children}</RootLayoutWrapper>
-    
-       </AntdRegistry>
+        <AntdRegistry>
+          <RootLayoutWrapper>{children}</RootLayoutWrapper>
+        </AntdRegistry>
       </body>
     </html>
   );

@@ -91,7 +91,8 @@ const EmployerDashboard = () => {
           title='Hires'
           value={loading ? "..." : stats.totalHires.toLocaleString()}
           percentage={`${Math.abs(stats.hiresPercentage || 0)}%`}
-          isUp={stats.isHiresUp}
+          isUp={stats.hiresPercentage > 0}
+          isDown={stats.hiresPercentage < 0}
         />
       </div>
 
