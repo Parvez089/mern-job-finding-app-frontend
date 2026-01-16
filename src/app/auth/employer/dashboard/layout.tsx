@@ -1,6 +1,6 @@
 /** @format */
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   UnorderedListOutlined,
   VideoCameraOutlined,
@@ -15,162 +15,243 @@ import {
   UserOutlined,
   NotificationFilled,
 } from "@ant-design/icons";
-import { Menu, Avatar, Badge } from "antd";
+import {
+  Menu,
+  Avatar,
+  Badge,
+  Spin,
+  Layout,
+  Button,
+  ConfigProvider,
+} from "antd";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
+import axios from "axios";
+import { Bell, BriefcaseBusiness, CalendarCheck, CircleUser, Database, LayoutDashboard, Settings, Users } from "lucide-react";
 
-interface DecodedToken {
-  role: string;
+const { Header, Sider, Content } = Layout;
+
+// 🔹 Types
+interface EmployerProfile {
   name: string;
-  exp: number;
+  companyName: string;
+  profilePicture?: string;
 }
 
 const EmployerDashboard = ({ children }: { children: React.ReactNode }) => {
   const [collapsed, setCollapsed] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [userData, setUserData] = useState<DecodedToken | null>(null);
-  const router = useRouter();
+  const [profile, setProfile] = useState<EmployerProfile | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  // Detect Mobile and handle sidebar state
+  const router = useRouter();
+  const pathname = usePathname(); // 🔹 Hook to get current URL path
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+
+  // 1. Logout Logic (useCallback to prevent unnecessary re-renders)
+  const handleLogout = useCallback(() => {
+    localStorage.removeItem("token");
+    setProfile(null);
+    router.replace("/");
+  }, [router]);
+
+  // 2. Fetch Profile Logic
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) return router.push("/login");
+
+      try {
+        const res = await axios.get(`${API_BASE_URL}/api/employer/me`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setProfile(res.data);
+      } catch (error) {
+        console.error("Profile Fetch Error:", error);
+        handleLogout();
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfile();
+  }, [API_BASE_URL, router, handleLogout]);
+
+  // 3. Responsive Logic
   useEffect(() => {
     const handleResize = () => {
       const mobile = window.innerWidth <= 1024;
       setIsMobile(mobile);
-      if (mobile) setCollapsed(true);
-      else setCollapsed(false);
+      setCollapsed(mobile);
     };
-
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    setUserData(null);
-    router.push("/");
-  };
+  // 4. Menu Items Config
+  const menuItems = [
+    {
+      key: "/auth/employer/dashboard",
+      icon: <LayoutDashboard />,
+      label: <Link href='/auth/employer/dashboard'>Dashboard</Link>,
+    },
+    {
+      key: "/auth/employer/dashboard/job-post",
+      icon: <BriefcaseBusiness />,
+      label: <Link href='/auth/employer/dashboard/job-post'>Posts</Link>,
+    },
+    {
+      key: "/auth/employer/dashboard/company-profile",
+      icon: <Users />,
+      label: (
+        <Link href='/auth/employer/dashboard/company-profile'>
+          Applicants
+        </Link>
+      ),
+    },
+    {
+      key: "/auth/employer/dashboard/account-settings",
+      icon: <CalendarCheck />,
+      label: (
+        <Link href='/auth/employer/dashboard/account-settings'>
+          Interviews
+        </Link>
+      ),
+    },
+    {
+      key: "/auth/employer/dashboard/subscriptions-billing",
+      icon: <Database />,
+      label: (
+        <Link href='/auth/employer/dashboard/subscriptions-billing'>
+          Talent Pool
+        </Link>
+      ),
+    },
+    {
+      key: "/auth/employer/dashboard/marketplace",
+      icon: <Settings />,
+      label: (
+        <Link href='/auth/employer/dashboard/marketplace'>Settings</Link>
+      ),
+    },
+   
+  ];
 
   return (
-    <div className="flex h-screen overflow-hidden bg-[#f6f6f8]">
-      
-      {/* 🔹 MOBILE OVERLAY */}
-      {!collapsed && isMobile && (
-        <div
-          className="fixed inset-0 bg-black/20 z-40 backdrop-blur-sm transition-opacity"
-          onClick={() => setCollapsed(true)}
-        />
-      )}
-
-      {/* 🔹 SIDEBAR (Background #FFFFFF) */}
-      <aside
-        className={`fixed lg:static top-0 left-0 h-full bg-[#FFFFFF] border-r border-[#e8e8f3] 
-        z-50 flex flex-col transition-all duration-300 shadow-sm
-        ${collapsed ? "-translate-x-full lg:translate-x-0 lg:w-20" : "translate-x-0 w-64"}`}
-      >
-        {/* BRANDING / LOGO */}
-        <div className="h-20 flex items-center px-6 gap-3 overflow-hidden whitespace-nowrap">
-          <div className="bg-[#4850e5] min-w-[40px] h-10 rounded-lg flex items-center justify-center text-white shadow-lg shadow-indigo-100">
-            <RadiusSettingOutlined className="text-xl" />
-          </div>
-          {!collapsed && (
-            <div className="flex flex-col">
-              <h1 className="text-[#0e0f1b] font-bold text-lg leading-tight">JobOrbit</h1>
-              <p className="text-[#505495] text-[10px] font-semibold uppercase tracking-wider">Employer</p>
-            </div>
-          )}
-        </div>
-
-        {/* NAVIGATION MENU */}
-        <div className="flex-1 overflow-y-auto py-4">
-          <Menu
-            mode="inline"
-            inlineCollapsed={collapsed}
-            selectable={true}
-            defaultSelectedKeys={["1"]}
-            /* CUSTOM OVERRIDES FOR WHITE BACKGROUND AND TEXT #505495 */
-            className={`
-              !border-none !bg-transparent px-3
-              [&_.ant-menu-item]:!text-[#505495] 
-              [&_.ant-menu-item]:!font-medium
-              [&_.ant-menu-item]:!h-11
-              [&_.ant-menu-item]:!rounded-lg
-              [&_.ant-menu-item-selected]:!bg-[#4850e512] 
-              [&_.ant-menu-item-selected]:!text-[#4850e5]
-              [&_.ant-menu-item:hover]:!text-[#4850e5]
-              [&_.ant-menu-item-icon]:!text-lg
-            `}
-            items={[
-              { key: "1", icon: <UnorderedListOutlined />, label: <Link href="/auth/employer/dashboard/">Dashboard</Link> },
-              { key: "2", icon: <VideoCameraOutlined />, label: <Link href="/auth/employer/dashboard/job-post">Post a job</Link> },
-              { key: "3", icon: <UsergroupAddOutlined />, label: <Link href="/auth/employer/dashboard/company-profile">Employer Profile</Link> },
-              { key: "4", icon: <RadiusSettingOutlined />, label: <Link href="/auth/employer/dashboard/account-settings">Account Settings</Link> },
-              { key: "5", icon: <AccountBookOutlined />, label: <Link href="/auth/employer/dashboard/subscriptions-billing">Subscriptions</Link> },
-              { key: "6", icon: <ShoppingCartOutlined />, label: <Link href="/auth/employer/dashboard/marketplace">Marketplace</Link> },
-              { key: "7", icon: <ContactsOutlined />, label: <Link href="/auth/employer/dashboard/contact">Contact Support</Link> },
-            ]}
+    <ConfigProvider
+      theme={{
+        token: { colorPrimary: "#4850e5" },
+        components: {
+          Menu: { itemSelectedBg: "#4850e512", itemSelectedColor: "#4850e5" },
+        },
+      }}>
+      <div className='flex h-screen overflow-hidden bg-[#f6f6f8]'>
+        {/* Mobile Overlay */}
+        {!collapsed && isMobile && (
+          <div
+            className='fixed inset-0 bg-black/20 z-40 backdrop-blur-sm transition-opacity'
+            onClick={() => setCollapsed(true)}
           />
-        </div>
+        )}
 
-        {/* SIGN OUT SECTION */}
-        <div className="p-4 border-t border-[#e8e8f3]">
-          <button 
-            onClick={handleLogout}
-            className="flex items-center gap-3 w-full px-4 py-3 text-[#505495] hover:text-red-500 hover:bg-red-50 rounded-lg transition-all font-medium text-sm group"
-          >
-            <LogoutOutlined className="text-lg group-hover:scale-110 transition-transform" />
-            {!collapsed && <span>Sign Out</span>}
-          </button>
-        </div>
-      </aside>
-
-      {/* 🔹 MAIN CONTENT AREA */}
-      <div className="flex flex-col flex-1 min-w-0">
-        
-        {/* TOP HEADER */}
-        <header className="h-20 bg-white/80 backdrop-blur-md border-b border-[#e8e8f3] px-8 flex items-center justify-between sticky top-0 z-30">
-          <div className="flex items-center gap-4">
-            <button 
-              onClick={() => setCollapsed(!collapsed)}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-[#505495]"
-            >
-              {collapsed ? <MenuUnfoldOutlined className="text-xl" /> : <MenuFoldOutlined className="text-xl" />}
-            </button>
-            <h2 className="text-xl font-bold text-[#0e0f1b] hidden md:block">Dashboard Overview</h2>
-          </div>
-
-          {/* TOP RIGHT ACTIONS */}
-          <div className="flex items-center gap-6">
-            <Badge dot color="#ef4444" offset={[-2, 2]}>
-              <div className="p-2 bg-gray-50 rounded-full text-[#505495] cursor-pointer hover:bg-gray-100 transition-colors">
-                <NotificationFilled className="text-lg" />
-              </div>
-            </Badge>
-
-            <div className="h-8 w-[1px] bg-[#e8e8f3]"></div>
-
-            <div className="flex items-center gap-3 cursor-pointer group">
-              <div className="text-right hidden sm:block">
-                <p className="text-sm font-bold text-[#0e0f1b] group-hover:text-[#4850e5] transition-colors">Alex Rivera</p>
-                <p className="text-[11px] text-[#505495] font-medium uppercase tracking-tight">TechFlow Inc</p>
-              </div>
-              <Avatar 
-                size={40} 
-                className="bg-indigo-100 !text-[#4850e5] font-bold border-2 border-white shadow-sm"
-                icon={<UserOutlined />}
-              />
+        {/* Sidebar */}
+        <aside
+          className={`fixed lg:static top-0 left-0 h-full bg-white border-r border-[#e8e8f3] z-50 flex flex-col transition-all duration-300 ${
+            collapsed
+              ? "-translate-x-full lg:translate-x-0 lg:w-20"
+              : "translate-x-0 w-64"
+          }`}>
+          {/* Logo Section */}
+          <div className='h-20 flex items-center px-6 gap-3 overflow-hidden'>
+            <div className='bg-[#4850e5] min-w-[40px] h-10 rounded-lg flex items-center justify-center text-white'>
+              <RadiusSettingOutlined className='text-xl' />
             </div>
+            {!collapsed && (
+              <div className='flex flex-col'>
+                <span className='text-[#0e0f1b] font-bold text-lg leading-tight'>
+                  JobOrbit
+                </span>
+                <span className='text-[#505495] text-[10px] font-semibold uppercase tracking-wider'>
+                  Employer
+                </span>
+              </div>
+            )}
           </div>
-        </header>
 
-        {/* PAGE DYNAMIC CONTENT */}
-        <main className="flex-1 overflow-y-auto p-6 md:p-8">
-          <div className="max-w-7xl mx-auto">
-            {children}
+          {/* Navigation */}
+          <div className='flex-1 overflow-y-auto py-4'>
+            <Menu
+              mode='inline'
+              selectedKeys={[pathname]} // 🔹 Automatically highlights based on URL
+              items={menuItems}
+              className='!border-none !bg-transparent px-3 [&_.ant-menu-item]:!h-11 [&_.ant-menu-item]:!rounded-lg [&_.ant-menu-item]:!text-[#505495]'
+            />
           </div>
-        </main>
+
+          {/* Sign Out */}
+          <div className='p-4 border-t border-[#e8e8f3]'>
+            <button
+              onClick={handleLogout}
+              className='flex items-center gap-3 w-full px-4 py-3 text-[#505495] hover:text-red-500 hover:bg-red-50 rounded-lg transition-all font-medium group'>
+              <LogoutOutlined className='text-lg' />
+              {!collapsed && <span>Sign Out</span>}
+            </button>
+          </div>
+        </aside>
+
+        {/* Main Area */}
+        <div className='flex flex-col flex-1 min-w-0'>
+          <header className='h-20 bg-white/80 backdrop-blur-md border-b border-[#e8e8f3] px-8 flex items-center justify-between sticky top-0 z-30'>
+            <div className='flex items-center gap-4'>
+              <Button
+                type='text'
+                icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                onClick={() => setCollapsed(!collapsed)}
+                className='text-[#505495] !text-xl'
+              />
+              <h2 className='text-xl font-bold text-[#0e0f1b] hidden md:block'>
+                Dashboard
+              </h2>
+            </div>
+
+            <div className='flex items-center gap-6'>
+              <Badge dot color='#ef4444'>
+                <Bell />
+              </Badge>
+              <div className='h-8 w-[1px] bg-[#e8e8f3]' />
+
+              <div className='flex items-center gap-3 cursor-pointer group'>
+                {loading ? (
+                  <Spin size='small' />
+                ) : (
+                  <>
+                    <div className='text-right hidden sm:block'>
+                      <p className='text-sm font-bold text-[#0e0f1b]'>
+                        {profile?.name || "User"}
+                      </p>
+                      <p className='text-[11px] text-[#505495] font-medium uppercase'>
+                        {profile?.companyName || "Company"}
+                      </p>
+                    </div>
+                    <Avatar
+                      size={40}
+                      src={profile?.profilePicture}
+                      icon={<UserOutlined />}
+                      className='border-2 border-white shadow-sm'
+                    />
+                  </>
+                )}
+              </div>
+            </div>
+          </header>
+
+          <main className='flex-1 overflow-y-auto p-6 md:p-8'>
+            <div className='max-w-full mx-auto'>{children}</div>
+          </main>
+        </div>
       </div>
-    </div>
+    </ConfigProvider>
   );
 };
 

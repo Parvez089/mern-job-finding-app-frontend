@@ -18,7 +18,10 @@ export default function RootLayoutWrapper({
   const isJobDetailsPage =
     pathname.startsWith("/job/") &&
     pathname !== "/job/apply-job";
-    const isDashboardPage = pathname.startsWith("/auth/employer/dashboard");
+    const isDashboardPage =
+      pathname.startsWith("/auth/employer/dashboard") ||
+      pathname.startsWith("/auth/job-seeker/dashboard") ||
+      pathname.startsWith("/auth/admin/dashboard");
 
   const shouldHideNavbar = isHomePage || isJobDetailsPage || isAuthPage;
 
