@@ -16,7 +16,7 @@ const LivePreviewCard = () => (
             S
           </div>
           <div>
-            <h3 className='font-bold text-[#0e0f1b] text-lg'>
+            <h3 className='font-bold! text-[#0e0f1b] text-lg'>
               Senior Product Designer
             </h3>
             <p className='text-xs text-gray-400 font-medium'>
@@ -29,10 +29,10 @@ const LivePreviewCard = () => (
           <div className='flex items-center gap-3 p-3 bg-gray-50 rounded-xl'>
             <span className='text-lg'>🏢</span>
             <div>
-              <p className='text-[10px] text-gray-400 uppercase font-bold'>
+              <p className='text-[10px] text-gray-400 uppercase font-bold!'>
                 Department
               </p>
-              <p className='font-bold text-[#0e0f1b]'>Design & Creative</p>
+              <p className='font-bold! text-[#0e0f1b]'>Design & Creative</p>
             </div>
           </div>
           <div className='flex items-center gap-3 p-3 bg-gray-50 rounded-xl'>
@@ -48,7 +48,7 @@ const LivePreviewCard = () => (
 
         <Button
           block
-          className='h-14 rounded-2xl font-bold bg-[#4850e5] text-white hover:!bg-[#3b43cc] border-none shadow-lg shadow-blue-100'>
+          className='h-14! rounded-2xl! font-bold bg-[#4850e5] text-white hover:!bg-[#3b43cc] border-none shadow-lg shadow-blue-100'>
           Apply for this position
         </Button>
       </div>
