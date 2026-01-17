@@ -14,17 +14,22 @@ const CreateJob = () => {
   const handleNext = () =>{
     setCurrentStep((prev)=> prev + 1)
   }
+  const handleBack = () => {
+    setCurrentStep((prev) => prev - 1);
+  };
 
-  const renderStepForm = () =>{
-    switch(currentStep){
-      case 1: 
-        return <JobDetailsForm onNext={handleNext}/>
-      case 2: 
-        return <RequirementsForm onNext={handleNext}/>
-      default: 
-       return <JobDetailsForm onNext={handleNext} />;
+  const renderStepForm = () => {
+    switch (currentStep) {
+      case 1:
+        return <JobDetailsForm onNext={handleNext} />;
+      case 2:
+        return <RequirementsForm onBack={handleBack} onNext={handleNext} />;
+      case 3:
+        return <RequirementsForm onBack={handleBack} onNext={handleNext} />;
+      default:
+        return <JobDetailsForm onNext={handleNext} />;
     }
-  }
+  };
   return <div className="min-h-screen ">
  
     <div className="max-w-7xl mx-auto px-4 py-4">
