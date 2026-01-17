@@ -4,32 +4,31 @@ import React from "react";
 
 
 
-interface PageHeaderProps{
-    title: string;
-    subtitle: string;
-    onActionClick?: () => void;
+interface PageHeaderProps {
+  title: string;
+  subtitle: string;
+  action?: string;
+  onActionClick?: () => void;
 }
 
-
-const PageHeader = ({title, subtitle, onActionClick}:PageHeaderProps) => {
+const PageHeader = ({ title, subtitle, onActionClick }: PageHeaderProps) => {
   return (
-  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-    <div>
-        <h1 className="text-3xl !font-bold text-[#0e0f1b] tracking-tight ">
-            {title}
+    <div className='flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8'>
+      <div>
+        <h1 className='text-3xl !font-bold text-[#0e0f1b] tracking-tight '>
+          {title}
         </h1>
-        <p className="text-gray-500 font-medium mt-1">
-            {subtitle}
-        </p>
-    </div>
+        <p className='text-gray-500 font-medium mt-1'>{subtitle}</p>
+      </div>
 
-    <Button 
-    type="primary"
-    size="large"
-    onClick={onActionClick}
-    icon={<Plus size={20} className="mr-1 !font-bold"/>}
-    >Create New Job</Button>
-
+      <Button
+        type='primary'
+        size='large'
+        onClick={onActionClick}
+        icon={<Plus size={20} />}
+        className='mr-1 font-semibold!'>
+        Create New Job
+      </Button>
     </div>
   );
 };
