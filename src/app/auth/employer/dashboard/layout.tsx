@@ -28,13 +28,15 @@ import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import axios from "axios";
 import { Bell, BriefcaseBusiness, CalendarCheck, CircleUser, Database, LayoutDashboard, Settings, Users } from "lucide-react";
+import DashboardHeader from "@/app/components/employer/dashboard/DashboardHeader";
+import CreateJobHeader from "@/app/components/employer/createJob/CreateJobHeader";
 
 const { Header, Sider, Content } = Layout;
 
 // 🔹 Types
 interface EmployerProfile {
   name: string;
-  companyName: string;
+  email: string;
   profilePicture?: string;
 }
 
@@ -47,7 +49,7 @@ const EmployerDashboard = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
   const pathname = usePathname(); // 🔹 Hook to get current URL path
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
-
+  const isCreateJobPage = pathname.includes("/create-job")
   // 1. Logout Logic (useCallback to prevent unnecessary re-renders)
   const handleLogout = useCallback(() => {
     localStorage.removeItem("token");
@@ -55,6 +57,14 @@ const EmployerDashboard = ({ children }: { children: React.ReactNode }) => {
     router.replace("/");
   }, [router]);
 
+
+  const renderHeader = () => {
+    if (pathname.includes("/create-job")) {
+      return <CreateJobHeader />;
+    }
+  
+    return <DashboardHeader collapsed={collapsed} setCollapsed={setCollapsed} />;
+  };
   // 2. Fetch Profile Logic
   useEffect(() => {
     const fetchProfile = async () => {
@@ -105,18 +115,14 @@ const EmployerDashboard = ({ children }: { children: React.ReactNode }) => {
       key: "/auth/employer/dashboard/company-profile",
       icon: <Users />,
       label: (
-        <Link href='/auth/employer/dashboard/company-profile'>
-          Applicants
-        </Link>
+        <Link href='/auth/employer/dashboard/company-profile'>Applicants</Link>
       ),
     },
     {
       key: "/auth/employer/dashboard/account-settings",
       icon: <CalendarCheck />,
       label: (
-        <Link href='/auth/employer/dashboard/account-settings'>
-          Interviews
-        </Link>
+        <Link href='/auth/employer/dashboard/account-settings'>Interviews</Link>
       ),
     },
     {
@@ -131,11 +137,8 @@ const EmployerDashboard = ({ children }: { children: React.ReactNode }) => {
     {
       key: "/auth/employer/dashboard/marketplace",
       icon: <Settings />,
-      label: (
-        <Link href='/auth/employer/dashboard/marketplace'>Settings</Link>
-      ),
+      label: <Link href='/auth/employer/dashboard/marketplace'>Settings</Link>,
     },
-   
   ];
 
   return (
@@ -144,7 +147,22 @@ const EmployerDashboard = ({ children }: { children: React.ReactNode }) => {
         token: { colorPrimary: "#4850e5" },
         components: {
           Menu: { itemSelectedBg: "#4850e512", itemSelectedColor: "#4850e5" },
+          Input: {
+        activeBorderColor: "transparent", 
+        hoverBorderColor: "transparent",  
+        activeShadow: "none",             
+      },
+      Button: {
+        controlOutline: "none", 
+         activeBorderColor: "none", 
+        hoverBorderColor: "none",  
+        activeShadow: "none", 
+      },
+      Select: {
+        controlOutline: "none",
+      }
         },
+
       }}>
       <div className='flex h-screen overflow-hidden bg-[#f6f6f8]'>
         {/* Mobile Overlay */}
@@ -189,6 +207,30 @@ const EmployerDashboard = ({ children }: { children: React.ReactNode }) => {
             />
           </div>
 
+          <div className='flex items-center gap-3 cursor-pointer group p-4 border-t border-[#e8e8f3]'>
+            {loading ? (
+              <Spin size='small' />
+            ) : (
+              <>
+                <Avatar
+                  size={40}
+                  src={profile?.profilePicture}
+                  icon={<UserOutlined />}
+                  className='border-2 border-white shadow-sm'
+                />
+                <div className='flex justify-end flex-col text-right  sm:block'>
+                  <span className='text-sm font-bold text-[#0e0f1b]'>
+                    {profile?.name || "User"}
+                  </span>
+                  <br />
+                  <span className='text-[11px] text-[#505495] font-medium uppercase'>
+                    {profile?.email || "Company"}
+                  </span>
+                </div>
+              </>
+            )}
+          </div>
+
           {/* Sign Out */}
           <div className='p-4 border-t border-[#e8e8f3]'>
             <button
@@ -202,50 +244,8 @@ const EmployerDashboard = ({ children }: { children: React.ReactNode }) => {
 
         {/* Main Area */}
         <div className='flex flex-col flex-1 min-w-0'>
-          <header className='h-20 bg-white/80 backdrop-blur-md border-b border-[#e8e8f3] px-8 flex items-center justify-between sticky top-0 z-30'>
-            <div className='flex items-center gap-4'>
-              <Button
-                type='text'
-                icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-                onClick={() => setCollapsed(!collapsed)}
-                className='text-[#505495] !text-xl'
-              />
-              <h2 className='text-xl font-bold text-[#0e0f1b] hidden md:block'>
-                Dashboard
-              </h2>
-            </div>
 
-            <div className='flex items-center gap-6'>
-              <Badge dot color='#ef4444'>
-                <Bell />
-              </Badge>
-              <div className='h-8 w-[1px] bg-[#e8e8f3]' />
-
-              <div className='flex items-center gap-3 cursor-pointer group'>
-                {loading ? (
-                  <Spin size='small' />
-                ) : (
-                  <>
-                    <div className='text-right hidden sm:block'>
-                      <p className='text-sm font-bold text-[#0e0f1b]'>
-                        {profile?.name || "User"}
-                      </p>
-                      <p className='text-[11px] text-[#505495] font-medium uppercase'>
-                        {profile?.companyName || "Company"}
-                      </p>
-                    </div>
-                    <Avatar
-                      size={40}
-                      src={profile?.profilePicture}
-                      icon={<UserOutlined />}
-                      className='border-2 border-white shadow-sm'
-                    />
-                  </>
-                )}
-              </div>
-            </div>
-          </header>
-
+          {renderHeader()}
           <main className='flex-1 overflow-y-auto p-6 md:p-8'>
             <div className='max-w-full mx-auto'>{children}</div>
           </main>
