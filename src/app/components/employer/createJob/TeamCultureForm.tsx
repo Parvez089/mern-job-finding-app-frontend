@@ -81,7 +81,7 @@ const TeamCultureForm = ({ onNext, onBack }: TeamCultureProps) => {
             {workCultures.map((item) => (
               <div
                 key={item.title}
-                className='flex items-start gap-4 p-4 rounded-2xl! bg-gray-50 border border-gray-100 hover:border-indigo-200 transition-all cursor-pointer'>
+                className='flex items-start gap-4 p-4 rounded-2xl! bg-gray-50! border border-gray-100! hover:border-indigo-200 transition-all cursor-pointer'>
                 <div className='p-2 bg-white rounded-xl! shadow-sm'>
                   {item.icon}
                 </div>
@@ -100,15 +100,15 @@ const TeamCultureForm = ({ onNext, onBack }: TeamCultureProps) => {
         {/* Perks & Benefits Section */}
         <div>
           {/* className='font-bold! text-[#0e0f1b] text-sm block mb-4' */}
-          <label className='font-bold! text-[#0e0f1b]text-sm block mb-4'>
+          <label className='font-bold! text-[#0e0f1b]text-sm block mb-4!'>
             Perks & Benefits
           </label>
-          <div className="flex flex-wrap gap-3">
+          <div className='flex flex-wrap gap-3'>
             {allPerks.map((perk) => (
               <Tag
                 key={perk}
                 onClick={() => togglePerk(perk)}
-                className={`px-5 py-3 rounded-full! cursor-pointer transition-all border-none font-medium text-sm ${
+                className={`px-5! py-3! rounded-full! cursor-pointer transition-all border-none font-medium text-sm! ${
                   selectedPerks.includes(perk)
                     ? "bg-[#4950e5]! text-white!"
                     : "bg-white! border-gray-200! text-gray-500 hover:bg-gray-50!"
@@ -116,7 +116,7 @@ const TeamCultureForm = ({ onNext, onBack }: TeamCultureProps) => {
                 {perk}
               </Tag>
             ))}
-            <button className='text-[#4950e5] font-bold! text-sm flex items-center gap-1 hover:underline ml-2'>
+            <button className='text-[#4950e5] font-bold! text-sm flex items-center gap-1 hover:underline ml-2!'>
               <PlusOutlined size={12} /> Add custom perk
             </button>
           </div>

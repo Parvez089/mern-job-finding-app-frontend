@@ -45,7 +45,7 @@ const RequirementsForm = ({ onNext, onBack }: RequirementsFormProps) => {
                 key={skill}
                 closable
                 onClose={() => setSkills(skills.filter((s) => s !== skill))}
-                className='px-4 py-1.5 rounded-full! border-blue-100! bg-blue-50! text-blue-600 font-medium text-sm flex items-center gap-1'>
+                className='px-4! py-1.5! rounded-full! border-blue-100! bg-blue-50! text-blue-600 font-medium text-sm flex items-center gap-1'>
                 {skill}
               </Tag>
             ))}
