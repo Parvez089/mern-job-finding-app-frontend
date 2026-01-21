@@ -16,10 +16,29 @@ const ReactQuill = dynamic(() => import("react-quill-new"), {
 
 interface JobDetailsProps {
   onNext: () => void;
+  updateFormData: (stepData: Record<string, unknown>) => void;
 }
-const JobDetailsForm = ({onNext}: JobDetailsProps) => {
+const JobDetailsForm = ({ onNext, updateFormData }: JobDetailsProps) => {
+  const [description, setDescription] = useState("");
+  const [formData, setFormData] = useState({
+    title: "",
+    jobType: "Full Time",
+    department: "Design",
+    location: "",
+    isRemote: false,
+  });
 
-  const [description, setDescription] = useState("")
+  const handleChange = (field: string, value: string | boolean) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleContinue = () => {
+    updateFormData({
+      ...formData,
+      description: description,
+    });
+    onNext();
+  };
   const modules = {
     toolbar: [
       ["bold", "italic"],
@@ -41,8 +60,10 @@ const JobDetailsForm = ({onNext}: JobDetailsProps) => {
         <div className='flex flex-col gap-2'>
           <label className='font-bold text-[#0e0f1b] text-sm '>Job Title</label>
           <Input
+            value={formData.title}
             placeholder='e.g. Senior Product Designer'
             className='h-12 bg-gray-50! border-none rounded-xl!'
+            onChange={(e) => handleChange("title", e.target.value)}
           />
         </div>
 
@@ -53,6 +74,8 @@ const JobDetailsForm = ({onNext}: JobDetailsProps) => {
             </label>
 
             <Select
+              value={formData.jobType}
+              onChange={(value) => handleChange("jobType", value)}
               defaultValue='Full Time'
               className='h-12! w-full custom-select'
               variant='borderless'
@@ -64,9 +87,16 @@ const JobDetailsForm = ({onNext}: JobDetailsProps) => {
               Department
             </label>
             <Select
+              value={formData.department}
+              onChange={(value) => handleChange("department", value)}
               defaultValue='Design'
+              options={[
+                { value: "Design", label: "Design" },
+                { value: "Engineering", label: "Engineering" },
+                { value: "Marketing", label: "Marketing" },
+              ]}
               className='h-12! w-full'
-              bordered={false}
+              variant='borderless'
               style={{ background: "#f9fafb", borderRadius: "12px" }}
             />
           </div>
@@ -74,13 +104,19 @@ const JobDetailsForm = ({onNext}: JobDetailsProps) => {
         <div className='flex flex-col gap-2'>
           <div className='flex justify-between items-center'>
             <label className='font-bold text-[#0e0f1b] text-sm'>Location</label>
-            <Checkbox className='text-[#4850e5] font-semibold text-xs'>
+            <Checkbox
+              className='text-[#4850e5] 
+            font-semibold text-xs'
+              checked={formData.isRemote}
+              onChange={(e) => handleChange("isRemote", e.target.checked)}>
               Remote Friendly
             </Checkbox>
           </div>
           <Input
             placeholder='San Francisco, CA'
             className='h-12 bg-gray-50! border-none rounded-xl!'
+            value={formData.location}
+            onChange={(e) => handleChange("location", e.target.value)}
           />
 
           <div className='flex flex-col gap-2'>
@@ -124,7 +160,7 @@ const JobDetailsForm = ({onNext}: JobDetailsProps) => {
               Save as Draft
             </Button>
             <Button
-              onClick={onNext}
+              onClick={handleContinue}
               type='primary'
               className='h-12 px-10 rounded-xl font-bold bg-[#4950e5]'>
               Continue

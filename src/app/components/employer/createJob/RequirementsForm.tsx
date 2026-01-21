@@ -9,9 +9,14 @@ import ReactQuill from "react-quill-new";
 interface RequirementsFormProps {
   onNext: () => void;
   onBack: () => void;
+  updateFormData: (stepData: Record<string, unknown>) => void;
 }
 
-const RequirementsForm = ({ onNext, onBack }: RequirementsFormProps) => {
+const RequirementsForm = ({
+  onNext,
+  onBack,
+  updateFormData,
+}: RequirementsFormProps) => {
   const [skills, setSkills] = useState(["Figma", "React", "Leadership"]);
 
   const [responsibilities, setResponsibilities] = useState("");
@@ -45,7 +50,7 @@ const RequirementsForm = ({ onNext, onBack }: RequirementsFormProps) => {
                 key={skill}
                 closable
                 onClose={() => setSkills(skills.filter((s) => s !== skill))}
-                className='px-4 py-1.5 rounded-full! border-blue-100! bg-blue-50! text-blue-600 font-medium text-sm flex items-center gap-1'>
+                className='px-4! py-1.5! rounded-full! border-blue-100! bg-blue-50! text-blue-600 font-medium text-sm flex items-center gap-1'>
                 {skill}
               </Tag>
             ))}
