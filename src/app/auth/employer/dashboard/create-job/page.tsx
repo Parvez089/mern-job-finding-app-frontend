@@ -27,20 +27,17 @@ const CreateJob = () => {
     description: "",
     skills: [],
     perks: [],
-    ecperienceLevel: "",
+    experienceLevel: "",
     visibility: "public",
-  })
+  });
 
-  const updateFormData = (stepData: any) => {
-    setAllJobData((prev) => (
-      {
-        ...prev,
-        ...stepData,
-      }
-    ));
+  const updateFormData = (stepData: Record<string, unknown>) => {
+    setAllJobData((prev) => ({
+      ...prev,
+      ...stepData,
+    }));
   };
 
-  
   const isSuccessPage = currentStep === 5;
 
   const handleNext = () => {
@@ -54,24 +51,25 @@ const CreateJob = () => {
     setCurrentStep(step);
   };
 
-  const handlePublish = async() => {
+  const handlePublish = async () => {
     const hide = message.loading("publishing your job...", 0);
-    try{
-      const response = await axios.post(`${API_BASE_URL}/api/job`, allJobData, {withCredentials: true});
+    try {
+      const response = await axios.post(`${API_BASE_URL}/api/job`, allJobData, {
+        withCredentials: true,
+      });
 
-    if(response.data.success){
- hide();
-      setCurrentStep(5);
-      message.success("job published successfully!");
-    }
-    }catch (error: any){
+      if (response.data.success) {
+        hide();
+        setCurrentStep(5);
+        message.success("job published successfully!");
+      }
+    } catch (error: unknown) {
       hide();
-      message.error(error.response?.data?.message || "Faild to publish job")
+      if (axios.isAxiosError(error)) {
+        message.error(error.response?.data?.message || "Faild to publish job");
+      }
     }
-
-
-
-  } ;
+  }; ;
   const renderStepForm = () => {
     switch (currentStep) {
       case 1:
@@ -79,7 +77,13 @@ const CreateJob = () => {
       case 2:
         return <RequirementsForm onBack={handleBack} onNext={handleNext} updateFormData={updateFormData}/>;
       case 3:
-        return <TeamCultureForm onBack={handleBack} onNext={handleNext} />;
+        return (
+          <TeamCultureForm
+            onBack={handleBack}
+            onNext={handleNext}
+            updateFormData={updateFormData}
+          />
+        );
       case 4:
         return (
           <ReviewPostForm
@@ -97,7 +101,7 @@ const CreateJob = () => {
           />
         );
       default:
-        return <JobDetailsForm onNext={handleNext} />;
+        return <JobDetailsForm onNext={handleNext} updateFormData={updateFormData}/>;
     }
   };
   return (

@@ -9,9 +9,14 @@ import ReactQuill from "react-quill-new";
 interface RequirementsFormProps {
   onNext: () => void;
   onBack: () => void;
+  updateFormData: (stepData: Record<string, unknown>) => void;
 }
 
-const RequirementsForm = ({ onNext, onBack }: RequirementsFormProps) => {
+const RequirementsForm = ({
+  onNext,
+  onBack,
+  updateFormData,
+}: RequirementsFormProps) => {
   const [skills, setSkills] = useState(["Figma", "React", "Leadership"]);
 
   const [responsibilities, setResponsibilities] = useState("");

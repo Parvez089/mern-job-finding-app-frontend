@@ -13,8 +13,13 @@ import React, { useState } from "react";
 interface TeamCultureProps {
   onNext: () => void;
   onBack: () => void;
+  updateFormData: (stepData: Record<string, unknown>) => void;
 }
-const TeamCultureForm = ({ onNext, onBack }: TeamCultureProps) => {
+const TeamCultureForm = ({
+  onNext,
+  onBack,
+  updateFormData,
+}: TeamCultureProps) => {
   const [selectedPerks, setSelectedPerks] = useState([
     "Health Insurance",
     "Unlimited PTO",
