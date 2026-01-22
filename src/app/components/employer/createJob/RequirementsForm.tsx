@@ -17,9 +17,34 @@ const RequirementsForm = ({
   onBack,
   updateFormData,
 }: RequirementsFormProps) => {
+  // Step 1: Local state SetUp
   const [skills, setSkills] = useState(["Figma", "React", "Leadership"]);
-
+  const [skillInput, setSkillInput] = useState("");
   const [responsibilities, setResponsibilities] = useState("");
+  const [experienceLevel, setExperienceLevel] = useState("senior");
+  const [education, setEducation] = useState("bachelors");
+
+  // Step 2: Add new skill
+  const handleAddSkill = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && skillInput.trim()) {
+      e.preventDefault();
+      if (!skills.includes(skillInput.trim())) {
+        setSkills([...skills, skillInput.trim()]);
+      }
+      setSkillInput("");
+    }
+  };
+
+  // Step 3: Send data perants
+  const handleContinue = () => {
+    updateFormData({
+      skills,
+      responsibilities,
+      experienceLevel,
+      education,
+    });
+    onNext();
+  };
 
   const modules = {
     toolbar: [
@@ -59,6 +84,9 @@ const RequirementsForm = ({
             prefix={<SearchOutlined className='text-gray-400 mr-2' />}
             placeholder='Search and add skills (e.g., Python, UI Design)...'
             className='h-12! bg-gray-50! border-noneW rounded-xl!'
+            value={skillInput}
+            onChange={(e) => setSkillInput(e.target.value)}
+            onKeyDown={handleAddSkill}
           />
         </div>
 
@@ -69,6 +97,8 @@ const RequirementsForm = ({
               Experience Level
             </label>
             <Select
+              value={experienceLevel}
+              onChange={(value) => setExperienceLevel(value)}
               defaultValue='Senior (5-8 years)'
               variant='borderless'
               className='h-12! w-full custom-select'
@@ -87,6 +117,8 @@ const RequirementsForm = ({
               Education
             </label>
             <Select
+              value={education}
+              onChange={(value) => setEducation(value)}
               defaultValue="Bachelor's Degree"
               variant='borderless'
               className='h-12! w-full custom-select'
@@ -140,7 +172,7 @@ const RequirementsForm = ({
           </Button>
           <Button
             type='primary'
-            onClick={onNext}
+            onClick={handleContinue}
             className='h-12 px-8 rounded-xl! font-bold! bg-[#4950e5] flex items-center gap-2'>
             Continue
           </Button>
@@ -148,6 +180,6 @@ const RequirementsForm = ({
       </div>
     </div>
   );
-};
+};;
 
 export default RequirementsForm;
