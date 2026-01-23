@@ -4,8 +4,13 @@ import { SearchOutlined } from "@ant-design/icons";
 import { Button, Input, Select, Tag } from "antd";
 import { MoveLeft, MoveRight } from "lucide-react";
 import React, { useState } from "react";
-import ReactQuill from "react-quill-new";
+import dynamic from "next/dynamic";
+import "react-quill-new/dist/quill.snow.css";
 
+
+const ReactQuill = dynamic(() => import("react-quill-new"),{
+  ssr: false,
+})
 interface RequirementsFormProps {
   onNext: () => void;
   onBack: () => void;
@@ -38,10 +43,10 @@ const RequirementsForm = ({
   // Step 3: Send data parents
   const handleContinue = () => {
     updateFormData({
-      skills,
-      responsibilities,
-      experienceLevel,
-      education,
+      skills:skills,
+      responsibilities:responsibilities,
+      experience: experienceLevel,
+      education: education,
     });
     onNext();
   };

@@ -1,39 +1,59 @@
 /** @format */
 "use client";
 import { EditOutlined } from "@ant-design/icons";
-import { Button, Select, Switch, Tag } from "antd";
+import { Button, message, Select, Switch, Tag } from "antd";
 import React from "react";
+
+interface JobFormData {
+  title?: string;
+  department?: string;
+  location?: string;
+  skills?: string[];
+  experience?: string;
+  perks?: string[];
+  cultures?: string[];
+  description?: string;
+}
+
 interface ReviewPostProps {
+  formData?: JobFormData;
   onBack: () => void;
   onPublish: () => void;
   onEdit: (step: number) => void;
 }
 
-const ReviewPostForm = ({ onBack, onPublish, onEdit }: ReviewPostProps) => {
+const DetailItem = ({ label, value }: { label: string; value?: string }) => (
+  <div>
+    <p className='text-xs text-gray-400 uppercase font-bold! mb-1'>{label}</p>
+    <p className='font-semibold! text-[#0e0f1b]'>
+      {value || (
+        <span className='text-gray-300 font-normal italic text-xs'>
+          Not specified
+        </span>
+      )}
+    </p>
+  </div>
+);
+
+const ReviewPostForm = ({
+  formData = {},
+  onBack,
+  onPublish,
+  onEdit,
+}: ReviewPostProps) => {
+  const handlePublishClick = async () => {
+    try {
+      await onPublish();
+    } catch (error) {
+      message.error("Faild to publish job");
+    }
+  };
   return (
     <div className='space-y-6 pb-10'>
-      {/* Review Section Card */}
-
       <div className='bg-white rounded-3xl! border border-gray-100! p-6 md:p-8 shadow-sm'>
-        <div className='flex items-center justify-between mb-8 border-b border-gray-100'>
-          <div className='mb-8'>
-            <h2 className='text-xl font-bold! text-[#0e0f1b] '>
-              Review Job Posting
-            </h2>
-
-            <p className='text-gray-400 text-sm'>
-              Check the details before publishing your job post.
-            </p>
-          </div>
-
-          <Tag color='blue' className='rounded-full! px-4! py-1!'>
-            Draft Mode
-          </Tag>
-        </div>
-
-        {/* Job Details Summary */}
-        <section className='mb-10 border-b border-gray-100'>
-          <div className='flex justify-between items-center mb-4'>
+        {/* Job Details Section */}
+        <section className='mb-10 border-b border-gray-100 pb-8'>
+          <div className='flex justify-between items-center mb-6'>
             <h3 className='text-xs font-bold! tracking-widest text-indigo-500 uppercase'>
               Job Details
             </h3>
@@ -45,37 +65,16 @@ const ReviewPostForm = ({ onBack, onPublish, onEdit }: ReviewPostProps) => {
               Edit
             </Button>
           </div>
-          <div className='grid grid-cols-1 md:grid-cols-3 gap-6 mb-4'>
-            <div>
-              <p className='text-xs text-gray-400 uppercase font-bold!'>
-                Title
-              </p>
-              <p className='font-semibold! text-[#0e0f1b]'>
-                Senior Product Designer
-              </p>
-            </div>
-            <div>
-              <p className='text-xs text-gray-400 uppercase font-bold!'>
-                Department
-              </p>
-              <p className='font-semibold! text-[#0e0f1b]'>
-                Product Experience
-              </p>
-            </div>
-            <div>
-              <p className='text-xs text-gray-400 uppercase font-bold!'>
-                Location
-              </p>
-              <p className='font-semibold! text-[#0e0f1b]'>
-                San Francisco, CA (Hybrid)
-              </p>
-            </div>
+          <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
+            <DetailItem label='Title' value={formData?.title} />
+            <DetailItem label='Department' value={formData?.department} />
+            <DetailItem label='Location' value={formData?.location} />
           </div>
         </section>
 
-        {/* Requirements Summary */}
-        <section className='mb-10! border-b border-gray-100'>
-          <div className='flex justify-between items-center mb-4!'>
+        {/* Requirements Section */}
+        <section className='mb-10 border-b border-gray-100 pb-8'>
+          <div className='flex justify-between items-center mb-6'>
             <h3 className='text-xs font-bold! tracking-widest text-indigo-500 uppercase'>
               Requirements
             </h3>
@@ -87,130 +86,42 @@ const ReviewPostForm = ({ onBack, onPublish, onEdit }: ReviewPostProps) => {
               Edit
             </Button>
           </div>
-          <div className='space-y-4 mb-8'>
-            <div className='mt-4'>
-              <p className='text-xs text-gray-400 uppercase font-bold mb-2'>
-                Key Skills
-              </p>
-              <div>
-                {[
-                  "Product Design",
-                  "Figma Expert",
-                  "Design Systems",
-                  "User Research",
-                ].map((skill) => (
+          <div className='space-y-6'>
+            <p className='text-xs text-gray-400 uppercase font-bold! mb-2'>
+              Key Skills
+            </p>
+            <div className='flex flex-wrap gap-2'>
+              {formData?.skills && formData.skills.length > 0 ? (
+                formData.skills.map((skill) => (
                   <Tag
                     key={skill}
-                    className='bg-gray-50! flex flex-col border-none px-3! py-1! rounded-md! font-medium! text-gray-600 gap-4'>
+                    className='bg-gray-50! border-none px-3! py-1! rounded-md!'>
                     {skill}
                   </Tag>
-                ))}
-              </div>
-            </div>
-            <div>
-              <p className='text-xs text-gray-400 uppercase font-bold!'>
-                Experience
-              </p>
-              <p className='text-sm text-gray-700 font-medium'>
-                5+ years in senior roles at high-growth SaaS companies.
-              </p>
+                ))
+              ) : (
+                <span className='text-gray-300 text-xs'>
+                  No skills selected
+                </span>
+              )}
             </div>
           </div>
         </section>
 
-        {/* 3.Team & Perks Summary */}
-        <section>
-          <div className='flex justify-between items-center pb-3! mb-4!'>
-            <h3 className='text-xs font-bold! tracking-widest text-indigo-500 uppercase'>
-              Team & Perks
-            </h3>
-            <Button
-              type='link'
-              icon={<EditOutlined />}
-              onClick={() => onEdit(3)}
-              className='font-bold!'>
-              Edit
-            </Button>
-          </div>
-          <div className='space-y-4'>
-            <div>
-              <p className='text-xs text-gray-400 uppercase font-bold! mb-2'>
-                Selected Perks
-              </p>
-              <div className='flex flex-wrap gap-2'>
-                <Tag
-                  color='success'
-                  className='rounded-full! border-none px-3!'>
-                  Health Insurance
-                </Tag>
-                <Tag
-                  color='volcano'
-                  className='rounded-full! border-none px-3!'>
-                  Gym Membership
-                </Tag>
-                <Tag color='purple' className='rounded-full! border-none px-3!'>
-                  401 Matching
-                </Tag>
-              </div>
-            </div>
-            <div>
-              <p className='text-xs text-gray-400 uppercase font-bold! mb-2'>
-                Culture
-              </p>
-              <p className='text-sm italic text-gray-600'>
-                Remote Friendly, Flexible Hours, Collaborative Environment
-              </p>
-            </div>
-          </div>
-        </section>
-      </div>
-
-      {/* Publishing Option Card */}
-      <div className='bg-white rounded-3xl! p-6 md:p-8 shadow-sm'>
-        <h3 className='text-lg font-bold! text-[#0e0f1b] mb-6'>
-          Publishing Options
-        </h3>
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
-          <div className='bg-gray-50 rounded-2xl! p-5 flex items-center justify-between'>
-            <div>
-              <p className='font-bold! text-sm text-[#0e0f1b]'>
-                Post to External Job Boards
-              </p>
-              <p className='text-xs text-gray-400'>
-                LinkedIn, Indeed, and Glassdoor
-              </p>
-            </div>
-            <Switch defaultChecked />
-          </div>
-          <div className='space-y-2!'>
-            <p className='font-bold! text-sm'>Visibility</p>
-            <Select
-              className='w-full h-12 custom-select-review'
-              defaultValue='public'
-              style={{ borderRadius: "12px" }}
-              options={[
-                { value: "public", label: "Public (Anyone can see and apply)" },
-                { value: "private", label: "Private (Link only)" },
-              ]}
-            />
-          </div>
+        {/* Footer Navigation */}
+        <div className='flex items-center justify-between pt-4'>
+          <Button
+            onClick={onBack}
+            className='h-12! px-8! rounded-xl! font-bold! text-gray-500 bg-gray-50! border-none'>
+            Back
+          </Button>
+          <Button
+            type='primary'
+            onClick={handlePublishClick}
+            className='h-12! px-12! rounded-xl! font-bold! bg-[#4950e5]! text-white!'>
+            Publish Job
+          </Button>
         </div>
-      </div>
-
-      {/* Footer Navigation */}
-      <div className='flex items-center justify-between pt-4'>
-        <Button
-          onClick={onBack}
-          className='h-8
-        ! px-6! rounded-xl! font-bold! text-gray-500 bg-gray-50! border-none'>
-          Back
-        </Button>
-        <Button
-          type='primary'
-          onClick={onPublish}
-          className='h-8! px-10! rounded-xl! font-bold! bg-[#4950e5]! shadow-lg text-white! shadow-indigo-100'>
-          Publish Job
-        </Button>
       </div>
     </div>
   );

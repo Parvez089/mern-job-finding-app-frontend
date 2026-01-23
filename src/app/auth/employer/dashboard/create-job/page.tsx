@@ -12,12 +12,26 @@ import { message } from "antd";
 import axios from "axios";
 import React, { useState } from "react";
 
+interface JobData {
+  title: string;
+  department: string;
+  company: string;
+  location: string;
+  jobType: string;
+  salary: string;
+  description: string;
+  skills: string[];
+  perks: string[];
+  cultures: string[];
+  experience: string;
+  visibility: string;
+}
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 const CreateJob = () => {
   const [currentStep, setCurrentStep] = useState(1);
 
-  const [allJobData, setAllJobData] = useState({
+  const initialState: JobData = {
     title: "",
     department: "",
     company: "",
@@ -27,9 +41,11 @@ const CreateJob = () => {
     description: "",
     skills: [],
     perks: [],
-    experienceLevel: "",
+    cultures: [],
+    experience: "",
     visibility: "public",
-  });
+  };
+  const [allJobData, setAllJobData] = useState<JobData>(initialState);
 
   const updateFormData = (stepData: Record<string, unknown>) => {
     setAllJobData((prev) => ({
@@ -54,7 +70,12 @@ const CreateJob = () => {
   const handlePublish = async () => {
     const hide = message.loading("publishing your job...", 0);
     try {
+      const token = localStorage.getItem("accessToken");
+
       const response = await axios.post(`${API_BASE_URL}/api/job`, allJobData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         withCredentials: true,
       });
 
@@ -69,13 +90,21 @@ const CreateJob = () => {
         message.error(error.response?.data?.message || "Faild to publish job");
       }
     }
-  }; ;
+  };
   const renderStepForm = () => {
     switch (currentStep) {
       case 1:
-        return <JobDetailsForm onNext={handleNext} updateFormData={updateFormData}/>;
+        return (
+          <JobDetailsForm onNext={handleNext} updateFormData={updateFormData} />
+        );
       case 2:
-        return <RequirementsForm onBack={handleBack} onNext={handleNext} updateFormData={updateFormData}/>;
+        return (
+          <RequirementsForm
+            onBack={handleBack}
+            onNext={handleNext}
+            updateFormData={updateFormData}
+          />
+        );
       case 3:
         return (
           <TeamCultureForm
@@ -87,6 +116,7 @@ const CreateJob = () => {
       case 4:
         return (
           <ReviewPostForm
+            formData={allJobData}
             onBack={handleBack}
             onPublish={handlePublish}
             onEdit={handleEdit}
@@ -97,11 +127,29 @@ const CreateJob = () => {
         return (
           <JobSuccess
             onGoToDashboard={() => console.log("Going to Dashboard")}
-            onCreateAnother={() => setCurrentStep(1)}
+            onCreateAnother={() => {
+              setAllJobData({
+                title: "",
+                department: "",
+                company: "",
+                location: "",
+                jobType: "Full-time",
+                salary: "",
+                description: "",
+                skills: [],
+                perks: [],
+                cultures: [],
+                experience: "",
+                visibility: "public",
+              });
+              setCurrentStep(1);
+            }}
           />
         );
       default:
-        return <JobDetailsForm onNext={handleNext} updateFormData={updateFormData}/>;
+        return (
+          <JobDetailsForm onNext={handleNext} updateFormData={updateFormData} />
+        );
     }
   };
   return (
@@ -119,6 +167,7 @@ const CreateJob = () => {
         {!isSuccessPage && (
           <div className='w-full lg:w-[400px]'>
             <LivePreviewCard />
+            {/* formData={allJobData} */}
           </div>
         )}
       </div>
