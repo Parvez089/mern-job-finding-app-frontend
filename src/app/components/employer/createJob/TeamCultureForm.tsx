@@ -27,6 +27,10 @@ const TeamCultureForm = ({
     "401k Matching",
   ]);
 
+  const [selectedCultures, setSelectedCultures] = useState<string[]>([]);
+  const [teamIntro, setTeamIntro] = useState(
+    "You will be joining our Product Experience squad, a cross-functional team of 4 designers, 8 engineers, and 2 product managers, we focus on building the most intuitive hiring tools on the market.",
+  );
   const allPerks = [
     "Health Insurance",
     "Unlimited PTO",
@@ -39,7 +43,7 @@ const TeamCultureForm = ({
   const workCultures = [
     {
       title: "Remote Friendly",
-      desc: "Work for any Where in the world.",
+      desc: "Work for anywhere in the world.",
       icon: <GlobalOutlined className='text-xl' />,
     },
     {
@@ -49,7 +53,7 @@ const TeamCultureForm = ({
     },
     {
       title: "Collaborative Environment",
-      desc: "Thrive in a team=first culture.",
+      desc: "Thrive in a team-first culture.",
       icon: <TeamOutlined className='text-xl text-purple-600' />,
     },
     {
@@ -65,6 +69,22 @@ const TeamCultureForm = ({
     );
   };
 
+  const toggleCulture = (title: string) => {
+    setSelectedCultures((prev) =>
+      prev.includes(title) ? prev.filter((t) => t !== title) : [...prev, title],
+    );
+  };
+
+  // Sent data in parents state
+
+  const handleContinue = () => {
+    updateFormData({
+      perks: selectedPerks,
+      cultures: selectedCultures,
+      description: teamIntro,
+    });
+    onNext();
+  };
   return (
     <div className='bg-white rounded-3xl! border border-gray-100! p-6 md:p-8 shadow-sm'>
       {/* Header */}
@@ -86,7 +106,12 @@ const TeamCultureForm = ({
             {workCultures.map((item) => (
               <div
                 key={item.title}
-                className='flex items-start gap-4 p-4 rounded-2xl! bg-gray-50! border border-gray-100! hover:border-indigo-200 transition-all cursor-pointer'>
+                onClick={() => toggleCulture(item.title)}
+                className={` flex items-start gap-4 p-4 rounded-2xl! border transition-all cursor-pointer ${
+                  selectedCultures.includes(item.title)
+                    ? "bg-indigo-50! border-indigo-200!"
+                    : "bg-gray-50! border-gray-100! hover:border-indigo-200"
+                }`}>
                 <div className='p-2 bg-white rounded-xl! shadow-sm'>
                   {item.icon}
                 </div>
@@ -97,14 +122,13 @@ const TeamCultureForm = ({
                   </h4>
                   <p className='text-xs text-gray-500'>{item.desc}</p>
                 </div>
-                <Checkbox />
+                <Checkbox checked={selectedCultures.includes(item.title)} />
               </div>
             ))}
           </div>
         </div>
         {/* Perks & Benefits Section */}
         <div>
-          {/* className='font-bold! text-[#0e0f1b] text-sm block mb-4' */}
           <label className='font-bold! text-[#0e0f1b]text-sm block mb-4!'>
             Perks & Benefits
           </label>
@@ -127,20 +151,16 @@ const TeamCultureForm = ({
           </div>
         </div>
         {/* Team Introduction Section */}
-        {/* className='flex flex-col gap-2 */}
+
         <div className=' flex flex-col gap-2'>
-          {/* className='font-bold! text-[#0e0f1b] text-sm' */}
           <label className='font-bold! text-[#0e0f1b] text-sm'>
             Team Introduction
           </label>
-
-          {/* className='w-full p-4 rounded-2xl bg-gray-50 border border-transparent
-          focus:border-indigo-200 focus:bg-white transition-all text-sm
-          text-gray-700 outline-none resize-none' */}
           <textarea
+            value={teamIntro}
+            onChange={(e) => setTeamIntro(e.target.value)}
             rows={5}
             placeholder='Introduce the team and the working environment....'
-            defaultValue='You will be joining our Product Experience squad, a cross-functional team of 4 designers, 8 engineers, and 2 product managers. We focus on building the most intuitive hiring tools on the market.'
             className='w-full p-4 rounded-2xl! bg-gray-50 border! border-transparent! focus:border-indigo-200! focus:bg-white! transition-all text-sm text-gray-700 outline-none resize-none'
           />
         </div>
@@ -154,7 +174,7 @@ const TeamCultureForm = ({
           </Button>
           <Button
             type='primary'
-            onClick={onNext}
+            onClick={handleContinue}
             className='h-12 px-8 rounded-xl! font-bold! bg-[#4950e5] flex items-center gap-2'>
             Continue
           </Button>
