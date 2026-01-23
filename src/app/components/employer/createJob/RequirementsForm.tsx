@@ -4,8 +4,13 @@ import { SearchOutlined } from "@ant-design/icons";
 import { Button, Input, Select, Tag } from "antd";
 import { MoveLeft, MoveRight } from "lucide-react";
 import React, { useState } from "react";
-import ReactQuill from "react-quill-new";
+import dynamic from "next/dynamic";
+import "react-quill-new/dist/quill.snow.css";
 
+
+const ReactQuill = dynamic(() => import("react-quill-new"),{
+  ssr: false,
+})
 interface RequirementsFormProps {
   onNext: () => void;
   onBack: () => void;
@@ -26,22 +31,22 @@ const RequirementsForm = ({
 
   // Step 2: Add new skill
   const handleAddSkill = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && skillInput.trim()) {
+    if (e.key === "Enter") {
       e.preventDefault();
-      if (!skills.includes(skillInput.trim())) {
+      if (skillInput.trim() && !skills.includes(skillInput.trim())) {
         setSkills([...skills, skillInput.trim()]);
       }
       setSkillInput("");
     }
   };
 
-  // Step 3: Send data perants
+  // Step 3: Send data parents
   const handleContinue = () => {
     updateFormData({
-      skills,
-      responsibilities,
-      experienceLevel,
-      education,
+      skills:skills,
+      responsibilities:responsibilities,
+      experience: experienceLevel,
+      education: education,
     });
     onNext();
   };
@@ -91,7 +96,7 @@ const RequirementsForm = ({
         </div>
 
         {/* Experience and Education Grid */}
-        <div className='grid grid-cols-1 md:grid-2 gap-4'>
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
           <div className='flex flex-col gap-2'>
             <label className='font-bold! text-[#0e0f1b] text-sm'>
               Experience Level
