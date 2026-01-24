@@ -36,12 +36,12 @@ const JobDetailsForm = ({ onNext, updateFormData }: JobDetailsProps) => {
   };
 
   const handleContinue = () => {
-    // স্যালারি ডাটাকে ব্যাকেন্ডের ফরম্যাটে সাজানো (যেমন: "$140k - $180k USD")
+  
     const formattedSalary = `${formData.salaryMin} - ${formData.salaryMax} ${formData.currency}`;
     
     updateFormData({
       ...formData,
-      salary: formattedSalary, // আপনি চাইলে আলাদা ফিল্ডও পাঠাতে পারেন
+      salary: formattedSalary, 
       description: description,
     });
     onNext();
@@ -220,4 +220,5 @@ const JobDetailsForm = ({ onNext, updateFormData }: JobDetailsProps) => {
 };
 
 export default JobDetailsForm;
+
 
