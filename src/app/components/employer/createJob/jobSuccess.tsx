@@ -11,19 +11,29 @@ import {
   ExportOutlined,
 } from "@ant-design/icons";
 import { Briefcase } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface JobSuccessProps {
-  onGoToDashboard: () => void;
+  onGoToDashboard?: () => void;
   onCreateAnother: () => void;
 }
 
 const JobSuccess = ({ onGoToDashboard, onCreateAnother }: JobSuccessProps) => {
   const jobLink = "https://recruitpro.io/jobs/senior-product-designer-sf";
+  const router = useRouter();
 
   const handleCopy = () => {
     navigator.clipboard.writeText(jobLink);
     message.success("Link copied to clipboard!");
   };
+
+  const handeGoToDashboard = () =>{
+    if(onGoToDashboard){
+      onGoToDashboard();
+    } else{
+      router.push("/dashboard")
+    }
+  }
 
   return (
     <div className='min-h-screen bg-[#f8f9fc] flex flex-col items-center justify-center py-12 px-4'>
@@ -106,7 +116,7 @@ const JobSuccess = ({ onGoToDashboard, onCreateAnother }: JobSuccessProps) => {
 
         <div className='flex flex-col md:flex-row items-center justify-center gap-5 pt-10'>
           <Button
-            onClick={onGoToDashboard}
+            onClick={handeGoToDashboard}
             icon={<AppstoreOutlined />}
             className='h-14 px-10 rounded-[20px] bg-blue-600! text-white! font-bold border-none shadow-lg shadow-blue-200 hover:bg-blue-700! transition-all flex items-center gap-2'>
             Go to Jobs Dashboard
