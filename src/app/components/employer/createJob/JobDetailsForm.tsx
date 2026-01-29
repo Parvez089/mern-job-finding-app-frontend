@@ -1,6 +1,10 @@
+
 /** @format */
 
-"use client";
+
+
+"use client"
+
 
 import { Button, Checkbox, Input, Select } from "antd";
 import React, { useState } from "react";
@@ -41,8 +45,12 @@ const JobDetailsForm = ({ onNext, updateFormData }: JobDetailsProps) => {
     isRemote: false,
     salaryMin: "",
     salaryMax: "",
+<<<<<<< HEAD
     company: "",
     currency: "USD ($)",
+=======
+    currency: "USD ($)"
+>>>>>>> 93f4b448ebcc1930d5f1b89551cb7c790e5485c9
   });
 
   const handleChange = (field: keyof JobFormData, value: string | boolean) => {
@@ -50,11 +58,20 @@ const JobDetailsForm = ({ onNext, updateFormData }: JobDetailsProps) => {
   };
 
   const handleContinue = () => {
+
     const formattedSalary = `${formData.salaryMin} - ${formData.salaryMax} ${formData.currency}`;
 
     updateFormData({
       ...formData,
       salary: formattedSalary,
+
+  
+    const formattedSalary = `${formData.salaryMin} - ${formData.salaryMax} ${formData.currency}`;
+    
+    updateFormData({
+      ...formData,
+      salary: formattedSalary, 
+
       description: description,
     });
     onNext();
@@ -73,9 +90,13 @@ const JobDetailsForm = ({ onNext, updateFormData }: JobDetailsProps) => {
       {/* Header */}
       <div className='mb-8'>
         <h2 className='text-xl font-bold text-[#0e0f1b]'>Job Details</h2>
+
         <p className='text-gray-400 text-sm'>
           Provide the fundamental information about this opening
         </p>
+
+        <p className='text-gray-400 text-sm'>Provide the fundamental information about this opening</p>
+
       </div>
 
       <div className='space-y-6'>
@@ -85,7 +106,11 @@ const JobDetailsForm = ({ onNext, updateFormData }: JobDetailsProps) => {
           <Input
             value={formData.title}
             placeholder='e.g. Senior Product Designer'
+
             className='h-12 bg-gray-50 border-none rounded-xl'
+
+            className='h-12 bg-gray-50 border-none rounded-xl hover:bg-gray-100 focus:bg-white transition-all'
+
             onChange={(e) => handleChange("title", e.target.value)}
           />
         </div>
@@ -103,14 +128,15 @@ const JobDetailsForm = ({ onNext, updateFormData }: JobDetailsProps) => {
                 { value: "Contract", label: "Contract" },
               ]}
               className='h-12 w-full custom-select'
-              variant='borderless'
+
+
+              variant="borderless"
+
               style={{ background: "#f9fafb", borderRadius: "12px" }}
             />
           </div>
           <div className='flex flex-col gap-2'>
-            <label className='font-bold text-[#0e0f1b] text-sm'>
-              Department
-            </label>
+            <label className='font-bold text-[#0e0f1b] text-sm'>Department</label>
             <Select
               value={formData.department}
               onChange={(value) => handleChange("department", value)}
@@ -120,7 +146,10 @@ const JobDetailsForm = ({ onNext, updateFormData }: JobDetailsProps) => {
                 { value: "Marketing", label: "Marketing" },
               ]}
               className='h-12 w-full'
-              variant='borderless'
+
+
+              variant="borderless"
+
               style={{ background: "#f9fafb", borderRadius: "12px" }}
             />
           </div>
@@ -133,7 +162,8 @@ const JobDetailsForm = ({ onNext, updateFormData }: JobDetailsProps) => {
             <Checkbox
               className='text-[#4850e5] font-semibold text-xs'
               checked={formData.isRemote}
-              onChange={(e) => handleChange("isRemote", e.target.checked)}>
+              onChange={(e) => handleChange("isRemote", e.target.checked)}
+            >
               Remote Friendly
             </Checkbox>
           </div>
@@ -145,6 +175,7 @@ const JobDetailsForm = ({ onNext, updateFormData }: JobDetailsProps) => {
           />
         </div>
 
+
         {/* Salary Range */}
         <div className='space-y-2'>
           <label className='font-bold text-[#0e0f1b] text-sm'>
@@ -154,21 +185,41 @@ const JobDetailsForm = ({ onNext, updateFormData }: JobDetailsProps) => {
             <div className='md:col-span-2'>
               <Input
                 placeholder='Min'
+
+        {/* Salary Range Section - Fixed Layout */}
+        <div className='space-y-2'>
+          <label className='font-bold text-[#0e0f1b] text-sm'>Salary Range</label>
+          <div className='grid grid-cols-1 md:grid-cols-7 gap-3 items-center'>
+            <div className="md:col-span-2">
+              <Input
+                placeholder='Min (e.g. 140000)'
+
                 className='h-12 bg-gray-50 border-none rounded-xl'
                 value={formData.salaryMin}
                 onChange={(e) => handleChange("salaryMin", e.target.value)}
               />
             </div>
+
             <div className='text-center text-gray-400 font-medium'>to</div>
             <div className='md:col-span-2'>
               <Input
                 placeholder='Max'
+
+            <div className="text-center text-gray-400 font-medium">to</div>
+            <div className="md:col-span-2">
+              <Input
+                placeholder='Max (e.g. 180000)'
+ main
                 className='h-12 bg-gray-50 border-none rounded-xl'
                 value={formData.salaryMax}
                 onChange={(e) => handleChange("salaryMax", e.target.value)}
               />
             </div>
+
             <div className='md:col-span-2'>
+
+            <div className="md:col-span-2">
+ main
               <Select
                 value={formData.currency}
                 onChange={(value) => handleChange("currency", value)}
@@ -178,12 +229,17 @@ const JobDetailsForm = ({ onNext, updateFormData }: JobDetailsProps) => {
                   { value: "BDT (৳)", label: "BDT (৳)" },
                 ]}
                 className='h-12 w-full'
+
                 variant='borderless'
+                style={{ background: "#f9fafb", borderRadius: "12px" }}
+
+                variant="borderless"
                 style={{ background: "#f9fafb", borderRadius: "12px" }}
               />
             </div>
           </div>
         </div>
+<<<<<<< HEAD
         <div className='flex flex-col gap-2'>
           <label className='font-bold text-[#0e0f1b] text-sm'>
             Company Name
@@ -195,6 +251,46 @@ const JobDetailsForm = ({ onNext, updateFormData }: JobDetailsProps) => {
             onChange={(e) => handleChange("company", e.target.value)}
           />
         </div>
+=======
+          <div className='flex flex-col gap-2'>
+            <label className='font-bold! text-[#0e0f1b] text-sm'>
+              Job Description
+            </label>
+
+            <div className='rich-editor-wrapper'>
+              <style>{`
+    .ql-container {
+      min-height: 200px; 
+    }
+
+    .custom-quill-editor .ql-toolbar {
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+      border: 1px solid #f3f4f6 !important;
+      background-color: #f9fafb !important; 
+    }
+
+    .custom-quill-editor .ql-container {
+      border-bottom-left-radius: 12px;
+      border-bottom-right-radius: 12px;
+      border: 1px solid #f3f4f6 !important;
+      font-family: inherit;
+    }
+  `}</style>
+              <ReactQuill
+                theme='snow'
+                value={description}
+                onChange={setDescription}
+                modules={modules}
+                placeholder='We are looking for a Senior Product Designer...'
+                className='custom-quill-editor !'
+
+              />
+            </div>
+          </div>
+        </div>
+
+>>>>>>> 93f4b448ebcc1930d5f1b89551cb7c790e5485c9
 
         {/* Description */}
         <div className='flex flex-col gap-2'>
@@ -221,6 +317,18 @@ const JobDetailsForm = ({ onNext, updateFormData }: JobDetailsProps) => {
               placeholder='Describe the role...'
               className='custom-quill-editor'
             />
+
+          <div className='flex items-center justify-between pt-6 border-t border-gray-50'>
+            <Button className='h-12! px-8 rounded-xl! font-bold text-gray-400 bg-gray-50 border-none'>
+              Save as Draft
+            </Button>
+            <Button
+              onClick={handleContinue}
+              type='primary'
+              className='h-12 px-10 rounded-xl font-bold bg-[#4950e5]'>
+              Continue
+            </Button>
+
           </div>
         </div>
 
@@ -242,3 +350,5 @@ const JobDetailsForm = ({ onNext, updateFormData }: JobDetailsProps) => {
 };
 
 export default JobDetailsForm;
+
+
