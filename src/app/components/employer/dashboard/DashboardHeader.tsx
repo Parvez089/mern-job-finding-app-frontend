@@ -1,7 +1,7 @@
 /** @format */
 "use client";
 
-import React, { ReactNode } from "react"; // ReactNode টাইপটি ইম্পোর্ট করুন
+import React, { ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import { Button, Badge, Input } from "antd";
 import {
@@ -11,17 +11,16 @@ import {
 } from "@ant-design/icons";
 import { Bell, Search, MessageSquare } from "lucide-react";
 
-// ১. প্রতিটি পেইজের কনফিগারের জন্য টাইপ ডিফাইন করা
 interface PageConfig {
   title: string;
   showSearch: boolean;
-  searchPlaceholder?: string; // এটি অপশনাল কারণ সব পেইজে সার্চ নেই
-  rightElement?: ReactNode; // JSX এলিমেন্টের জন্য ReactNode ব্যবহার করা হয়
+  searchPlaceholder?: string;
+  rightElement?: ReactNode;
   rightAction?: ReactNode;
   dateDisplay?: string;
 }
 
-// ২. মেইন হেডারের প্রপস টাইপ ডিফাইন করা
+
 interface DashboardHeaderProps {
   collapsed: boolean;
   setCollapsed: (collapsed: boolean) => void;
@@ -30,7 +29,7 @@ interface DashboardHeaderProps {
 const DashboardHeader = ({ collapsed, setCollapsed }: DashboardHeaderProps) => {
   const pathname = usePathname();
 
-  // ৩. 'any' এর বদলে Record টাইপ ব্যবহার করা
+
   const headerConfig: Record<string, PageConfig> = {
     "/dashboard": {
       title: "Recruitment Overview",
