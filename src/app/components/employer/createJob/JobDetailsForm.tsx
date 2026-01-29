@@ -26,6 +26,7 @@ interface JobFormData {
   isRemote: boolean;
   salaryMin: string;
   salaryMax: string;
+  company: string;
   currency: string;
 }
 
@@ -44,7 +45,12 @@ const JobDetailsForm = ({ onNext, updateFormData }: JobDetailsProps) => {
     isRemote: false,
     salaryMin: "",
     salaryMax: "",
+<<<<<<< HEAD
+    company: "",
+    currency: "USD ($)",
+=======
     currency: "USD ($)"
+>>>>>>> 93f4b448ebcc1930d5f1b89551cb7c790e5485c9
   });
 
   const handleChange = (field: keyof JobFormData, value: string | boolean) => {
@@ -233,6 +239,19 @@ const JobDetailsForm = ({ onNext, updateFormData }: JobDetailsProps) => {
             </div>
           </div>
         </div>
+<<<<<<< HEAD
+        <div className='flex flex-col gap-2'>
+          <label className='font-bold text-[#0e0f1b] text-sm'>
+            Company Name
+          </label>
+          <Input
+            value={formData.company}
+            placeholder='e.g. JobOrbit Inc.'
+            className='h-12! w-full! bg-gray-50 border-none rounded-xl'
+            onChange={(e) => handleChange("company", e.target.value)}
+          />
+        </div>
+=======
           <div className='flex flex-col gap-2'>
             <label className='font-bold! text-[#0e0f1b] text-sm'>
               Job Description
@@ -271,6 +290,7 @@ const JobDetailsForm = ({ onNext, updateFormData }: JobDetailsProps) => {
           </div>
         </div>
 
+>>>>>>> 93f4b448ebcc1930d5f1b89551cb7c790e5485c9
 
         {/* Description */}
         <div className='flex flex-col gap-2'>
