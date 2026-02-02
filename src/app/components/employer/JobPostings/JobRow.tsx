@@ -21,7 +21,7 @@ interface JobData {
   location: string;
   jobType: string;
   department: string;
-  status: "published" | "draft" | "closed";
+  status: string;
   createdAt: string;
   candidates?: number;
   matchPercent?: number;
@@ -43,7 +43,17 @@ const statusConfig: Record<
 };
 
 const JobRow = ({ job, onRefresh }: JobRowProps) => {
+  const statusKey = job.status?.toLowerCase() || "closed";
   const currentStatus = statusConfig[job.status] || statusConfig.closed;
+
+
+  const formattedDate = job.createdAt && !isNaN(Date.parse(job.createdAt)) 
+    ? new Date(job.createdAt).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      })
+    : "No Date";
 
   const handleDelete = async () => {
     try {
@@ -103,7 +113,7 @@ const JobRow = ({ job, onRefresh }: JobRowProps) => {
       <td className='py-5 px-6'>
         <div className='flex items-center gap-4'>
           <div className='w-10 h-10 rounded-lg flex items-center justify-center font-bold text-lg bg-indigo-50 text-indigo-600 uppercase'>
-            {job.title.charAt(0)}
+            {job.title.charAt(0) || "J"}
           </div>
           <div>
             <h4 className='font-bold! text-[#0e0f1b] mb-0.5'>{job.title}</h4>
@@ -140,11 +150,7 @@ const JobRow = ({ job, onRefresh }: JobRowProps) => {
       </td>
 
       <td className='py-5 px-4 text-center text-sm font-semibold! text-gray-500'>
-        {new Date(job.createdAt).toLocaleDateString("en-US", {
-          month: "short",
-          day: "numeric",
-          year: "numeric",
-        })}
+        {formattedDate}
       </td>
 
       <td className='py-5 px-4 text-center'>
