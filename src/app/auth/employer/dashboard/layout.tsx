@@ -114,9 +114,7 @@ const EmployerDashboard = ({ children }: { children: React.ReactNode }) => {
     {
       key: "/auth/employer/dashboard/company-profile",
       icon: <Users />,
-      label: (
-        <Link href='/auth/employer/dashboard/company-profile'>Applicants</Link>
-      ),
+      label: <Link href='/auth/employer/dashboard/applicants'>Applicants</Link>,
     },
     {
       key: "/auth/employer/dashboard/account-settings",

@@ -41,12 +41,8 @@ const ReviewPostForm = ({
   onPublish,
   onEdit,
 }: ReviewPostProps) => {
-  const handlePublishClick = async () => {
-    try {
-      await onPublish();
-    } catch (error) {
-      message.error("Faild to publish job");
-    }
+  const handlePublishClick =  () => {
+    onPublish()
   };
   return (
     <div className='space-y-6 pb-10'>

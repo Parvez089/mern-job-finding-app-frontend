@@ -11,18 +11,45 @@ import {
   ExportOutlined,
 } from "@ant-design/icons";
 import { Briefcase } from "lucide-react";
+import { useRouter } from "next/navigation";
 
-interface JobSuccessProps {
-  onGoToDashboard: () => void;
-  onCreateAnother: () => void;
+interface PostedJobData {
+  _id?: string;
+  title: string;
+  department: string;
+  company: string;
+  location: string;
+  jobType: string;
+  salary?: string;
 }
 
-const JobSuccess = ({ onGoToDashboard, onCreateAnother }: JobSuccessProps) => {
-  const jobLink = "https://recruitpro.io/jobs/senior-product-designer-sf";
+interface JobSuccessProps {
+  onGoToDashboard?: () => void;
+  onCreateAnother: () => void;
+  jobData?: PostedJobData;
+}
+
+const JobSuccess = ({
+  onGoToDashboard,
+  onCreateAnother,
+  jobData,
+}: JobSuccessProps) => {
+  const router = useRouter();
+  const jobLink = `https://joborbit.com/jobs/${jobData?._id || ""}`;
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(jobLink);
-    message.success("Link copied to clipboard!");
+    if (jobData?._id) {
+      navigator.clipboard.writeText(jobLink);
+      message.success("Link copied to clipboard!");
+    }
+  };
+
+  const handleGoToDashboard = () => {
+    if (onGoToDashboard) {
+      onGoToDashboard();
+    } else {
+      router.push("/dashboard");
+    }
   };
 
   return (
@@ -38,7 +65,7 @@ const JobSuccess = ({ onGoToDashboard, onCreateAnother }: JobSuccessProps) => {
           Congratulations!
         </h1>
         <p className='text-gray-500 text-lg'>
-          Your job is now live and accepting applications.
+          Your job at {jobData?.company} now live.
         </p>
       </div>
 
@@ -50,10 +77,10 @@ const JobSuccess = ({ onGoToDashboard, onCreateAnother }: JobSuccessProps) => {
             </div>
             <div className='text-center md:text-left'>
               <h3 className='text-xl font-bold text-[#0e0f1b]'>
-                Senior Product Designer
+                {jobData?.title}
               </h3>
               <p className='text-sm text-gray-400 font-medium'>
-                Product Experience • San Francisco, CA (Hybrid)
+                {jobData?.department} • {jobData?.location}
               </p>
             </div>
           </div>
@@ -106,7 +133,7 @@ const JobSuccess = ({ onGoToDashboard, onCreateAnother }: JobSuccessProps) => {
 
         <div className='flex flex-col md:flex-row items-center justify-center gap-5 pt-10'>
           <Button
-            onClick={onGoToDashboard}
+            onClick={handleGoToDashboard}
             icon={<AppstoreOutlined />}
             className='h-14 px-10 rounded-[20px] bg-blue-600! text-white! font-bold border-none shadow-lg shadow-blue-200 hover:bg-blue-700! transition-all flex items-center gap-2'>
             Go to Jobs Dashboard
