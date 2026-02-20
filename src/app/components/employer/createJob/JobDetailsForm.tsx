@@ -183,33 +183,6 @@ const JobDetailsForm = ({ onNext, updateFormData }: JobDetailsProps) => {
             </div>
           </div>
         </div>
-<<<<<<< HEAD
-        <div className='flex flex-col gap-2'>
-          <label className='font-bold! text-[#0e0f1b] text-sm'>
-            Job Description
-          </label>
-
-          <div className='rich-editor-wrapper'>
-            <style>{`
-    .ql-container {
-      min-height: 200px; 
-    }
-
-    .custom-quill-editor .ql-toolbar {
-      border-top-left-radius: 12px;
-      border-top-right-radius: 12px;
-      border: 1px solid #f3f4f6 !important;
-      background-color: #f9fafb !important; 
-    }
-
-    .custom-quill-editor .ql-container {
-      border-bottom-left-radius: 12px;
-      border-bottom-right-radius: 12px;
-      border: 1px solid #f3f4f6 !important;
-      font-family: inherit;
-    }
-  `}</style>
-=======
 
         {/* Company Name */}
         <div className='flex flex-col gap-2'>
@@ -237,42 +210,27 @@ const JobDetailsForm = ({ onNext, updateFormData }: JobDetailsProps) => {
                 border: 1px solid #f3f4f6 !important; font-family: inherit;
               }
             `}</style>
->>>>>>> f06e2c57392e0f948ad61eba8e752284dce53215
             <ReactQuill
               theme='snow'
               value={description}
               onChange={setDescription}
               modules={modules}
-<<<<<<< HEAD
-              placeholder='We are looking for a Senior Product Designer...'
-              className='custom-quill-editor !'
-=======
               placeholder='Describe the role...'
               className='custom-quill-editor'
->>>>>>> f06e2c57392e0f948ad61eba8e752284dce53215
             />
           </div>
         </div>
 
-<<<<<<< HEAD
-        <div className='flex items-center justify-between pt-6 border-t border-gray-50'>
-          <Button className='h-12! px-8 rounded-xl! font-bold text-gray-400 bg-gray-50 border-none'>
-=======
         {/* Footer Buttons */}
         <div className='flex items-center justify-between pt-6 border-t border-gray-50'>
           <Button className='h-12 px-8 rounded-xl font-bold text-gray-400 bg-gray-50 border-none'>
->>>>>>> f06e2c57392e0f948ad61eba8e752284dce53215
             Save as Draft
           </Button>
           <Button
             onClick={handleContinue}
             type='primary'
-<<<<<<< HEAD
-            className='h-12 px-10 rounded-xl font-bold bg-[#4950e5]'>
-=======
             className='h-12 px-10 rounded-xl font-bold bg-[#4950e5]'
           >
->>>>>>> f06e2c57392e0f948ad61eba8e752284dce53215
             Continue
           </Button>
         </div>
