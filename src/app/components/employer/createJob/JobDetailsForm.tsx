@@ -107,7 +107,9 @@ const JobDetailsForm = ({ onNext, updateFormData }: JobDetailsProps) => {
             />
           </div>
           <div className='flex flex-col gap-2'>
-            <label className='font-bold text-[#0e0f1b] text-sm'>Department</label>
+            <label className='font-bold text-[#0e0f1b] text-sm'>
+              Department
+            </label>
             <Select
               value={formData.department}
               onChange={(value) => handleChange("department", value)}
@@ -130,8 +132,7 @@ const JobDetailsForm = ({ onNext, updateFormData }: JobDetailsProps) => {
             <Checkbox
               className='text-[#4850e5] font-semibold text-xs'
               checked={formData.isRemote}
-              onChange={(e) => handleChange("isRemote", e.target.checked)}
-            >
+              onChange={(e) => handleChange("isRemote", e.target.checked)}>
               Remote Friendly
             </Checkbox>
           </div>
@@ -145,7 +146,9 @@ const JobDetailsForm = ({ onNext, updateFormData }: JobDetailsProps) => {
 
         {/* Salary Range Section */}
         <div className='space-y-2'>
-          <label className='font-bold text-[#0e0f1b] text-sm'>Salary Range</label>
+          <label className='font-bold text-[#0e0f1b] text-sm'>
+            Salary Range
+          </label>
           <div className='grid grid-cols-1 md:grid-cols-7 gap-3 items-center'>
             <div className='md:col-span-2'>
               <Input
