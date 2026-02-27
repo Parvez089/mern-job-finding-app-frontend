@@ -125,6 +125,19 @@ const JobDetailsForm = ({ onNext, updateFormData }: JobDetailsProps) => {
           </div>
         </div>
 
+        {/* Company Name */}
+        <div className='flex flex-col gap-2'>
+          <label className='font-bold text-[#0e0f1b] text-sm'>
+            Company Name
+          </label>
+          <Input
+            value={formData.company}
+            placeholder='e.g. JobOrbit Inc.'
+            className='h-12 bg-gray-50 border-none rounded-xl'
+            onChange={(e) => handleChange("company", e.target.value)}
+          />
+        </div>
+
         {/* Location & Remote */}
         <div className='flex flex-col gap-2'>
           <div className='flex justify-between items-center'>
@@ -144,7 +157,7 @@ const JobDetailsForm = ({ onNext, updateFormData }: JobDetailsProps) => {
           />
         </div>
 
-        {/* Salary Range Section */}
+        {/* Salary Range */}
         <div className='space-y-2'>
           <label className='font-bold text-[#0e0f1b] text-sm'>
             Salary Range
@@ -184,20 +197,11 @@ const JobDetailsForm = ({ onNext, updateFormData }: JobDetailsProps) => {
           </div>
         </div>
 
-        {/* Company Name */}
-        <div className='flex flex-col gap-2'>
-          <label className='font-bold text-[#0e0f1b] text-sm'>Company Name</label>
-          <Input
-            value={formData.company}
-            placeholder='e.g. JobOrbit Inc.'
-            className='h-12 bg-gray-50 border-none rounded-xl'
-            onChange={(e) => handleChange("company", e.target.value)}
-          />
-        </div>
-
         {/* Job Description */}
         <div className='flex flex-col gap-2'>
-          <label className='font-bold text-[#0e0f1b] text-sm'>Job Description</label>
+          <label className='font-bold text-[#0e0f1b] text-sm'>
+            Job Description
+          </label>
           <div className='rich-editor-wrapper'>
             <style>{`
               .ql-container { min-height: 200px; }
@@ -229,8 +233,7 @@ const JobDetailsForm = ({ onNext, updateFormData }: JobDetailsProps) => {
           <Button
             onClick={handleContinue}
             type='primary'
-            className='h-12 px-10 rounded-xl font-bold bg-[#4950e5]'
-          >
+            className='h-12 px-10 rounded-xl font-bold bg-[#4950e5]'>
             Continue
           </Button>
         </div>
