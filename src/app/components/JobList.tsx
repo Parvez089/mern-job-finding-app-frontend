@@ -1,0 +1,96 @@
+/** @format */
+"use client";
+
+import { SaveOutlined } from "@ant-design/icons";
+import { usePathname, useRouter } from "next/navigation";
+import React, { useEffect, useRef } from "react";
+
+interface Job {
+  _id: string;
+  title: string;
+  company: string;
+  city: string;
+  location: string;
+}
+
+interface JobListProps {
+  jobs: Job[];
+  onSelectJob?: (id: string) => void;
+}
+
+const JobList = ({ jobs = [], onSelectJob }: JobListProps) => {
+  const pathname = usePathname();
+  const router = useRouter();
+  const hasAutoSelected = useRef(false);
+
+  // Auto-select first job once when jobs load on /job route
+  useEffect(() => {
+    if (hasAutoSelected.current) return;
+    if (jobs.length === 0) return;
+    if (pathname !== "/job") return;
+
+    hasAutoSelected.current = true;
+
+    const firstJobId = jobs[0]._id;
+    const isMobile = window.innerWidth < 768;
+
+    if (isMobile) {
+      router.replace(`/job/small-device/${firstJobId}`);
+    } else {
+      router.replace(`/job/${firstJobId}`);
+    }
+
+    if (onSelectJob) onSelectJob(firstJobId);
+  }, [jobs, pathname, router, onSelectJob]);
+
+  const handleJobClick = (id: string) => {
+    if (onSelectJob) onSelectJob(id);
+    const isMobile = window.innerWidth < 768;
+    if (isMobile) {
+      router.push(`/job/small-device/${id}`);
+    } else {
+      router.push(`/job/${id}`);
+    }
+  };
+
+  return (
+    <div>
+      <h2 className='text-2xl !font-bold --font-poppins'>Available Jobs</h2>
+      {jobs.length === 0 && (
+        <p className='text-gray-400 mt-2'>No jobs available</p>
+      )}
+      <div className='space-y-3 mt-3'>
+        {jobs.map((job) => {
+          const isActive = pathname === `/job/${job._id}`;
+          return (
+            <div
+              key={job._id}
+              onClick={() => handleJobClick(job._id)}
+              className={`border p-3 rounded-4xl cursor-pointer transition
+                !bg-[var(--card-color)] ${
+                  isActive
+                    ? "!border-blue-500 shadow-sm"
+                    : "border-gray-200 hover:border-blue-300"
+                }`}>
+              <div className='flex justify-between !m-2'>
+                <div className='--font-poppins'>
+                  <h3 className='text-xl !font-semibold'>{job.title}</h3>
+                  <p className='text-gray-500'>{job.company}</p>
+                </div>
+                <div className='text-lg h-6'>
+                  <SaveOutlined className='bg-blue-200 p-2 rounded-4xl' />
+                </div>
+              </div>
+              <div className='text-gray-500 m-2'>
+                <h2>{job.city}</h2>
+                <h2>{job.location}</h2>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
+export default JobList;

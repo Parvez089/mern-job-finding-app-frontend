@@ -1,5 +1,6 @@
 /** @format */
 
+<<<<<<< Updated upstream
 import Hero from "@/Component/Hero/Hero";
 
 export default function Home() {
@@ -8,4 +9,19 @@ export default function Home() {
       <Hero />
     </div>
   );
+=======
+"use client";
+
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+
+export default function Home() {
+  const router = useRouter();
+
+  useEffect(() => {
+    router.replace("/job");
+  }, [router]);
+
+  return null;
+>>>>>>> Stashed changes
 }
