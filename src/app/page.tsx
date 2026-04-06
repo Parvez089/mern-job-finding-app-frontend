@@ -1,3 +1,20 @@
+<<<<<<< HEAD
+
+"use client";
+
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+
+export default function Home() {
+  const router = useRouter();
+
+  useEffect(() => {
+    router.replace("/job");
+  }, [router]);
+
+  return null;
+
+=======
 // app/page.tsx 
 
 'use client';
@@ -21,4 +38,5 @@ export default function Home() {
       </JobLayout>
     </div>
   );
+>>>>>>> main
 }
