@@ -4,11 +4,33 @@
   --background: #ffffff;
   --foreground: #171717;
   /* --color: #164081; */
-  --color: #007f61;
+  /* --color: #007f61; */
+  --color: #016BFD;
   /* --bg-color: #164081;  */
-   --bg-color: #007f61; 
+   /* --bg-color: #007f61;  */
+   --bg-color: #016BFD; 
+   --bg-dashboard-color: #24243E; 
+   --bg-dashboard: #E8EBF5; 
+   /* --primary-light: #9afcdb; */
+/* --primary-light: #CCFFF0; */
+ --text-color: #ffffff;
+ --card-color: #ffffff;
+  --bg-primary : #166286;
+--primary-light: #0a4936;
+}
+.ant-menu-horizontal {
+  justify-content: center !important;
 }
 
+.ant-menu {
+  background-color: var(--bg-dashboard-color) !important;
+  color: white !important;
+}
+
+.ant-menu-item,
+.ant-menu-submenu-title {
+  color: white !important;
+}
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -21,7 +43,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #ededed;
+    --background: #f4f5fa;
     --foreground: #0a0a0a;
     
   }
@@ -49,3 +71,9 @@ body {
 .primary-text-color{
   color: #164081;
 }
+
+.custom-menu .ant-menu-item a,
+.custom-menu .ant-menu-item {
+  @apply text-white hover:text-[var(--primary-text)];
+}
+
