@@ -1,102 +1,77 @@
+/** @format */
+"use client";
 
-"use client"
 import React from "react";
+import { DownOutlined } from "@ant-design/icons";
 
-import { DownOutlined, UserOutlined } from "@ant-design/icons";
-import type { MenuProps } from "antd";
-import {Button, Dropdown, message, Space, Tooltip } from "antd";
-
-const handleButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-  message.info('Click on left button.');
-  console.log('click left button', e);
-};
-
-const handleMenuClick: MenuProps['onClick'] = (e) => {
-  message.info('Click on menu item.');
-  console.log('click', e);
-};
-const items: MenuProps['items'] = [
-  {
-    label: '1st menu item',
-    key: '1',
-    icon: <UserOutlined />,
-  },
-  {
-    label: '2nd menu item',
-    key: '2',
-    icon: <UserOutlined />,
-  },
-  {
-    label: '3rd menu item',
-    key: '3',
-    icon: <UserOutlined />,
-    danger: true,
-  },
-  {
-    label: '4rd menu item',
-    key: '4',
-    icon: <UserOutlined />,
-    danger: true,
-    disabled: true,
-  },
+const filters = [
+  "Experience", "Company", "Job Types", "Salary", "Market", "Benefit",
 ];
 
-const menuProps = {
-  items,
-  onClick: handleMenuClick,
-};
 const SelectFilter = () => {
   return (
-    <div className=" w-full  flex justify-center">
-      <div className="flex  flex-wrap justify-center items-center bg-white border-t border-gray-200 p-3 flex flex-wrap gap-2 md:gap-3 sm:gap-3 w-full max-w-7xl rounded-b-lg shadow-sm ">
-      <Dropdown menu={menuProps}>
-      <Button>
-        <Space>
-          Expreience
-          <DownOutlined />
-        </Space>
-      </Button>
-    </Dropdown>
-      <Dropdown menu={menuProps}>
-      <Button>
-        <Space>
-          Company
-          <DownOutlined />
-        </Space>
-      </Button>
-    </Dropdown>
-      <Dropdown menu={menuProps}>
-      <Button>
-        <Space>
-          Job types
-          <DownOutlined />
-        </Space>
-      </Button>
-    </Dropdown>
-      <Dropdown menu={menuProps}>
-      <Button>
-        <Space>
-          Salary
-          <DownOutlined />
-        </Space>
-      </Button>
-    </Dropdown>
-      <Dropdown menu={menuProps}>
-      <Button>
-        <Space>
-          Market
-          <DownOutlined />
-        </Space>
-      </Button>
-    </Dropdown>
-      <Dropdown menu={menuProps}>
-      <Button>
-        <Space>
-          Benifit
-          <DownOutlined />
-        </Space>
-      </Button>
-    </Dropdown>
+    <div style={{ maxWidth: 900, margin: "0 auto", padding: "0 16px" }}>
+      <style>{`
+        .filter-pill-dark {
+          transition: all 0.18s ease !important;
+        }
+        .filter-pill-dark:hover {
+          background: rgba(56,189,248,0.15) !important;
+          color: #38bdf8 !important;
+          border-color: rgba(56,189,248,0.35) !important;
+          transform: translateY(-1px) !important;
+        }
+      `}</style>
+
+      <div
+        style={{
+          background: "rgba(13,25,50,0.85)",
+          backdropFilter: "blur(24px)",
+          WebkitBackdropFilter: "blur(24px)",
+          borderRadius: "0 0 20px 20px",
+          border: "1px solid rgba(56,189,248,0.12)",
+          borderTop: "1px solid rgba(56,189,248,0.06)",
+          boxShadow: "0 24px 80px rgba(0,0,0,0.4), 0 4px 20px rgba(0,0,0,0.3)",
+          padding: "12px 22px",
+          display: "flex",
+          alignItems: "center",
+          flexWrap: "wrap",
+          gap: 8,
+        }}
+      >
+        <span
+          style={{
+            fontSize: "0.72rem",
+            fontWeight: 700,
+            color: "rgba(148,197,255,0.45)",
+            letterSpacing: "0.08em",
+            textTransform: "uppercase",
+            marginRight: 4,
+            fontFamily: "'DM Sans', sans-serif",
+          }}
+        >
+          Filter
+        </span>
+
+        {filters.map((f) => (
+          <button
+            key={f}
+            className="filter-pill-dark"
+            style={{
+              display: "inline-flex", alignItems: "center", gap: 4,
+              padding: "5px 13px", borderRadius: 999,
+              background: "rgba(255,255,255,0.05)",
+              border: "1px solid rgba(56,189,248,0.15)",
+              color: "rgba(186,230,253,0.7)",
+              fontSize: "0.8rem", fontWeight: 600,
+              cursor: "pointer",
+              fontFamily: "'DM Sans', sans-serif",
+            }}
+          >
+            {f}
+            <DownOutlined style={{ fontSize: 8, opacity: 0.5 }} />
+          </button>
+        ))}
       </div>
     </div>
   );

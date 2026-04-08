@@ -1,74 +1,141 @@
 /** @format */
-
 "use client";
 
-import React from "react";
-import { Button, Input } from "antd";
-import type { GetProps } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
-
-type SearchProps = GetProps<typeof Input.Search>;
-
-const { Search } = Input;
-
-const onSearch: SearchProps["onSearch"] = (value, _e, info) =>
-  console.log(info?.source, value);
+import React, { useState } from "react";
+import { Input } from "antd";
+import { Search, MapPin } from "lucide-react";
 
 const SearchPage = () => {
+  const [jobInput, setJobInput] = useState("");
+  const [locationInput, setLocationInput] = useState("");
+
   return (
-    <div className="w-full flex justify-center mt-7">
-      {/* Desktop View */}
-      <div className="hidden md:flex items-center justify-center w-full max-w-7xl">
-        {/* Job title input */}
-        <div className="flex flex-1 p-3 bg-white rounded-tl-lg">
-          <SearchOutlined className="text-2xl text-gray-600" />
-          <Input
-            className="!border-none !outline-none !shadow-none w-full"
-            placeholder="Job title, keywords, or company"
-          />
-        </div>
+    <div
+      className="hero-fade-5"
+      style={{ maxWidth: 900, margin: "0 auto", padding: "0 16px" }}
+    >
+      <style>{`
+        .search-input-wrap:focus-within {
+          background: rgba(56,189,248,0.04) !important;
+        }
+        .search-input-wrap .ant-input {
+          background: transparent !important;
+          color: #f1f5f9 !important;
+        }
+        .search-input-wrap .ant-input::placeholder {
+          color: rgba(148,197,255,0.45) !important;
+        }
+      `}</style>
 
-        {/* Location input + Search button */}
-        <div className="flex flex-1 p-3 bg-white rounded-tr-lg">
-          <FontAwesomeIcon
-            icon={faLocationDot} width={20} height={20}
-            className="text-2xl text-gray-600"
-          />
-          <Input
-            variant="borderless"
-            className="!border-none !outline-none !shadow-none w-full"
-            placeholder="City, state, zip code, or 'remote'"
-          />
-          <Button className="!bg-[var(--bg-color)] !text-white !font-semibold !h-7 !px-6 ml-2">
-            Search
-          </Button>
-        </div>
-      </div>
+      <div
+        style={{
+          background: "rgba(13,25,50,0.85)",
+          backdropFilter: "blur(24px)",
+          WebkitBackdropFilter: "blur(24px)",
+          borderRadius: "20px 20px 0 0",
+          border: "1px solid rgba(56,189,248,0.12)",
+          borderBottom: "none",
+          boxShadow: "0 24px 80px rgba(0,0,0,0.4), 0 4px 20px rgba(0,0,0,0.3)",
+          overflow: "hidden",
+        }}
+      >
+        <div style={{ display: "flex", flexWrap: "wrap" }}>
 
-      {/* Mobile View */}
-      <div className="grid grid-cols-1 items-center md:hidden justify-center mt-6 w-full px-5">
-        <div className="flex p-2 bg-white rounded-t-lg">
-          <SearchOutlined className="text-2xl text-gray-600" />
-          <Input
-            className="!border-none !outline-none !shadow-none w-full"
-            placeholder="Job title, keywords, or company"
-          />
-        </div>
+          {/* Job title */}
+          <div
+            className="search-input-wrap"
+            style={{
+              flex: 1, minWidth: 200,
+              display: "flex", alignItems: "center", gap: 12,
+              padding: "18px 22px",
+              borderRight: "1px solid rgba(56,189,248,0.08)",
+              transition: "background 0.2s",
+            }}
+          >
+            <div
+              style={{
+                width: 34, height: 34, borderRadius: 9,
+                background: "linear-gradient(135deg, #0e4d8a, #1e6bb8)",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                flexShrink: 0,
+                boxShadow: "0 4px 12px rgba(14,77,138,0.4)",
+              }}
+            >
+              <Search size={15} color="#fff" />
+            </div>
+            <Input
+              bordered={false}
+              placeholder="Job title, keywords, or company"
+              value={jobInput}
+              onChange={(e) => setJobInput(e.target.value)}
+              style={{
+                padding: 0, fontSize: "0.95rem", fontWeight: 500,
+                color: "#f1f5f9", boxShadow: "none",
+                fontFamily: "'DM Sans', sans-serif",
+                background: "transparent",
+              }}
+            />
+          </div>
 
-        <div className="flex p-2 bg-white rounded-b-lg mt-[1px]">
-          <FontAwesomeIcon icon={faLocationDot} className="text-2xl text-gray-600" />
-          <Input
-            className="!border-none !outline-none !shadow-none w-full"
-            placeholder="City, state, zip code, or 'remote'"
-          />
-        </div>
+          {/* Location + Search button */}
+          <div
+            className="search-input-wrap"
+            style={{
+              flex: 1, minWidth: 200,
+              display: "flex", alignItems: "center", gap: 12,
+              padding: "18px 22px",
+              transition: "background 0.2s",
+            }}
+          >
+            <div
+              style={{
+                width: 34, height: 34, borderRadius: 9,
+                background: "linear-gradient(135deg, #6366f1, #818cf8)",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                flexShrink: 0,
+                boxShadow: "0 4px 12px rgba(99,102,241,0.4)",
+              }}
+            >
+              <MapPin size={15} color="#fff" />
+            </div>
+            <Input
+              bordered={false}
+              placeholder="City, state, or 'remote'"
+              value={locationInput}
+              onChange={(e) => setLocationInput(e.target.value)}
+              style={{
+                padding: 0, fontSize: "0.95rem", fontWeight: 500,
+                color: "#f1f5f9", boxShadow: "none",
+                fontFamily: "'DM Sans', sans-serif",
+                background: "transparent",
+              }}
+            />
+            <button
+              style={{
+                flexShrink: 0,
+                padding: "10px 24px", borderRadius: 12,
+                background: "linear-gradient(135deg, #0e4d8a 0%, #1e6bb8 100%)",
+                border: "1px solid rgba(56,189,248,0.3)",
+                color: "#ffffff",
+                fontSize: "0.9rem", fontWeight: 700, cursor: "pointer",
+                boxShadow: "0 4px 16px rgba(14,77,138,0.5)",
+                transition: "all 0.2s ease",
+                fontFamily: "'DM Sans', sans-serif",
+                letterSpacing: "0.01em",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.boxShadow = "0 8px 28px rgba(14,77,138,0.7)";
+                e.currentTarget.style.transform = "translateY(-1px)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.boxShadow = "0 4px 16px rgba(14,77,138,0.5)";
+                e.currentTarget.style.transform = "translateY(0)";
+              }}
+            >
+              Search
+            </button>
+          </div>
 
-        <div className="mt-3">
-          <Button className="!bg-[var(--bg-color)] !text-white !font-semibold !h-12 w-full !text-lg">
-            Search
-          </Button>
         </div>
       </div>
     </div>
