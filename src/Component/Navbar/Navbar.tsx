@@ -3,7 +3,7 @@
 "use client";
 
 import { MenuOutlined } from "@ant-design/icons";
-import { Button, Drawer, Input, Menu } from "antd";
+import { Button, Drawer, Menu } from "antd";
 import { jwtDecode } from "jwt-decode";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -24,20 +24,40 @@ const Navbar = () => {
   const router = useRouter();
 
   const menuItems = [
-    { key: "home", label: <Link href='/'>Home</Link> },
-    { key: "about", label: <Link href='/about'>About</Link> },
+    {
+      key: "home",
+      label: (
+        <Link href="/" className="!text-white/80 hover:!text-white transition-colors">
+          Home
+        </Link>
+      ),
+    },
+    {
+      key: "about",
+      label: (
+        <Link href="/about" className="!text-white/80 hover:!text-white transition-colors">
+          About
+        </Link>
+      ),
+    },
     {
       key: "services",
-      label: <Link href='/services'>Services</Link>,
+      label: (
+        <Link href="/services" className="!text-white/80 hover:!text-white transition-colors">
+          Services
+        </Link>
+      ),
     },
     {
       key: "talent",
-      label: <Link href='/talent'>Find Talent</Link>,
+      label: (
+        <Link href="/talent" className="!text-white/80 hover:!text-white transition-colors">
+          Find Talent
+        </Link>
+      ),
     },
-    
   ];
 
-  // ✅ Handle Responsive Menu + Decode Token
   useEffect(() => {
     setMounted(true);
 
@@ -49,12 +69,10 @@ const Navbar = () => {
     handleResize();
     window.addEventListener("resize", handleResize);
 
-    // ✅ Check token in localStorage
     const token = localStorage.getItem("token");
     if (token) {
       try {
         const decoded: DecodedToken = jwtDecode(token);
-        // ✅ Check token expiry
         if (decoded.exp * 1000 > Date.now()) {
           setUserData(decoded);
         } else {
@@ -70,22 +88,18 @@ const Navbar = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // ✅ Role-based dashboard redirect
   const handleDashboardRedirect = () => {
     if (!userData) {
       router.push("/auth");
       return;
     }
-
     const { role } = userData;
-
     if (role === "jobseeker") router.push("/auth/job-seeker/dashboard");
     else if (role === "employer") router.push("/auth/employer/dashboard");
     else if (role === "admin") router.push("/auth/admin/dashboard");
     else router.push("/auth");
   };
 
-  // ✅ Logout handler
   const handleLogout = () => {
     localStorage.removeItem("token");
     setUserData(null);
@@ -95,80 +109,152 @@ const Navbar = () => {
   if (!mounted) return null;
 
   return (
-    <header className='  flex justify-between items-center px-4 sm:px-6 lg:px-8 py-3 w-full  bg-[var(--bg-primary)]'>
-      <div className='w-full flex  justify-between items-center px-4 sm:px-1 lg:px-8 py-3 '>
-        <div className='text-2xl font-semibold text-[var(--text-color)] tracking-tight'>
-          <Link href='/'>JobOrbit</Link>
+    <header
+      className="sticky top-0 z-50 w-full border-b border-white/[0.08]"
+      style={{
+        background: "rgba(10, 22, 40, 0.60)",
+        backdropFilter: "blur(16px)",
+        WebkitBackdropFilter: "blur(16px)",
+      }}
+    >
+      <div className="w-full flex justify-between items-center px-4 sm:px-6 lg:px-12 py-3">
+
+        {/* Logo */}
+        <div className="text-2xl font-bold text-white tracking-tight shrink-0">
+          <Link href="/">JobOrbit</Link>
         </div>
-        <div className='hidden md:flex items-center !border-b-none !shadow-none  gap-2 sm:gap-5 custom-menu'>
+
+        {/* Desktop Menu */}
+        <div className="hidden md:flex items-center flex-1 justify-center">
           <Menu
-            mode='horizontal'
+            mode="horizontal"
             items={menuItems}
-            className=' !border-none !bg-transparent  flex justify-center w-full text-black'
+            className="
+              !border-none !bg-transparent !shadow-none
+              [&_.ant-menu-item]:!bg-transparent
+              [&_.ant-menu-item-selected]:!bg-transparent
+              [&_.ant-menu-item::after]:!border-b-cyan-400
+              [&_.ant-menu-item-selected_.ant-menu-title-content_a]:!text-white
+              [&_.ant-menu-item:hover]:!bg-transparent
+            "
           />
         </div>
 
+        {/* Desktop Actions */}
         {!isMobile && (
-          <div>
+          <div className="shrink-0">
             {userData ? (
-              <div className='flex items-center gap-3'>
+              <div className="flex items-center gap-3">
                 <Button
-                  className='border-dashed!  border-(--bg-color) text-(--primary-text) text-sm sm:text-base shadow'
-                  onClick={handleDashboardRedirect}>
+                  onClick={handleDashboardRedirect}
+                  className="
+                    !border !border-white/30 !bg-white/10 !text-white
+                    !font-medium hover:!bg-white/20 transition-all
+                    !rounded-lg !text-sm
+                  "
+                >
                   {userData.name}
                 </Button>
                 <Button
-                  className='bg-red-500! !hover:bg-red-600 !text-[var(--text-color)]'
-                  onClick={handleLogout}>
+                  onClick={handleLogout}
+                  className="
+                    !border !border-red-400/50 !bg-red-500/20 !text-red-300
+                    hover:!bg-red-500/40 hover:!text-white transition-all
+                    !rounded-lg !text-sm
+                  "
+                >
                   Logout
                 </Button>
               </div>
             ) : (
               <Button
-                className='!border-dashed !border-[var(--text-color)] !bg-transparent  !text-[var(--text-color)] !font-semibold  text-sm sm:text-base shadow'
-                onClick={() => router.push("/auth")}>
+                onClick={() => router.push("/auth")}
+                className="
+                  !border !border-white/30 !bg-transparent !text-white
+                  !font-semibold hover:!bg-white/10 transition-all
+                  !rounded-lg !text-sm !px-5
+                "
+              >
                 Get Started
               </Button>
             )}
           </div>
         )}
 
+        {/* Mobile Hamburger */}
         {isMobile && (
           <Button
-            type='text'
-            icon={<MenuOutlined className='text-black text-2xl' />}
+            type="text"
+            icon={<MenuOutlined className="!text-white text-xl" />}
             onClick={() => setVisible(true)}
+            className="!bg-transparent !border-none"
           />
         )}
+      </div>
 
-        <Drawer
-          placement='right'
-          onClose={() => setVisible(false)}
-          open={visible}
-          closable={false}>
-          <Menu mode='vertical' items={menuItems} className='border-none' />
+      {/* Mobile Drawer */}
+      <Drawer
+        placement="right"
+        onClose={() => setVisible(false)}
+        open={visible}
+        closable={false}
+        styles={{
+          body: {
+            background: "rgba(10, 22, 40, 0.97)",
+            padding: "24px 16px",
+          },
+        }}
+      >
+        <div className="text-2xl font-bold text-white mb-6 px-2">
+          JobOrbit
+        </div>
+
+        <Menu
+          mode="vertical"
+          items={menuItems}
+          className="
+            !border-none !bg-transparent
+            [&_.ant-menu-item]:!bg-transparent
+            [&_.ant-menu-item:hover]:!bg-white/10
+            [&_.ant-menu-item-selected]:!bg-white/10
+          "
+        />
+
+        <div className="mt-6 px-2 flex flex-col gap-3">
           {userData ? (
-            <div className='flex flex-col gap-2'>
+            <>
               <Button
-                className='w-full mt-4 !border-gray-300 !text-black'
-                onClick={handleDashboardRedirect}>
+                onClick={() => { handleDashboardRedirect(); setVisible(false); }}
+                className="
+                  w-full !border !border-white/30 !bg-white/10 !text-white
+                  !font-medium hover:!bg-white/20 !rounded-lg
+                "
+              >
                 {userData.name}
               </Button>
               <Button
-                className='w-full mt-2 !bg-red-500 !border-none !text-white'
-                onClick={handleLogout}>
+                onClick={() => { handleLogout(); setVisible(false); }}
+                className="
+                  w-full !border !border-red-400/50 !bg-red-500/20 !text-red-300
+                  hover:!bg-red-500/40 hover:!text-white !rounded-lg
+                "
+              >
                 Logout
               </Button>
-            </div>
+            </>
           ) : (
             <Button
-              className='w-full mt-4'
-              onClick={() => router.push("/auth")}>
+              onClick={() => { router.push("/auth"); setVisible(false); }}
+              className="
+                w-full !border !border-white/30 !bg-transparent !text-white
+                !font-semibold hover:!bg-white/10 !rounded-lg
+              "
+            >
               Get Started
             </Button>
           )}
-        </Drawer>
-      </div>
+        </div>
+      </Drawer>
     </header>
   );
 };

@@ -27,13 +27,13 @@ const Hero = () => {
     const W = () => canvas.offsetWidth;
     const H = () => canvas.offsetHeight;
 
-    const dots = Array.from({ length: 40 }, () => ({
+    const dots = Array.from({ length: 55 }, () => ({
       x: Math.random() * W(),
       y: Math.random() * H(),
-      r: Math.random() * 2.5 + 0.5,
+      r: Math.random() * 2 + 0.5,
       vx: (Math.random() - 0.5) * 0.35,
       vy: (Math.random() - 0.5) * 0.35,
-      alpha: Math.random() * 0.4 + 0.1,
+      alpha: Math.random() * 0.5 + 0.1,
     }));
 
     let raf: number;
@@ -43,12 +43,12 @@ const Hero = () => {
       dots.forEach((a, i) => {
         dots.slice(i + 1).forEach((b) => {
           const d = Math.hypot(a.x - b.x, a.y - b.y);
-          if (d < 120) {
+          if (d < 110) {
             ctx.beginPath();
             ctx.moveTo(a.x, a.y);
             ctx.lineTo(b.x, b.y);
-            ctx.strokeStyle = `rgba(14,77,138,${0.07 * (1 - d / 120)})`;
-            ctx.lineWidth = 0.8;
+            ctx.strokeStyle = `rgba(56,189,248,${0.08 * (1 - d / 110)})`;
+            ctx.lineWidth = 0.6;
             ctx.stroke();
           }
         });
@@ -61,7 +61,7 @@ const Hero = () => {
         if (dot.y < 0 || dot.y > H()) dot.vy *= -1;
         ctx.beginPath();
         ctx.arc(dot.x, dot.y, dot.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(14,77,138,${dot.alpha})`;
+        ctx.fillStyle = `rgba(148,197,255,${dot.alpha})`;
         ctx.fill();
       });
 
@@ -90,39 +90,43 @@ const Hero = () => {
         .hero-fade-5 { animation: fadeUp 0.7s ease both; animation-delay: 0.7s; }
       `}</style>
 
-      {/* ── Hero background ───────────────────── */}
+      {/* ── Dark Hero Background ───────────────── */}
       <div
         className="relative overflow-hidden"
         style={{
           background:
-            "linear-gradient(160deg, #f8faff 0%, #eef2ff 40%, #f0f9ff 70%, #f8faff 100%)",
-          minHeight: 560,
+            "linear-gradient(135deg, #080f1e 0%, #0a1628 35%, #0d2137 65%, #0e3460 100%)",
+          minHeight: 580,
         }}
       >
-        {/* Dot-grid texture */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            backgroundImage: "radial-gradient(circle, #c7d9f0 1px, transparent 1px)",
-            backgroundSize: "32px 32px",
-            opacity: 0.55,
-          }}
-        />
-
-        {/* Glow blobs */}
+        {/* Top radial glow — sky blue */}
         <div
           className="absolute pointer-events-none"
           style={{
-            top: -120, right: -100, width: 600, height: 600,
-            background: "radial-gradient(circle, rgba(99,102,241,0.07) 0%, transparent 70%)",
+            top: -100, right: -80,
+            width: 650, height: 650,
+            background: "radial-gradient(circle, rgba(56,189,248,0.09) 0%, transparent 70%)",
             borderRadius: "50%",
           }}
         />
+        {/* Bottom radial glow — indigo */}
         <div
           className="absolute pointer-events-none"
           style={{
-            bottom: -80, left: "5%", width: 500, height: 500,
-            background: "radial-gradient(circle, rgba(56,189,248,0.08) 0%, transparent 70%)",
+            bottom: -60, left: "8%",
+            width: 500, height: 500,
+            background: "radial-gradient(circle, rgba(99,102,241,0.08) 0%, transparent 70%)",
+            borderRadius: "50%",
+          }}
+        />
+        {/* Center subtle glow */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            top: "30%", left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 800, height: 400,
+            background: "radial-gradient(ellipse, rgba(14,77,138,0.15) 0%, transparent 70%)",
             borderRadius: "50%",
           }}
         />
@@ -131,7 +135,7 @@ const Hero = () => {
         <canvas
           ref={canvasRef}
           className="absolute inset-0 w-full h-full pointer-events-none"
-          style={{ opacity: 0.8 }}
+          style={{ opacity: 1 }}
         />
 
         {/* Navbar */}
