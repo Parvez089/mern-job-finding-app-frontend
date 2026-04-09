@@ -55,7 +55,14 @@ const JobLayout = ({ children, onSelectJob }: JobLayoutProps) => {
   }
 
   return (
-    <div className='max-w-7xl mx-auto flex flex-col md:flex-row gap-8 w-full'>
+    <div
+      className='max-w-7xl mx-auto flex flex-col md:flex-row gap-8 w-full'
+      style={{
+        minHeight: "100vh",
+        background:
+          "linear-gradient(160deg, #080f1e 0%, #0a1628 50%, #0d2137 100%)",
+        padding: "32px 24px",
+      }}>
       {showJobList && (
         <div className='w-full md:w-1/3 !max-w-lg'>
           <JobList jobs={jobs} onSelectJob={onSelectJob} />
