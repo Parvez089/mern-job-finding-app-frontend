@@ -30,75 +30,47 @@ const JobList = ({ jobs = [], onSelectJob }: JobListProps) => {
     hasAutoSelected.current = true;
     const firstJobId = jobs[0]._id;
     const isMobile = window.innerWidth < 768;
-    if (isMobile) {
-      router.replace(`/job/small-device/${firstJobId}`);
-    } else {
-      router.replace(`/job/${firstJobId}`);
-    }
+    if (isMobile) router.replace(`/job/small-device/${firstJobId}`);
+    else router.replace(`/job/${firstJobId}`);
     if (onSelectJob) onSelectJob(firstJobId);
   }, [jobs, pathname, router, onSelectJob]);
 
   const handleJobClick = (id: string) => {
     if (onSelectJob) onSelectJob(id);
     const isMobile = window.innerWidth < 768;
-    if (isMobile) {
-      router.push(`/job/small-device/${id}`);
-    } else {
-      router.push(`/job/${id}`);
-    }
+    if (isMobile) router.push(`/job/small-device/${id}`);
+    else router.push(`/job/${id}`);
   };
 
   return (
     <div style={{ fontFamily: "'Inter', sans-serif" }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-
-        .jl-card {
-          transition: all 0.18s ease;
-          cursor: pointer;
-        }
+        .jl-card { transition: all 0.15s ease; cursor: pointer; }
         .jl-card:hover {
-          border-color: rgba(99,179,237,0.35) !important;
-          background: rgba(30,42,64,0.9) !important;
+          border-color: #93c5fd !important;
+          box-shadow: 0 4px 16px rgba(0,119,182,0.08) !important;
           transform: translateY(-1px);
         }
         .jl-card.active {
-          border-color: rgba(99,179,237,0.55) !important;
-          background: rgba(30,48,75,0.95) !important;
+          border-color: #0077b6 !important;
+          background: #f0f7ff !important;
         }
-        .jl-save:hover {
-          color: #63b3ed !important;
-          border-color: rgba(99,179,237,0.4) !important;
-        }
+        .jl-save { transition: all 0.15s ease; }
+        .jl-save:hover { background: #e8f4fd !important; color: #0077b6 !important; border-color: #93c5fd !important; }
       `}</style>
 
-      {/* Header */}
-      <div style={{ marginBottom: 14 }}>
-        <h2
-          style={{
-            fontSize: "1.05rem",
-            fontWeight: 700,
-            color: "#e2e8f0",
-            letterSpacing: "-0.01em",
-            marginBottom: 2,
-          }}>
+      <div style={{ marginBottom: 12 }}>
+        <h2 style={{ fontSize: "1rem", fontWeight: 700, color: "#0f172a", marginBottom: 2 }}>
           Available Jobs
         </h2>
-        <p style={{ fontSize: "0.75rem", color: "#4a5568" }}>
-          {jobs.length} positions
+        <p style={{ fontSize: "0.75rem", color: "#94a3b8" }}>
+          {jobs.length} positions found
         </p>
       </div>
 
       {jobs.length === 0 && (
-        <div
-          style={{
-            padding: "40px 16px",
-            textAlign: "center",
-            background: "rgba(20,28,45,0.6)",
-            borderRadius: 12,
-            border: "1px solid #1e2a3d",
-          }}>
-          <p style={{ color: "#4a5568", fontSize: "0.85rem" }}>No jobs found</p>
+        <div style={{ padding: 32, textAlign: "center", background: "#f8fafc", borderRadius: 12, border: "1px solid #e2e8f0" }}>
+          <p style={{ color: "#94a3b8", fontSize: "0.85rem" }}>No jobs found</p>
         </div>
       )}
 
@@ -106,93 +78,47 @@ const JobList = ({ jobs = [], onSelectJob }: JobListProps) => {
         {jobs.map((job) => {
           const isActive = pathname === `/job/${job._id}`;
           return (
-            <div
-              key={job._id}
-              onClick={() => handleJobClick(job._id)}
+            <div key={job._id} onClick={() => handleJobClick(job._id)}
               className={`jl-card ${isActive ? "active" : ""}`}
               style={{
-                background: isActive
-                  ? "rgba(30,48,75,0.95)"
-                  : "rgba(20,30,48,0.7)",
-                border: `1px solid ${isActive ? "rgba(99,179,237,0.5)" : "#1a2540"}`,
-                borderRadius: 12,
-                padding: "12px 14px",
-                boxShadow: isActive
-                  ? "0 0 0 1px rgba(99,179,237,0.15), 0 4px 16px rgba(0,0,0,0.2)"
-                  : "none",
-              }}>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "flex-start",
-                }}>
+                background: isActive ? "#f0f7ff" : "#ffffff",
+                border: `1px solid ${isActive ? "#0077b6" : "#e2e8f0"}`,
+                borderRadius: 12, padding: "12px 14px",
+                boxShadow: isActive ? "0 2px 12px rgba(0,119,182,0.1)" : "0 1px 4px rgba(0,0,0,0.04)",
+              }}
+            >
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <h3
-                    style={{
-                      fontSize: "0.92rem",
-                      fontWeight: 600,
-                      color: "#e2e8f0",
-                      marginBottom: 2,
-                      whiteSpace: "nowrap",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                    }}>
+                  <h3 style={{ fontSize: "0.9rem", fontWeight: 600, color: "#0f172a", marginBottom: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                     {job.title}
                   </h3>
-                  <p
-                    style={{
-                      fontSize: "0.78rem",
-                      color: "#63b3ed",
-                      fontWeight: 500,
-                      marginBottom: 6,
-                    }}>
+                  <p style={{ fontSize: "0.78rem", color: "#0077b6", fontWeight: 600, marginBottom: 6 }}>
                     {job.company}
                   </p>
-                  <div
-                    style={{ display: "flex", alignItems: "center", gap: 4 }}>
-                    <MapPin size={10} color='#4a5568' />
-                    <span style={{ fontSize: "0.72rem", color: "#4a5568" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                    <MapPin size={10} color="#94a3b8" />
+                    <span style={{ fontSize: "0.72rem", color: "#94a3b8" }}>
                       {job.city || job.location}
                     </span>
                     {isActive && (
-                      <span
-                        style={{
-                          marginLeft: 6,
-                          fontSize: "0.6rem",
-                          fontWeight: 700,
-                          color: "#63b3ed",
-                          background: "rgba(99,179,237,0.1)",
-                          border: "1px solid rgba(99,179,237,0.2)",
-                          padding: "1px 6px",
-                          borderRadius: 999,
-                          textTransform: "uppercase",
-                          letterSpacing: "0.05em",
-                        }}>
+                      <span style={{
+                        marginLeft: 6, fontSize: "0.6rem", fontWeight: 700,
+                        color: "#0077b6", background: "#dbeafe",
+                        padding: "1px 6px", borderRadius: 999,
+                        textTransform: "uppercase", letterSpacing: "0.05em",
+                      }}>
                         Viewing
                       </span>
                     )}
                   </div>
                 </div>
 
-                <button
-                  className='jl-save'
-                  onClick={(e) => e.stopPropagation()}
-                  style={{
-                    width: 28,
-                    height: 28,
-                    borderRadius: 7,
-                    background: "transparent",
-                    border: "1px solid #1e2a3d",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    color: "#2d3748",
-                    cursor: "pointer",
-                    flexShrink: 0,
-                    marginLeft: 8,
-                    transition: "all 0.15s ease",
-                  }}>
+                <button className="jl-save" onClick={(e) => e.stopPropagation()} style={{
+                  width: 28, height: 28, borderRadius: 7,
+                  background: "#f8fafc", border: "1px solid #e2e8f0",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  color: "#cbd5e1", cursor: "pointer", flexShrink: 0, marginLeft: 8,
+                }}>
                   <Bookmark size={12} />
                 </button>
               </div>
