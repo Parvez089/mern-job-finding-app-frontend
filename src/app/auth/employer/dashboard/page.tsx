@@ -65,12 +65,12 @@ const EmployerDashboard = () => {
   return (
     <div>
       <div className='grid md:grid-cols-4 grid-cols-2 gap-8'>
-        <StatsCard
-          title='Total Applicants'
-          value={loading ? "..." : stats.totalApplicants.toLocaleString()}
-          percentage={`${Math.abs(stats.applicantsPercentage)}%`}
-          isUp={stats.isApplicantsUp}
-        />
+       <StatsCard
+  title='Total Applicants'
+   value={loading ? "..." : stats.totalApplicants.toLocaleString()} 
+  percentage={`${Math.abs(stats?.applicantsPercentage ?? 0)}%`}
+  isUp={stats?.isApplicantsUp ?? false}
+/>
 
         <StatsCard
           title='Active Jobs'

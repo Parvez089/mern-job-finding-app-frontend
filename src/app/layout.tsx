@@ -6,6 +6,7 @@ import "./globals.css";
 import Navbar from "@/Component/Navbar/Navbar";
 import RootLayoutWrapper from "@/Component/Layout/RootLayoutWrapper";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
+import { JobProvider } from "@/context/JobContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -52,7 +53,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${roboto.variable} ${poppins.variable} antialiased`}>
         <AntdRegistry>
+          <JobProvider>
           <RootLayoutWrapper>{children}</RootLayoutWrapper>
+          </JobProvider>
         </AntdRegistry>
       </body>
     </html>
