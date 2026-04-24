@@ -6,8 +6,14 @@ import { Input } from "antd";
 import { DownOutlined } from "@ant-design/icons";
 import { Search, MapPin, Briefcase, Users, TrendingUp, Zap } from "lucide-react";
 import Navbar from "../Navbar/Navbar";
+import { getAllJobs } from "@/app/services/api";
 
-const Hero = () => {
+
+interface HeroProps {
+  onSearch: (jobs: any[], pagination: any) => void;
+  setLoading?: (loading: boolean) => void;
+}
+const Hero = ({onSearch , setLoading}: HeroProps) => {
   const [jobInput, setJobInput] = useState("");
   const [locationInput, setLocationInput] = useState("");
 
@@ -18,6 +24,30 @@ const Hero = () => {
   ];
 
   const filters = ["Experience", "Company", "Job Types", "Salary", "Market", "Benefit"];
+
+  const handleSearch = async () => {
+    const searchParams = {
+      search: jobInput,
+      city: locationInput,
+    };
+
+    console.log("Searching with parameters: ", searchParams);
+
+    if (setLoading) setLoading(true);
+    
+  try {
+    const data = await getAllJobs(1,12, searchParams);
+    if(data && data.jobs){
+      onSearch(data.jobs, data.pagination)
+    }
+    console.log("Serach Results: ", data);
+  } catch(error){
+    console.error("Search failed: ", error)
+  } finally {
+    if(setLoading) setLoading(false)
+  }
+  }
+
 
   return (
     <div className="w-full" style={{ fontFamily: "'Inter', sans-serif" }}>
@@ -183,9 +213,11 @@ const Hero = () => {
             }}>
               <Search size={18} color="#0077b6" strokeWidth={2.5} />
               <Input bordered={false}
+                
                 placeholder="Job title, keywords, or company"
                 value={jobInput}
                 onChange={(e) => setJobInput(e.target.value)}
+                onPressEnter={handleSearch}
                 style={{ padding: 0, fontSize: "0.9rem", fontWeight: 500, color: "#0f172a", boxShadow: "none" }}
               />
             </div>
@@ -204,7 +236,9 @@ const Hero = () => {
                 onChange={(e) => setLocationInput(e.target.value)}
                 style={{ padding: 0, fontSize: "0.9rem", fontWeight: 500, color: "#0f172a", boxShadow: "none" }}
               />
-              <button className="search-btn" style={{
+              <button className="search-btn" 
+              onClick={handleSearch}
+              style={{
                 flexShrink: 0, padding: "9px 22px", borderRadius: 10,
                 background: "#0077b6", border: "none", color: "#fff",
                 fontSize: "0.88rem", fontWeight: 700, cursor: "pointer",

@@ -5,6 +5,7 @@ import Navbar from "../Navbar/Navbar";
 import Footer from "../Footer/Footer";
 import ConditionalHero from "../Hero/ConditionalHero";
 import Banner from "../banner/Banner";
+import { useState } from "react";
 
 export default function RootLayoutWrapper({
   children,
@@ -12,6 +13,8 @@ export default function RootLayoutWrapper({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+
+  const [searchResults, setSearchResults] = useState<any[]>([]);
 
   const isHomePage = pathname === "/" ;
   const isAuthPage = pathname.startsWith("/auth")
@@ -30,7 +33,7 @@ export default function RootLayoutWrapper({
   return (
     <div className='flex flex-col min-h-screen'>
       {!shouldHideNavbar && <Navbar />}
-      <ConditionalHero/>
+      <ConditionalHero onUpdateJobs={(data: any) => setSearchResults(data)}/>
       <main className='flex-grow'>{children}</main>
 
            {/* Hide Footer on Dashboard */}

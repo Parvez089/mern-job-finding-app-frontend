@@ -1,6 +1,7 @@
 /** @format */
 "use client";
 
+import { useJobContext } from "@/context/JobContext";
 import { Bookmark, MapPin } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect, useRef } from "react";
@@ -14,26 +15,46 @@ interface Job {
 }
 
 interface JobListProps {
-  jobs: Job[];
+  jobs?: Job[];
   onSelectJob?: (id: string) => void;
 }
 
-const JobList = ({ jobs = [], onSelectJob }: JobListProps) => {
+const JobList = ({ jobs: initialJobs = [], onSelectJob }: JobListProps) => {
   const pathname = usePathname();
   const router = useRouter();
-  const hasAutoSelected = useRef(false);
+
+  const { searchResults } = useJobContext();
+
+  // ✅ Use search results if available, otherwise use initial jobs
+  const displayJobs = searchResults.length > 0 ? searchResults : initialJobs;
+
+  // ✅ Track which job list we last auto-selected from
+  // Using a string key so it resets when the jobs source changes
+  const lastAutoSelectedKey = useRef<string>("");
 
   useEffect(() => {
-    if (hasAutoSelected.current) return;
-    if (jobs.length === 0) return;
+    if (displayJobs.length === 0) return;
+
+    // Build a unique key from the first job id + total count
+    // This resets auto-select whenever jobs change (e.g. after search)
+    const key = `${displayJobs[0]._id}-${displayJobs.length}`;
+
+    // Already auto-selected for this exact job list — skip
+    if (lastAutoSelectedKey.current === key) return;
+
+    // Only auto-navigate on the base /job route
     if (pathname !== "/job") return;
-    hasAutoSelected.current = true;
-    const firstJobId = jobs[0]._id;
+
+    lastAutoSelectedKey.current = key;
+
+    const firstJobId = displayJobs[0]._id;
     const isMobile = window.innerWidth < 768;
+
     if (isMobile) router.replace(`/job/small-device/${firstJobId}`);
     else router.replace(`/job/${firstJobId}`);
+
     if (onSelectJob) onSelectJob(firstJobId);
-  }, [jobs, pathname, router, onSelectJob]);
+  }, [displayJobs, pathname, router, onSelectJob]);
 
   const handleJobClick = (id: string) => {
     if (onSelectJob) onSelectJob(id);
@@ -56,40 +77,62 @@ const JobList = ({ jobs = [], onSelectJob }: JobListProps) => {
           background: #f0f7ff !important;
         }
         .jl-save { transition: all 0.15s ease; }
-        .jl-save:hover { background: #e8f4fd !important; color: #0077b6 !important; border-color: #93c5fd !important; }
+        .jl-save:hover {
+          background: #e8f4fd !important;
+          color: #0077b6 !important;
+          border-color: #93c5fd !important;
+        }
       `}</style>
 
+      {/* Header */}
       <div style={{ marginBottom: 12 }}>
         <h2 style={{ fontSize: "1rem", fontWeight: 700, color: "#0f172a", marginBottom: 2 }}>
-          Available Jobs
+          {searchResults.length > 0 ? "Search Results" : "Available Jobs"}
         </h2>
         <p style={{ fontSize: "0.75rem", color: "#94a3b8" }}>
-          {jobs.length} positions found
+          {displayJobs.length} position{displayJobs.length !== 1 ? "s" : ""} found
         </p>
       </div>
 
-      {jobs.length === 0 && (
-        <div style={{ padding: 32, textAlign: "center", background: "#f8fafc", borderRadius: 12, border: "1px solid #e2e8f0" }}>
-          <p style={{ color: "#94a3b8", fontSize: "0.85rem" }}>No jobs found</p>
+      {/* Empty state */}
+      {displayJobs.length === 0 && (
+        <div style={{
+          padding: 32, textAlign: "center",
+          background: "#f8fafc", borderRadius: 12,
+          border: "1px solid #e2e8f0",
+        }}>
+          <p style={{ color: "#94a3b8", fontSize: "0.85rem" }}>
+            No jobs found
+          </p>
         </div>
       )}
 
+      {/* Job cards */}
       <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-        {jobs.map((job) => {
+        {displayJobs.map((job) => {
           const isActive = pathname === `/job/${job._id}`;
           return (
-            <div key={job._id} onClick={() => handleJobClick(job._id)}
+            <div
+              key={job._id}
+              onClick={() => handleJobClick(job._id)}
               className={`jl-card ${isActive ? "active" : ""}`}
               style={{
                 background: isActive ? "#f0f7ff" : "#ffffff",
                 border: `1px solid ${isActive ? "#0077b6" : "#e2e8f0"}`,
-                borderRadius: 12, padding: "12px 14px",
-                boxShadow: isActive ? "0 2px 12px rgba(0,119,182,0.1)" : "0 1px 4px rgba(0,0,0,0.04)",
+                borderRadius: 12,
+                padding: "12px 14px",
+                boxShadow: isActive
+                  ? "0 2px 12px rgba(0,119,182,0.1)"
+                  : "0 1px 4px rgba(0,0,0,0.04)",
               }}
             >
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <h3 style={{ fontSize: "0.9rem", fontWeight: 600, color: "#0f172a", marginBottom: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                  <h3 style={{
+                    fontSize: "0.9rem", fontWeight: 600, color: "#0f172a",
+                    marginBottom: 2, overflow: "hidden",
+                    textOverflow: "ellipsis", whiteSpace: "nowrap",
+                  }}>
                     {job.title}
                   </h3>
                   <p style={{ fontSize: "0.78rem", color: "#0077b6", fontWeight: 600, marginBottom: 6 }}>
@@ -113,12 +156,17 @@ const JobList = ({ jobs = [], onSelectJob }: JobListProps) => {
                   </div>
                 </div>
 
-                <button className="jl-save" onClick={(e) => e.stopPropagation()} style={{
-                  width: 28, height: 28, borderRadius: 7,
-                  background: "#f8fafc", border: "1px solid #e2e8f0",
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  color: "#cbd5e1", cursor: "pointer", flexShrink: 0, marginLeft: 8,
-                }}>
+                <button
+                  className="jl-save"
+                  onClick={(e) => e.stopPropagation()}
+                  style={{
+                    width: 28, height: 28, borderRadius: 7,
+                    background: "#f8fafc", border: "1px solid #e2e8f0",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    color: "#cbd5e1", cursor: "pointer",
+                    flexShrink: 0, marginLeft: 8,
+                  }}
+                >
                   <Bookmark size={12} />
                 </button>
               </div>
