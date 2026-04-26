@@ -1,3 +1,5 @@
+/** @format */
+
 "use client";
 
 import { usePathname } from "next/navigation";
@@ -13,34 +15,37 @@ export default function RootLayoutWrapper({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-
   const [searchResults, setSearchResults] = useState<any[]>([]);
 
-  const isHomePage = pathname === "/" ;
-  const isAuthPage = pathname.startsWith("/auth")
+  const isHomePage = pathname === "/";
+  const isAuthPage = pathname.startsWith("/auth");
+
+  const isDashboardPage =
+    pathname.startsWith("/auth/employer/dashboard") ||
+    pathname.startsWith("/auth/job-seeker/dashboard") ||
+    pathname.startsWith("/auth/admin/dashboard");
+
   const isJobDetailsPage =
-    pathname.startsWith("/job/") &&
-    pathname !== "/job/apply-job";
-    const isDashboardPage =
-      pathname.startsWith("/auth/employer/dashboard") ||
-      pathname.startsWith("/auth/job-seeker/dashboard") ||
-      pathname.startsWith("/auth/admin/dashboard");
+    pathname.startsWith("/job/") && pathname !== "/job/apply-job";
+
+  // ✅ Dashboard page হলে wrapper বাদ
+  if (isDashboardPage) {
+    return <>{children}</>;
+  }
 
   const shouldHideNavbar = isHomePage || isJobDetailsPage || isAuthPage;
-
-  const shouldHideBanner = isDashboardPage || isAuthPage;
+  const shouldHideBanner = isAuthPage;
 
   return (
     <div className='flex flex-col min-h-screen'>
       {!shouldHideNavbar && <Navbar />}
-      <ConditionalHero onUpdateJobs={(data: any) => setSearchResults(data)}/>
+
+      <ConditionalHero onUpdateJobs={(data: any) => setSearchResults(data)} />
+
       <main className='flex-grow'>{children}</main>
 
-           {/* Hide Footer on Dashboard */}
-        {!shouldHideBanner && <Banner/>}   
-      {!isDashboardPage && <Footer /> }
-   
-
+      {!shouldHideBanner && <Banner />}
+      {!isDashboardPage && <Footer />}
     </div>
   );
 }

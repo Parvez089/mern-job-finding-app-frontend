@@ -2,38 +2,25 @@
 "use client";
 import React, { useEffect, useState, useCallback } from "react";
 import {
-  UnorderedListOutlined,
-  VideoCameraOutlined,
-  UsergroupAddOutlined,
   RadiusSettingOutlined,
-  AccountBookOutlined,
-  ShoppingCartOutlined,
-  ContactsOutlined,
   LogoutOutlined,
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
   UserOutlined,
-  NotificationFilled,
 } from "@ant-design/icons";
-import {
-  Menu,
-  Avatar,
-  Badge,
-  Spin,
-  Layout,
-  Button,
-  ConfigProvider,
-} from "antd";
+import { Menu, Avatar, Spin, ConfigProvider } from "antd";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import axios from "axios";
-import { Bell, BriefcaseBusiness, CalendarCheck, CircleUser, Database, LayoutDashboard, Settings, Users } from "lucide-react";
+import {
+  BriefcaseBusiness,
+  CalendarCheck,
+  Database,
+  LayoutDashboard,
+  Settings,
+  Users,
+} from "lucide-react";
 import DashboardHeader from "@/app/components/employer/dashboard/DashboardHeader";
 import CreateJobHeader from "@/app/components/employer/createJob/CreateJobHeader";
 
-const { Header, Sider, Content } = Layout;
-
-// 🔹 Types
 interface EmployerProfile {
   name: string;
   email: string;
@@ -47,30 +34,24 @@ const EmployerDashboard = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   const router = useRouter();
-  const pathname = usePathname(); // 🔹 Hook to get current URL path
+  const pathname = usePathname();
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
-  const isCreateJobPage = pathname.includes("/create-job")
-  // 1. Logout Logic (useCallback to prevent unnecessary re-renders)
+
   const handleLogout = useCallback(() => {
     localStorage.removeItem("token");
     setProfile(null);
     router.replace("/");
   }, [router]);
 
-
   const renderHeader = () => {
-    if (pathname.includes("/create-job")) {
-      return <CreateJobHeader />;
-    }
-  
+    if (pathname.includes("/create-job")) return <CreateJobHeader />;
     return <DashboardHeader collapsed={collapsed} setCollapsed={setCollapsed} />;
   };
-  // 2. Fetch Profile Logic
+
   useEffect(() => {
     const fetchProfile = async () => {
       const token = localStorage.getItem("token");
       if (!token) return router.push("/login");
-
       try {
         const res = await axios.get(`${API_BASE_URL}/api/employer/me`, {
           headers: { Authorization: `Bearer ${token}` },
@@ -83,11 +64,9 @@ const EmployerDashboard = ({ children }: { children: React.ReactNode }) => {
         setLoading(false);
       }
     };
-
     fetchProfile();
   }, [API_BASE_URL, router, handleLogout]);
 
-  // 3. Responsive Logic
   useEffect(() => {
     const handleResize = () => {
       const mobile = window.innerWidth <= 1024;
@@ -99,153 +78,166 @@ const EmployerDashboard = ({ children }: { children: React.ReactNode }) => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // 4. Menu Items Config
   const menuItems = [
     {
       key: "/auth/employer/dashboard",
-      icon: <LayoutDashboard />,
-      label: <Link href='/auth/employer/dashboard'>Dashboard</Link>,
+      icon: <LayoutDashboard size={18} />,
+      label: <Link href="/auth/employer/dashboard">Dashboard</Link>,
     },
     {
       key: "/auth/employer/dashboard/job-post",
-      icon: <BriefcaseBusiness />,
-      label: <Link href='/auth/employer/dashboard/job-post'>Posts</Link>,
+      icon: <BriefcaseBusiness size={18} />,
+      label: <Link href="/auth/employer/dashboard/job-post">Posts</Link>,
     },
     {
-      key: "/auth/employer/dashboard/company-profile",
-      icon: <Users />,
-      label: <Link href='/auth/employer/dashboard/applicants'>Applicants</Link>,
+      key: "/auth/employer/dashboard/applicants",
+      icon: <Users size={18} />,
+      label: <Link href="/auth/employer/dashboard/applicants">Applicants</Link>,
     },
     {
       key: "/auth/employer/dashboard/account-settings",
-      icon: <CalendarCheck />,
-      label: (
-        <Link href='/auth/employer/dashboard/account-settings'>Interviews</Link>
-      ),
+      icon: <CalendarCheck size={18} />,
+      label: <Link href="/auth/employer/dashboard/account-settings">Interviews</Link>,
     },
     {
       key: "/auth/employer/dashboard/subscriptions-billing",
-      icon: <Database />,
-      label: (
-        <Link href='/auth/employer/dashboard/subscriptions-billing'>
-          Talent Pool
-        </Link>
-      ),
+      icon: <Database size={18} />,
+      label: <Link href="/auth/employer/dashboard/subscriptions-billing">Talent Pool</Link>,
     },
     {
       key: "/auth/employer/dashboard/marketplace",
-      icon: <Settings />,
-      label: <Link href='/auth/employer/dashboard/marketplace'>Settings</Link>,
+      icon: <Settings size={18} />,
+      label: <Link href="/auth/employer/dashboard/marketplace">Settings</Link>,
     },
   ];
 
   return (
     <ConfigProvider
       theme={{
-        token: { colorPrimary: "#4850e5" },
+        token: { colorPrimary: "#0077b6" },
         components: {
-          Menu: { itemSelectedBg: "#4850e512", itemSelectedColor: "#4850e5" },
+          Menu: {
+            itemSelectedBg: "#eff6ff",
+            itemSelectedColor: "#0077b6",
+            itemHoverBg: "#f8fafc",
+            itemHoverColor: "#0077b6",
+          },
           Input: {
-        activeBorderColor: "transparent", 
-        hoverBorderColor: "transparent",  
-        activeShadow: "none",             
-      },
-      Button: {
-        controlOutline: "none", 
-         activeBorderColor: "none", 
-        hoverBorderColor: "none",  
-        activeShadow: "none", 
-      },
-      Select: {
-        controlOutline: "none",
-      }
+            activeBorderColor: "#0077b6",
+            hoverBorderColor: "#93c5fd",
+          },
+          Button: { colorPrimary: "#0077b6" },
+          Select: { controlOutline: "none" },
         },
+      }}
+    >
+      <div className="flex h-screen overflow-hidden bg-[#f8fafc]">
 
-      }}>
-      <div className='flex h-screen overflow-hidden bg-[#f6f6f8]'>
-        {/* Mobile Overlay */}
+        {/* Mobile overlay */}
         {!collapsed && isMobile && (
           <div
-            className='fixed inset-0 bg-black/20 z-40 backdrop-blur-sm transition-opacity'
+            className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm"
             onClick={() => setCollapsed(true)}
           />
         )}
 
-        {/* Sidebar */}
+        {/* ── Sidebar ───────────────────────── */}
         <aside
-          className={`fixed lg:static top-0 left-0 h-full bg-white border-r border-[#e8e8f3] z-50 flex flex-col transition-all duration-300 ${
-            collapsed
-              ? "-translate-x-full lg:translate-x-0 lg:w-20"
-              : "translate-x-0 w-64"
-          }`}>
-          {/* Logo Section */}
-          <div className='h-20 flex items-center px-6 gap-3 overflow-hidden'>
-            <div className='bg-[#4850e5] min-w-[40px] h-10 rounded-lg flex items-center justify-center text-white'>
-              <RadiusSettingOutlined className='text-xl' />
+          className={`
+            flex flex-col bg-white border-r border-slate-100
+            shadow-[1px_0_8px_rgba(0,0,0,0.04)]
+            transition-all duration-300 z-50 flex-shrink-0
+            ${isMobile
+              ? `fixed top-0 left-0 h-full ${collapsed ? "-translate-x-full" : "translate-x-0"} w-64`
+              : `static h-full ${collapsed ? "w-[72px]" : "w-60"}`
+            }
+          `}
+        >
+          {/* Logo */}
+          <div className="h-16 flex items-center gap-3 px-4 border-b border-slate-100 overflow-hidden flex-shrink-0">
+            <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-[#0077b6] to-[#4f46e5] flex items-center justify-center text-white flex-shrink-0 shadow-md">
+              <RadiusSettingOutlined className="text-base" />
             </div>
             {!collapsed && (
-              <div className='flex flex-col'>
-                <span className='text-[#0e0f1b] font-bold text-lg leading-tight'>
-                  JobOrbit
-                </span>
-                <span className='text-[#505495] text-[10px] font-semibold uppercase tracking-wider'>
+              <div className="overflow-hidden">
+                <div className="font-extrabold text-[#0f172a] text-base leading-tight whitespace-nowrap">
+                  Job<span className="text-[#0077b6]">Orbit</span>
+                </div>
+                <div className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">
                   Employer
-                </span>
+                </div>
               </div>
             )}
           </div>
 
-          {/* Navigation */}
-          <div className='flex-1 overflow-y-auto py-4'>
+          {/* Nav label */}
+          {!collapsed && (
+            <div className="px-5 pt-4 pb-1 text-[10px] font-bold text-slate-300 uppercase tracking-widest">
+              Main Menu
+            </div>
+          )}
+
+          {/* Menu */}
+          <div className="flex-1 overflow-y-auto py-2 px-2">
             <Menu
-              mode='inline'
-              selectedKeys={[pathname]} // 🔹 Automatically highlights based on URL
+              mode="inline"
+              selectedKeys={[pathname]}
               items={menuItems}
-              className='!border-none !bg-transparent px-3 [&_.ant-menu-item]:!h-11 [&_.ant-menu-item]:!rounded-lg [&_.ant-menu-item]:!text-[#505495]'
+              inlineCollapsed={collapsed}
+              className="!border-none !bg-transparent [&_.ant-menu-item]:!rounded-lg [&_.ant-menu-item]:!my-0.5 [&_.ant-menu-item]:!h-10 [&_.ant-menu-item]:!leading-10 [&_.ant-menu-item]:!font-medium [&_.ant-menu-item]:!text-slate-500"
             />
           </div>
 
-          <div className='flex items-center gap-3 cursor-pointer group p-4 border-t border-[#e8e8f3]'>
+          {/* Profile */}
+          <div className="flex items-center gap-3 p-4 border-t border-slate-100 overflow-hidden flex-shrink-0">
             {loading ? (
-              <Spin size='small' />
+              <Spin size="small" />
             ) : (
               <>
                 <Avatar
-                  size={40}
+                  size={36}
                   src={profile?.profilePicture}
                   icon={<UserOutlined />}
-                  className='border-2 border-white shadow-sm'
+                  className="flex-shrink-0 border-2 border-blue-100"
                 />
-                <div className='flex justify-end flex-col text-right  sm:block'>
-                  <span className='text-sm font-bold text-[#0e0f1b]'>
-                    {profile?.name || "User"}
-                  </span>
-                  <br />
-                  <span className='text-[11px] text-[#505495] font-medium uppercase'>
-                    {profile?.email || "Company"}
-                  </span>
-                </div>
+                {!collapsed && (
+                  <div className="overflow-hidden flex-1">
+                    <div className="text-sm font-bold text-[#0f172a] truncate">
+                      {profile?.name || "User"}
+                    </div>
+                    <div className="text-[11px] text-slate-400 truncate">
+                      {profile?.email || ""}
+                    </div>
+                  </div>
+                )}
               </>
             )}
           </div>
 
           {/* Sign Out */}
-          <div className='p-4 border-t border-[#e8e8f3]'>
+          <div className="p-3 border-t border-slate-100 flex-shrink-0">
             <button
               onClick={handleLogout}
-              className='flex items-center gap-3 w-full px-4 py-3 text-[#505495] hover:text-red-500 hover:bg-red-50 rounded-lg transition-all font-medium group'>
-              <LogoutOutlined className='text-lg' />
+              className={`
+                flex items-center gap-3 w-full px-3 py-2.5
+                rounded-lg text-slate-400 hover:text-red-500
+                hover:bg-red-50 transition-all font-semibold text-sm
+                ${collapsed ? "justify-center" : ""}
+              `}
+            >
+              <LogoutOutlined className="text-base flex-shrink-0" />
               {!collapsed && <span>Sign Out</span>}
             </button>
           </div>
         </aside>
 
-        {/* Main Area */}
-        <div className='flex flex-col flex-1 min-w-0'>
-
+        {/* ── Main Content ──────────────────── */}
+        <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
           {renderHeader()}
-          <main className='flex-1 overflow-y-auto p-6 md:p-8'>
-            <div className='max-w-full mx-auto'>{children}</div>
+          <main className="flex-1 overflow-y-auto p-6 md:p-8">
+            <div className="max-w-full mx-auto">
+              {children}
+            </div>
           </main>
         </div>
       </div>
