@@ -43,13 +43,7 @@ const JobseekerDahboard = ({ children }: DashboardProps) => {
       icon: <LayoutDashboard />,
       label: <Link href='/auth/job-seeker/dashboard'>Dashboard</Link>,
     },
-    {
-      key: "/auth/employer/dashboard/search-job",
-      icon: <Search />,
-      label: (
-        <Link href='/auth/job-seeker/dashboard/search-job'>Search Jobs</Link>
-      ),
-    },
+ 
     {
       key: "/auth/employer/dashboard/company-profile",
       icon: <FileText />,
@@ -57,27 +51,17 @@ const JobseekerDahboard = ({ children }: DashboardProps) => {
         <Link href='/auth/employer/dashboard/company-profile'>Application</Link>
       ),
     },
-    {
-      key: "/auth/employer/dashboard/account-settings",
-      icon: <MessageCircleMore />,
-      label: (
-        <Link href='/auth/employer/dashboard/account-settings'>Message</Link>
-      ),
-    },
+ 
     {
       key: "/auth/employer/dashboard/subscriptions-billing",
       icon: <MessageCircleMore />,
       label: (
-        <Link href='/auth/employer/dashboard/subscriptions-billing'>
+        <Link href='/auth/job-seeker/dashboard/my-profile'>
           My Profile
         </Link>
       ),
     },
-    {
-      key: "/auth/employer/dashboard/marketplace",
-      icon: <Settings />,
-      label: <Link href='/auth/employer/dashboard/marketplace'>Setting</Link>,
-    },
+ 
   ];
 
   return (
