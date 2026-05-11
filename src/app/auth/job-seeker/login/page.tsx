@@ -24,10 +24,17 @@ const JobSeekerLogin = () => {
   const onFinish = async (values: FieldType) => {
     setLoading(true);
     try {
-      const res = await axios.post(`${API_BASE_URL}/api/auth/login`, {
-        ...values,
-        role: "jobseeker",
-      });
+     const res = await axios.post(
+  `${API_BASE_URL}/api/auth/login`,
+  {
+    ...values,
+    role: "jobseeker",
+  },
+  {
+    withCredentials: true,
+  }
+);
+
 
       const token = res.data.token;
       const user = res.data.user;

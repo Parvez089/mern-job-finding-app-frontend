@@ -48,7 +48,7 @@ const JobseekerDahboard = ({ children }: DashboardProps) => {
       key: "/auth/employer/dashboard/company-profile",
       icon: <FileText />,
       label: (
-        <Link href='/auth/employer/dashboard/company-profile'>Application</Link>
+        <Link href='/auth/employer/dashboard/application'>Application</Link>
       ),
     },
  

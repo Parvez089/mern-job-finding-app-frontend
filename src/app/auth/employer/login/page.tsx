@@ -7,7 +7,7 @@ import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Mail, Lock, Eye, EyeOff, ArrowRight, Briefcase } from "lucide-react";
-
+import Cookies from 'js-cookie';
 type FieldType = {
   email?: string;
   password?: string;
@@ -21,33 +21,41 @@ const JobSeekerLogin = () => {
   const router = useRouter();
   const [form] = Form.useForm();
 
-  const onFinish = async (values: FieldType) => {
+const onFinish = async (values: FieldType) => {
     setLoading(true);
     try {
-      const res = await axios.post(`${API_BASE_URL}/api/auth/login`, {
-        ...values,
-        role: "jobseeker",
-      });
+        const res = await axios.post(`${API_BASE_URL}/api/auth/login`, {
+            ...values,
+            role: "jobseeker",
+        });
 
-      const token = res.data.token;
-      const user = res.data.user;
+        const { token, user } = res.data;
 
-      if (token && user) {
-        localStorage.setItem("token", token);
-        localStorage.setItem("user", JSON.stringify(user));
-        message.success("Welcome back! Redirecting...");
-        setTimeout(() => {
-          window.location.href = "/";
-        }, 600);
-      } else {
-        message.error("Invalid login response from server!");
-      }
+        if (token && user) {
+           
+            Cookies.set("token", token, { expires: 2, path: '/' });
+            
+           
+            const middlewareRole = user.role === 'jobseeker' ? 'job-seeker' : user.role;
+            Cookies.set("role", middlewareRole, { expires: 2, path: '/' });
+
+           
+            localStorage.setItem("token", token);
+            localStorage.setItem("user", JSON.stringify(user));
+            
+            message.success("Login successful!");
+            
+
+            setTimeout(() => {
+                window.location.href = `/auth/${middlewareRole}/dashboard`;
+            }, 600);
+        }
     } catch (error: any) {
-      message.error(error.response?.data?.message || "Login failed. Please check your credentials.");
+        message.error(error.response?.data?.message || "Login failed!");
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
-  };
+};
 
   return (
     <div style={{
